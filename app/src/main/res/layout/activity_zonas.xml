@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.phoenixdroid.proyectoinge2.activity_zonas"
+    android:background="#85c1e9">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Seleccione la zona en la que vive:"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_dark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:rowCount="2"
+                android:columnCount="3">
+
+                <Button
+                    android:id="@+id/button18"
+                    android:layout_width="129dp"
+                    android:layout_height="257dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="Santa Ana (Centro)" />
+
+                <Button
+                    android:id="@+id/button17"
+                    android:layout_width="129dp"
+                    android:layout_height="257dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="@android:color/transparent"
+                    android:text="Salitral" />
+
+                <Button
+                    android:id="@+id/button16"
+                    android:layout_width="129dp"
+                    android:layout_height="257dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="Pozos" />
+
+                <Button
+                    android:id="@+id/button14"
+                    android:layout_width="129dp"
+                    android:layout_height="257dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="Uruca" />
+
+                <Button
+                    android:id="@+id/button13"
+                    android:layout_width="129dp"
+                    android:layout_height="257dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="Piedades" />
+
+                <Button
+                    android:id="@+id/button12"
+                    android:layout_width="129dp"
+                    android:layout_height="257dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="Brazil" />
+
+            </GridLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
