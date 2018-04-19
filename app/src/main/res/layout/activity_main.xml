@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#85c1e9"
+    android:background="@color/background"
     tools:context="com.example.phoenixdroid.proyectoinge2.MainActivity">
 
     <LinearLayout
@@ -16,7 +16,7 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="Seleccione el modo deseado: la primera mitad de la pantalla es para el modo Vidente, la otra mitad es para el modo No Vidente."
             android:textAlignment="center"
             android:textColor="@android:color/background_dark"
             tools:text="Seleccione el modo deseado: la primera mitad de la pantalla es para el modo Vidente, la otra mitad es para el modo No Vidente." />
@@ -31,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="209dp"
                 android:backgroundTint="@android:color/transparent"
+                android:onClick="iniciarActZonas"
                 android:text="Modo Vidente" />
 
             <Button
@@ -38,8 +39,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="248dp"
                 android:background="@android:color/transparent"
-                android:text="Button"
+                android:text="Modo No Vidente"
                 tools:text="Modo No Vidente" />
+
         </LinearLayout>
 
     </LinearLayout>
