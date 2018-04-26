@@ -8,6 +8,18 @@
     android:background="#85c1e9">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/vector" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,97 +44,112 @@
                 android:orientation="vertical" >
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/btnMatinilla"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Matinilla" />
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/btnQNaranjos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Q. Naranjos" />
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/btnAlvarez"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Calle Los Álvarez" />
 
                 <Button
-                    android:id="@+id/button6"
+                    android:id="@+id/btnCPRioUruca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Calle Paralela Río Uruca" />
 
                 <Button
-                    android:id="@+id/button7"
+                    android:id="@+id/btnSPitier"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Salida Quebrada Pitier" />
 
                 <Button
-                    android:id="@+id/button8"
+                    android:id="@+id/btnQTapezco"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Quebrada Tapezco" />
 
                 <Button
-                    android:id="@+id/button9"
+                    android:id="@+id/btnCDelgado"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Calle Los Delgado" />
 
                 <Button
-                    android:id="@+id/button10"
+                    android:id="@+id/btnLaFuente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Puente Sector la Fuente" />
 
                 <Button
-                    android:id="@+id/button11"
+                    android:id="@+id/btnSanguijuela"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Quebrada Sanguijuela" />
 
                 <Button
-                    android:id="@+id/button12"
+                    android:id="@+id/btnCruceP"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Cruce a P." />
 
                 <Button
-                    android:id="@+id/button13"
+                    android:id="@+id/btnQCanoas"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Quebrada Canoas" />
 
                 <Button
-                    android:id="@+id/button14"
+                    android:id="@+id/btnCañada"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Calle de la Cañada" />
 
                 <Button
-                    android:id="@+id/button15"
+                    android:id="@+id/btnPMachete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/btn_border"
+                    android:onClick="actVideos"
                     android:text="Paso Machete" />
+
             </LinearLayout>
         </ScrollView>
+
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

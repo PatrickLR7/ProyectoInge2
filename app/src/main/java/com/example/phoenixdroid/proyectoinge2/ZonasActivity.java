@@ -1,7 +1,9 @@
 package com.example.phoenixdroid.proyectoinge2;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 public class ZonasActivity extends AppCompatActivity {
 
@@ -11,17 +13,10 @@ public class ZonasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_zonas);
     }
 
-    /*
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    public void actVideos (View v){
+        Intent i = new Intent(getApplicationContext(), VideosActivity.class);
+        startActivity(i);
+    }
 
-        <ImageView
-    android:id="@+id/imageView5"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:srcCompat="@+drawable/vector" />
-    </LinearLayout>
-    */
+
 }
