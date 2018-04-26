@@ -12,76 +12,127 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/vector" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seleccione la zona en la que vive:"
+            android:text="@string/seleccione_la_zona_en_la_que_vive"
             android:textAlignment="center"
             android:textColor="@android:color/background_dark" />
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <GridLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:rowCount="2"
-                android:columnCount="3">
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
                 <Button
-                    android:id="@+id/button18"
-                    android:layout_width="129dp"
-                    android:layout_height="257dp"
-                    android:layout_weight="1"
+                    android:id="@+id/button3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:text="Santa Ana (Centro)" />
+                    android:text="Matumilla" />
 
                 <Button
-                    android:id="@+id/button17"
-                    android:layout_width="129dp"
-                    android:layout_height="257dp"
-                    android:layout_weight="1"
+                    android:id="@+id/button4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:backgroundTint="@android:color/transparent"
-                    android:text="Salitral" />
+                    android:text="Q. Naranjos" />
 
                 <Button
-                    android:id="@+id/button16"
-                    android:layout_width="129dp"
-                    android:layout_height="257dp"
-                    android:layout_weight="1"
+                    android:id="@+id/button5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:text="Pozos" />
+                    android:text="Calle Los Álvarez" />
 
                 <Button
-                    android:id="@+id/button14"
-                    android:layout_width="129dp"
-                    android:layout_height="257dp"
-                    android:layout_weight="1"
+                    android:id="@+id/button6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:text="Uruca" />
+                    android:text="Calle Paralela Río Uruca" />
 
                 <Button
-                    android:id="@+id/button13"
-                    android:layout_width="129dp"
-                    android:layout_height="257dp"
-                    android:layout_weight="1"
+                    android:id="@+id/button7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:text="Piedades" />
+                    android:text="Salida Quebrada Pitier" />
+
+                <Button
+                    android:id="@+id/button8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Quebrada Tapezco" />
+
+                <Button
+                    android:id="@+id/button9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Calle Los Delgado" />
+
+                <Button
+                    android:id="@+id/button10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Puente Sector la Fuente" />
+
+                <Button
+                    android:id="@+id/button11"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Quebrada Sanguijuela" />
 
                 <Button
                     android:id="@+id/button12"
-                    android:layout_width="129dp"
-                    android:layout_height="257dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:text="Brazil" />
+                    android:text="Cruce a P." />
 
-            </GridLayout>
+                <Button
+                    android:id="@+id/button13"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Quebrada Canoas" />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/button14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Calle de la Cañada" />
+
+                <Button
+                    android:id="@+id/button15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Paso Machete" />
+            </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
