@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void iniciarActZonas (View v){
-        Intent i = new Intent(getApplicationContext(), activity_zonas.class);
+        Intent i = new Intent(getApplicationContext(), ZonasActivity.class);
         startActivity(i);
     }
 }

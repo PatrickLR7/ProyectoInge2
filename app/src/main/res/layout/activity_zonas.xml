@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.phoenixdroid.proyectoinge2.activity_zonas"
+    tools:context="com.example.phoenixdroid.proyectoinge2.ZonasActivity"
     android:background="#85c1e9">
 
     <LinearLayout
@@ -16,7 +16,7 @@
             android:id="@+id/imageView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/vector" />
+            app:srcCompat="@+drawable/vector" />
     </LinearLayout>
 
     <LinearLayout
@@ -28,7 +28,7 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/seleccione_la_zona_en_la_que_vive"
+            android:text="@string/seleccione_zona"
             android:textAlignment="center"
             android:textColor="@android:color/background_dark" />
 
@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:text="Matumilla" />
+                    android:text="Matinilla" />
 
                 <Button
                     android:id="@+id/button4"

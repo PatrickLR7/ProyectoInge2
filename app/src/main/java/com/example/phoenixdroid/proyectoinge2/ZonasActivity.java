@@ -3,7 +3,7 @@ package com.example.phoenixdroid.proyectoinge2;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class activity_zonas extends AppCompatActivity {
+public class ZonasActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
