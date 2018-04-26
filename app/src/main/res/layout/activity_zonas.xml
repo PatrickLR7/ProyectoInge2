@@ -7,17 +7,7 @@
     tools:context="com.example.phoenixdroid.proyectoinge2.ZonasActivity"
     android:background="#85c1e9">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@+drawable/vector" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
