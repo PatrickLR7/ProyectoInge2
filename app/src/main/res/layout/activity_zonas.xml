@@ -52,12 +52,12 @@
                     android:text="Matinilla" />
 
                 <Button
-                    android:id="@+id/btnQNaranjos"
+                    android:id="@+id/btnQNavajas"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Q. Naranjos" />
+                    android:text="Quebrada Navajas" />
 
                 <Button
                     android:id="@+id/btnAlvarez"
