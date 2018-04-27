@@ -9,17 +9,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <VideoView
-            android:id="@+id/videoView"
-            android:layout_width="match_parent"
-            android:layout_height="470sp" />
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="66dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <Button
             android:id="@+id/play_Video"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Empezar Video" />
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="431dp" />
+
+        <Button
+            android:id="@+id/botonMapa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ver Mapa" />
+
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

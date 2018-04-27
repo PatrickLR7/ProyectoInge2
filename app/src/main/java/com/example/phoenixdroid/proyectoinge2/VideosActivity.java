@@ -1,6 +1,8 @@
 package com.example.phoenixdroid.proyectoinge2;
 
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,10 +12,26 @@ import android.widget.VideoView;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.util.Log;
+
+
+
+
 public class VideosActivity extends AppCompatActivity implements View.OnClickListener{
 
     private MediaController mediaController;
     private VideoView video;
+
+    private final static int PERMISSION_CODE = 111;
+    private final static int PERMISSION_CODE2 = 112;
+
+    private Button botonMapa;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +41,23 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
         Button boton = (Button) findViewById(R.id.play_Video);
         boton.setOnClickListener(this);
         video = (VideoView) findViewById(R.id.videoView);
+
+
+
+        botonMapa = (Button) findViewById(R.id.botonMapa);
+        botonMapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToMapActivity();
+            }
+        });
+
+        //botonMapa.setOnClickListener(this);
+
+        botonMapa.setEnabled(askPermission());
+
+        //botonMapa.setEnabled(askPermission2());
+
     }
 
     public void ejecutarVideo(View v){
@@ -80,4 +115,65 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         ejecutarVideo(view);
     }
+
+
+
+
+
+    /**
+     * This check if permission is granted for this application, if this is not and we are running the application
+     * on a device that is api >= 23 this will trigger a user request where we caught the result in
+     * onRequestPermissionResult
+     * @return
+     */
+    private boolean askPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
+
+
+            return false;
+        }
+        else return true;
+
+    }
+    private boolean askPermission2(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE2);
+
+            return false;
+        }
+        else return true;
+
+    }
+
+    /**
+     * This is the callback response from calling ActivityCompat.requestPermission,
+     * if the user discard the permission the application will be closed
+     * @param requestCode   It should be PERMISSION_CODE
+     * @param permissions   The permission
+     * @param grantResults  The result that we check
+     */
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    botonMapa.setEnabled(true);
+                }
+                else {
+                    finish();
+                }
+            }
+        }
+    }
+
+    /**
+     * Go to the main activity
+     */
+    public void goToMapActivity(){
+        Intent i = new Intent(this, MapActivity.class);
+        startActivity(i);
+    }
+
+
+
 }
