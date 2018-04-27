@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
@@ -27,8 +28,8 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
     private MediaController mediaController;
     private VideoView video;
 
-    private final static int PERMISSION_CODE = 111;
-    private final static int PERMISSION_CODE2 = 112;
+    //private final static int PERMISSION_CODE = 111;
+   // private final static int PERMISSION_CODE2 = 112;
 
     private Button botonMapa;
 
@@ -52,9 +53,8 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        //botonMapa.setOnClickListener(this);
 
-        botonMapa.setEnabled(askPermission());
+        botonMapa.setEnabled(resultPermission());
 
         //botonMapa.setEnabled(askPermission2());
 
@@ -117,34 +117,30 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
+    private boolean resultPermission(){
 
+        Boolean concedidos = true;
 
+        if ( ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-    /**
-     * This check if permission is granted for this application, if this is not and we are running the application
-     * on a device that is api >= 23 this will trigger a user request where we caught the result in
-     * onRequestPermissionResult
-     * @return
-     */
-    private boolean askPermission(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_CODE);
+            concedidos = false;
 
-
-            return false;
         }
-        else return true;
+        else if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
 
-    }
-    private boolean askPermission2(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_CODE2);
-
-            return false;
+            concedidos = false;
         }
-        else return true;
 
+        if(concedidos == false){
+
+            Toast.makeText(this,"Los permisos de acceso a ubicación y memoria del dispositivo son necesarios!",Toast.LENGTH_LONG).show();
+
+        }
+
+        return concedidos;
     }
+
+
 
     /**
      * This is the callback response from calling ActivityCompat.requestPermission,
@@ -155,7 +151,15 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
      */
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case PERMISSION_CODE: {
+            case 111: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    botonMapa.setEnabled(true);
+                }
+                else {
+                    finish();
+                }
+            }
+            case 112: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     botonMapa.setEnabled(true);
                 }
@@ -165,6 +169,8 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
     }
+
+
 
     /**
      * Go to the main activity

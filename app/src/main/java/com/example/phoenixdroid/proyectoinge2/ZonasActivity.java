@@ -1,6 +1,10 @@
 package com.example.phoenixdroid.proyectoinge2;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +18,9 @@ public class ZonasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zonas);
+
+
+        askPermission();
     }
 
     public void actVideos (View v){
@@ -75,6 +82,25 @@ public class ZonasActivity extends AppCompatActivity {
             default:
                 throw new RuntimeException("Id de boton desconocido.");
         }
+    }
+
+
+
+    /**
+     * This check if permission is granted for this application, if this is not and we are running the application
+     * on a device that is api >= 23 this will trigger a user request where we caught the result in
+     * onRequestPermissionResult
+     * @return
+     */
+    private boolean askPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 111);
+
+
+            return false;
+        }
+        else return true;
+
     }
 
 
