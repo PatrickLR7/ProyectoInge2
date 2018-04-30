@@ -9,26 +9,61 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="66dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/play_Video"
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/vector4" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Empezar Video" />
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="66dp"
+            tools:layout_editor_absoluteY="0dp">
 
-        <VideoView
-            android:id="@+id/videoView"
-            android:layout_width="match_parent"
-            android:layout_height="431dp" />
+            <Button
+                android:id="@+id/play_Video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".50"
+                android:background="@drawable/btn_border"
+                android:text="Empezar Video"
+                android:textColor="@color/colorPrimaryDark" />
 
-        <Button
-            android:id="@+id/botonMapa"
+            <Button
+                android:id="@+id/botonMapa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".50"
+                android:background="@drawable/btn_border"
+                android:text="Ver Mapa"
+                android:textColor="@color/colorPrimaryDark" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ver Mapa" />
+            android:layout_height="match_parent"
+            android:layout_weight=".50"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="256dp">
+
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="match_parent"
+                android:layout_height="198dp"
+                android:layout_weight="1" />
+        </LinearLayout>
 
     </LinearLayout>
 
