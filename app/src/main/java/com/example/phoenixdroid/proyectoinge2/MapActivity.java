@@ -31,7 +31,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     MapView mapView;
     MapController mapViewController;
     GeoPoint routeCenter = new GeoPoint(9.91163,-84.1783);
-    GeoPoint routeCenter2 = new GeoPoint(9.910699,-84.176321);
     LocationManager locationmanager;
     ArrayList<PuntoEncuentro> puntosE;
     List<RutaEvacuacion> rutasE;
@@ -54,9 +53,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         mapViewController.animateTo(routeCenter);
         mapView.setTileSource(new XYTileSource("tiles", 10, 18, 256, ".png", new String[0]));
 
-        //addMarker(routeCenter, routeCenter2);
-        //addMarker(routeCenter2,routeCenter);
-
         parseXML();
         dibujarRutasEvacuacion();
         markersPuntosE();
@@ -68,35 +64,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         } catch (SecurityException ignored) { }
     }
 
-    public void addMarker(GeoPoint Center, GeoPoint Center2) {
-        Marker marker = new Marker(mapView);
-        marker.setPosition(Center);
-
-        //marker.setIcon(getDrawable(R.drawable.loc));
-        // marker.setAnchor(1000,1000);
-
-        Toast.makeText(this,"Distacia: " + Double.toString(Center.distanceToAsDouble(Center2))  + " metros" ,Toast.LENGTH_LONG).show();
-
-        mapView.getOverlays().add(marker);
-
-        //Limpia, barre
-        //mapView.getOverlays().clear();
-
-        mapView.invalidate();
-    }
-
     public void addMarker(GeoPoint Center, String nombre) {
         Marker marker= new Marker(mapView);
         marker.setPosition(Center);
         marker.setTitle(nombre);
-
-        //marker.setIcon(getDrawable(R.drawable.loc));
-        // marker.setAnchor(1000,1000);
-
-        //Toast.makeText(this,Double.toString(Center.distanceToAsDouble(Center2)),Toast.LENGTH_LONG).show();
         mapView.getOverlays().add(marker);
-
-        //mapView.getOverlays().clear();
         mapView.invalidate();
     }
 
@@ -264,10 +236,24 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        //GeoPoint center = new GeoPoint(location.getLatitude(),location.getLongitude());
+        GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
+        addMarker(miPosicion, "Mi ubicacion");
+        PuntoEncuentro puntoMasCercano = null;
+        double distanciaMin = Integer.MAX_VALUE;
+        for (int x = 0; x < puntosE.size(); x++) {
+            PuntoEncuentro puntoSeguro = puntosE.get(x);
+            GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
+            double dist = miPosicion.distanceToAsDouble(aux);
+            if (dist < distanciaMin) {
+                puntoMasCercano = puntoSeguro;
+                distanciaMin = dist;
+            }
+        }
+        Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
 
-        //mapViewController.animateTo(center);
-        //addMarker(center, "Mi ubicacion");
+
+
+
     }
 
     @Override
