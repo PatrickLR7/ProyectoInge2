@@ -25,8 +25,8 @@ import android.util.Log;
 
 public class VideosActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private MediaController mediaController;
     private VideoView video;
+    private MediaController mediaController;
 
     //private final static int PERMISSION_CODE = 111;
    // private final static int PERMISSION_CODE2 = 112;
@@ -42,8 +42,7 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
         Button boton = (Button) findViewById(R.id.play_Video);
         boton.setOnClickListener(this);
         video = (VideoView) findViewById(R.id.videoView);
-
-
+        mediaController = new MediaController(this);
 
         botonMapa = (Button) findViewById(R.id.botonMapa);
         botonMapa.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +61,7 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
 
     public void ejecutarVideo(View v){
         mediaController = new MediaController(this);
-        String ruta = "android.resource://com.cpt.sample/raw/";
+        String ruta = "android.resource://com.example.phoenixdroid.proyectoinge2/";
         int numZona;
         switch (Config.zona){
             case MATINILLA:
@@ -108,6 +107,8 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
         ruta += numZona;
         Uri uri = Uri.parse(ruta);
         video.setVideoURI(uri);
+        video.setMediaController(mediaController);
+        mediaController.setAnchorView(video);
         video.start();
     }
 
@@ -118,29 +119,20 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private boolean resultPermission(){
-
         Boolean concedidos = true;
-
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
             concedidos = false;
-
         }
         else if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-
             concedidos = false;
         }
 
         if(concedidos == false){
-
             Toast.makeText(this,"Los permisos de acceso a ubicación y memoria del dispositivo son necesarios!",Toast.LENGTH_LONG).show();
-
         }
 
         return concedidos;
     }
-
-
 
     /**
      * This is the callback response from calling ActivityCompat.requestPermission,
@@ -169,8 +161,6 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
     }
-
-
 
     /**
      * Go to the main activity
