@@ -50,9 +50,4 @@ public class MainActivity extends YouTubeBaseActivity {
             }
         });
     }
-
-    public void iniciarActZonas (View v){
-        Intent i = new Intent(getApplicationContext(), activity_zonas.class);
-        startActivity(i);
-    }
 }

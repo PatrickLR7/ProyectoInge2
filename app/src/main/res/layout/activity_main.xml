@@ -15,26 +15,21 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <view
-            android:id="@+id/view"
+            android:id="@+id/videoPlayer"
             class="com.google.android.youtube.player.YouTubePlayerView"
-            id="@+id/videoPlayer"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="16dp" />
+            android:layout_alignParentTop="true" />
 
         <Button
             android:id="@+id/playerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view"
+            android:layout_below="@+id/videoPlayer"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="13dp"
             android:text="@string/play"
             tools:layout_editor_absoluteX="148dp"
             tools:layout_editor_absoluteY="35dp" />
