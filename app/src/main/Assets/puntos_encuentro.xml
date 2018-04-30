@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <node>
+        <nombre>SALON PARROQUIAL MATINILLA</nombre>
+        <lat>9.88836429181</lat>
+        <lon>-84.1716826807</lon>
+    </node>
+    <node>
+        <nombre>PREDIO</nombre>
+        <lat>9.89169427979</lat>
+        <lon>-84.17412269812</lon>
+    </node>
+    <node>
+        <nombre>FINCA LOS PUPOS</nombre>
+        <lat>9.89690684782</lat>
+        <lon>-84.17485102577</lon>
+    </node>
+    <node>
+        <nombre>FINCA LOS HERRERA</nombre>
+        <lat>9.90411294918</lat>
+        <lon>-84.1762799084</lon>
+    </node>
+    <node>
+        <nombre>FINCA VICO</nombre>
+        <lat>9.90326849485</lat>
+        <lon>-84.17785073137</lon>
+    </node>
+    <node>
+        <nombre>FINCA EDDY SANDI</nombre>
+        <lat>9.90747501783</lat>
+        <lon>-84.17723489847</lon>
+    </node>
+    <node>
+        <nombre>FINCA FELLO</nombre>
+        <lat>9.90650038285</lat>
+        <lon>-84.17979818409</lon>
+    </node>
+    <node>
+        <nombre>RESTAURANTE BELLA VISTA</nombre>
+        <lat>9.90477870368</lat>
+        <lon>-84.18391741201</lon>
+    </node>
+    <node>
+        <nombre>CALLE LA CERAMICA</nombre>
+        <lat>9.91265981987</lat>
+        <lon>-84.17736954016</lon>
+    </node>
+    <node>
+        <nombre>FINCA LA CERAMICA</nombre>
+        <lat>9.91411483883</lat>
+        <lon>-84.17941002653</lon>
+    </node>
+    <node>
+        <nombre>PERICO</nombre>
+        <lat>9.91836178538</lat>
+        <lon>-84.17869043017</lon>
+    </node>
+    <node>
+        <nombre>FINCA FELLO NELSON</nombre>
+        <lat>9.91246419358</lat>
+        <lon>-84.18181470206</lon>
+    </node>
+    <node>
+        <nombre>POR VERIFICAR</nombre>
+        <lat>9.91505333687</lat>
+        <lon>-84.18260167154</lon>
+    </node>
+    <node>
+        <nombre>PUNTO DE ENCUENTRO SECTOR A (FINCA YOS OY)</nombre>
+        <lat>9.92123503472</lat>
+        <lon>-84.18232633495</lon>
+    </node>
+    <node>
+        <nombre>NO ESPECIFICADO</nombre>
+        <lat>9.89385349723</lat>
+        <lon>-84.17434385584</lon>
+    </node>
+    <node>
+        <nombre>ENGRACIA MARIN</nombre>
+        <lat>9.91726463952</lat>
+        <lon>-84.17946814449</lon>
+    </node>
+</resources>
