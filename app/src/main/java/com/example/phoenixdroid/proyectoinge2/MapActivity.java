@@ -65,10 +65,20 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     }
 
     public void addMarker(GeoPoint Center, String nombre) {
-        Marker marker= new Marker(mapView);
+        Marker marker = new Marker(mapView);
         marker.setPosition(Center);
         marker.setTitle(nombre);
         mapView.getOverlays().add(marker);
+        mapView.invalidate();
+    }
+
+    public void addMarker(Marker m) {
+        mapView.getOverlays().add(m);
+        mapView.invalidate();
+    }
+
+    public void deleteMarker(Marker m) {
+        mapView.getOverlays().remove(m);
         mapView.invalidate();
     }
 
@@ -143,7 +153,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
                             if (rEActual != null) {
                                 rEActual.camino.add(new GeoPoint(aux.lat, aux.lon));
                             }
-                            //listaPR.remove(pos);
+                            listaPR.remove(pos);
                         }
                     }
                     break;
@@ -213,14 +223,20 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
 
     public void dibujarRutasEvacuacion() {
         if (rutasE != null && !rutasE.isEmpty()) {
-            for (int x = 0; x < rutasE.size(); x++) {
+            /*Polyline polyline = new Polyline();
+            List<GeoPoint> pathPoints = rutasE.get(0).camino;
+
+            polyline.setColor(Color.RED);
+            mapView.getOverlays().add(polyline);
+            polyline.setPoints(pathPoints);*/
+            /*for (int x = 0; x < rutasE.size(); x++) {
                 Polyline polyline = new Polyline();
                 List<GeoPoint> pathPoints = rutasE.get(x).camino;
 
                 polyline.setColor(Color.RED);
                 mapView.getOverlays().add(polyline);
                 polyline.setPoints(pathPoints);
-            }
+            }*/
         }
     }
 
@@ -237,16 +253,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
+        /*Marker m = new Marker(mapView);
+        m.setTitle("Mi ubicación");
+        m.setPosition(miPosicion);*/
         addMarker(miPosicion, "Mi ubicacion");
         PuntoEncuentro puntoMasCercano = null;
         double distanciaMin = Integer.MAX_VALUE;
         for (int x = 0; x < puntosE.size(); x++) {
-            PuntoEncuentro puntoSeguro = puntosE.get(x);
-            GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
-            double dist = miPosicion.distanceToAsDouble(aux);
-            if (dist < distanciaMin) {
-                puntoMasCercano = puntoSeguro;
-                distanciaMin = dist;
+                    PuntoEncuentro puntoSeguro = puntosE.get(x);
+                    GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
+                    double dist = miPosicion.distanceToAsDouble(aux);
+                    if (dist < distanciaMin) {
+                        puntoMasCercano = puntoSeguro;
+                        distanciaMin = dist;
             }
         }
         Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
