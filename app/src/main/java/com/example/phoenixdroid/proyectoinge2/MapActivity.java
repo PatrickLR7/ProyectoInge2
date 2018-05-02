@@ -250,10 +250,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
             }
         }
         Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
-
-
-
-
     }
 
     @Override

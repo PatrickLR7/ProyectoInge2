@@ -13,13 +13,6 @@ import java.io.OutputStream;
 import static android.content.ContentValues.TAG;
 
 public class CopyFolder {
-
-
-
-
-
-
-
     /**
      * Aprovecha el almacenamiento externo para copiar tiles proveniente de los assets.
      *
@@ -27,10 +20,9 @@ public class CopyFolder {
      */
     public static void copyAssets(Activity activity) {
 
-        InputStream in = null;
-        OutputStream out = null;
+        InputStream in;
+        OutputStream out;
         try {
-
             in = activity.getAssets().open("tiles.zip");
 
             Log.i(TAG, ": " + Environment.getExternalStorageDirectory());
@@ -45,10 +37,8 @@ public class CopyFolder {
             out = new FileOutputStream(fileZip);
             copyFile(in, out);
             in.close();
-            in = null;
             out.flush();
             out.close();
-            out = null;
         } catch (IOException e) {
             Log.e("tag", "Error al copiar el archivo: " + e.getMessage());
         }
@@ -68,16 +58,4 @@ public class CopyFolder {
             out.write(buffer, 0, read);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

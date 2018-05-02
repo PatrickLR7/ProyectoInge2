@@ -27,10 +27,6 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
 
     private VideoView video;
     private MediaController mediaController;
-
-    //private final static int PERMISSION_CODE = 111;
-   // private final static int PERMISSION_CODE2 = 112;
-
     private Button botonMapa;
 
 
@@ -54,9 +50,6 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
 
 
         botonMapa.setEnabled(resultPermission());
-
-        //botonMapa.setEnabled(askPermission2());
-
     }
 
     public void ejecutarVideo(View v){
@@ -119,7 +112,7 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private boolean resultPermission(){
-        Boolean concedidos = true;
+        boolean concedidos = true;
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             concedidos = false;
         }
@@ -127,7 +120,7 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
             concedidos = false;
         }
 
-        if(concedidos == false){
+        if(!concedidos){
             Toast.makeText(this,"Los permisos de acceso a ubicación y memoria del dispositivo son necesarios!",Toast.LENGTH_LONG).show();
         }
 

@@ -18,8 +18,6 @@ public class ZonasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zonas);
-
-
         askPermission();
     }
 
@@ -84,8 +82,6 @@ public class ZonasActivity extends AppCompatActivity {
         }
     }
 
-
-
     /**
      * This check if permission is granted for this application, if this is not and we are running the application
      * on a device that is api >= 23 this will trigger a user request where we caught the result in
@@ -95,13 +91,8 @@ public class ZonasActivity extends AppCompatActivity {
     private boolean askPermission(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 111);
-
-
             return false;
         }
         else return true;
-
     }
-
-
 }
