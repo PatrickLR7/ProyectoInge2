@@ -1,6 +1,6 @@
 package com.example.phoenixdroid.proyectoinge2;
 
-import android.os.SystemClock;
+
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -18,42 +18,64 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class elegirModo {
+public class escogerZona {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void elegirModo() {
-        ViewInteraction button = onView(
-                allOf(withId(R.id.button),
+    public void escogerZona() {
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.button), withText("Modo Vidente"),
                         childAtPosition(
                                 childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+                                        withClassName(is("android.widget.LinearLayout")),
                                         1),
                                 0),
                         isDisplayed()));
-        button.check(matches(isDisplayed()));
-        SystemClock.sleep(1000);
+        appCompatButton.perform(click());
 
-
-        ViewInteraction button2 = onView(
-                allOf(withId(R.id.button2),
+        ViewInteraction button = onView(
+                allOf(withId(R.id.btnAlvarez),
                         childAtPosition(
                                 childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        1),
-                                1),
+                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
+                                        0),
+                                2),
+                        isDisplayed()));
+        button.check(matches(isDisplayed()));
+
+        ViewInteraction button2 = onView(
+                allOf(withId(R.id.btnQTapezco),
+                        childAtPosition(
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
+                                        0),
+                                5),
                         isDisplayed()));
         button2.check(matches(isDisplayed()));
-        SystemClock.sleep(1000);
+
+        ViewInteraction button3 = onView(
+                allOf(withId(R.id.btnSPitier),
+                        childAtPosition(
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
+                                        0),
+                                4),
+                        isDisplayed()));
+        button3.check(matches(isDisplayed()));
+
     }
 
     private static Matcher<View> childAtPosition(

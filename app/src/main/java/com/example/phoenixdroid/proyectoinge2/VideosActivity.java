@@ -20,16 +20,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-
-
-
 public class VideosActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private VideoView video;
-    private MediaController mediaController;
-    private Button botonMapa;
+    private VideoView video; // Reproductor de video
+    private MediaController mediaController; // controlador del medio de video
+    private Button botonMapa; // boton para mostrar mapa
 
 
+    /**
+     * Metodo que se ejecuta cuando se crea esta actividad.
+     * @param savedInstanceState: la instancia previa de esta actividad.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,10 +49,14 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-
+        // Se habilita el boton del mapa luego de recibir los permisos correspondientes.
         botonMapa.setEnabled(resultPermission());
     }
 
+    /**
+     * Utiliza esta vista para ubicar un marco donde se va a desplegar el video.
+     * @param v
+     */
     public void ejecutarVideo(View v){
         mediaController = new MediaController(this);
         String ruta = "android.resource://com.example.phoenixdroid.proyectoinge2/";
@@ -105,12 +110,19 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
         video.start();
     }
 
+    /**
+     *
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         ejecutarVideo(view);
     }
 
-
+    /**
+     *
+     * @return
+     */
     private boolean resultPermission(){
         boolean concedidos = true;
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -123,7 +135,6 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
         if(!concedidos){
             Toast.makeText(this,"Los permisos de acceso a ubicación y memoria del dispositivo son necesarios!",Toast.LENGTH_LONG).show();
         }
-
         return concedidos;
     }
 
@@ -162,7 +173,4 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
         Intent i = new Intent(this, MapActivity.class);
         startActivity(i);
     }
-
-
-
 }
