@@ -1,6 +1,7 @@
 package com.example.phoenixdroid.proyectoinge2;
 
 
+import android.os.SystemClock;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -45,6 +46,7 @@ public class PruebasMapa {
                                 0),
                         isDisplayed()));
         appCompatButton.perform(click());
+        SystemClock.sleep(2000);
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.btnSPitier), withText("Salida Quebrada Pitier"),
@@ -54,6 +56,7 @@ public class PruebasMapa {
                                         0),
                                 4)));
         appCompatButton2.perform(scrollTo(), click());
+        SystemClock.sleep(2000);
 
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.botonMapa), withText("Ver Mapa"),
@@ -64,6 +67,7 @@ public class PruebasMapa {
                                 1),
                         isDisplayed()));
         appCompatButton3.perform(click());
+        SystemClock.sleep(2000);
 
         ViewInteraction viewGroup = onView(
                 allOf(withId(R.id.mapview),
@@ -74,6 +78,7 @@ public class PruebasMapa {
                                 0),
                         isDisplayed()));
         viewGroup.check(matches(isDisplayed()));
+        SystemClock.sleep(2000);
 
         ViewInteraction viewGroup2 = onView(
                 allOf(withId(R.id.mapview),
@@ -84,7 +89,7 @@ public class PruebasMapa {
                                 0),
                         isDisplayed()));
         viewGroup2.check(matches(isDisplayed()));
-
+        SystemClock.sleep(2000);
     }
 
     private static Matcher<View> childAtPosition(

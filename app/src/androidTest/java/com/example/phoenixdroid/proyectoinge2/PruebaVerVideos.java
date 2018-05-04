@@ -37,6 +37,10 @@ public class PruebaVerVideos {
 
     @Test
     public void pruebaVerVideos() {
+        testVideo(R.id.btnMatinilla, "Matinilla");
+    }
+
+    private static void testVideo(int videoBot, String botName){
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.button), withText("Modo Vidente"),
                         childAtPosition(
@@ -48,12 +52,12 @@ public class PruebaVerVideos {
         appCompatButton.perform(click());
 
         ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.btnSPitier), withText("Salida Quebrada Pitier"),
+                allOf(withId(videoBot), withText(botName),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
-                                4)));
+                                0)));
         appCompatButton2.perform(scrollTo(), click());
 
         ViewInteraction button = onView(
@@ -75,7 +79,6 @@ public class PruebaVerVideos {
                                 1),
                         isDisplayed()));
         button2.check(matches(isDisplayed()));
-
     }
 
     private static Matcher<View> childAtPosition(

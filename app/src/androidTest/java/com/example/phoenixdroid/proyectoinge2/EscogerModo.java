@@ -1,6 +1,7 @@
 package com.example.phoenixdroid.proyectoinge2;
 
 
+import android.os.SystemClock;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -8,6 +9,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Toast;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -25,7 +27,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class escogerModo {
+public class EscogerModo {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -42,6 +44,8 @@ public class escogerModo {
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 
+        SystemClock.sleep(2000);
+
         ViewInteraction button2 = onView(
                 allOf(withId(R.id.button2),
                         childAtPosition(
@@ -51,6 +55,9 @@ public class escogerModo {
                                 1),
                         isDisplayed()));
         button2.check(matches(isDisplayed()));
+
+        System.out.println("Prueba del modo no vidente superada.");
+        SystemClock.sleep(2000);
 
     }
 

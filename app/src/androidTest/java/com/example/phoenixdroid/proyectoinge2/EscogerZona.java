@@ -1,6 +1,7 @@
 package com.example.phoenixdroid.proyectoinge2;
 
 
+import android.os.SystemClock;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -29,7 +30,7 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class escogerZona {
+public class EscogerZona {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -46,6 +47,9 @@ public class escogerZona {
                         isDisplayed()));
         appCompatButton.perform(click());
 
+        SystemClock.sleep(2000);
+
+
         ViewInteraction button = onView(
                 allOf(withId(R.id.btnAlvarez),
                         childAtPosition(
@@ -55,6 +59,8 @@ public class escogerZona {
                                 2),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
+
+        SystemClock.sleep(2000);
 
         ViewInteraction button2 = onView(
                 allOf(withId(R.id.btnQTapezco),
@@ -66,6 +72,8 @@ public class escogerZona {
                         isDisplayed()));
         button2.check(matches(isDisplayed()));
 
+        SystemClock.sleep(2000);
+
         ViewInteraction button3 = onView(
                 allOf(withId(R.id.btnSPitier),
                         childAtPosition(
@@ -76,6 +84,7 @@ public class escogerZona {
                         isDisplayed()));
         button3.check(matches(isDisplayed()));
 
+        SystemClock.sleep(2000);
     }
 
     private static Matcher<View> childAtPosition(

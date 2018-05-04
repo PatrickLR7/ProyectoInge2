@@ -26,7 +26,6 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
     private MediaController mediaController; // controlador del medio de video
     private Button botonMapa; // boton para mostrar mapa
 
-
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
      * @param savedInstanceState: la instancia previa de esta actividad.
