@@ -82,6 +82,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         mapView.invalidate();
     }
 
+    /**
+     * Metodo para leer datos desde un archivo XML.
+     */
     private void parseXML() {
         XmlPullParserFactory parserFactory;
         try {
@@ -191,6 +194,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         return resultado;
     }
 
+    /**
+     * Lee los puntos de encuentro desde un archivo XML y los guarda en un ArrayList.
+     * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de puntos de encuentro.
+     */
     public void processParsingPE(XmlPullParser parser) throws IOException, XmlPullParserException {
         puntosE = new ArrayList<>();
         int eventType = parser.getEventType();
@@ -240,6 +247,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         }
     }
 
+    /**
+     * Coloca marcadores en el mapa en la posición en la que se ubican los puntos de encuentro.
+     */
     public void markersPuntosE() {
         if (puntosE != null && !puntosE.isEmpty()) {
             for (int i = 0; i < puntosE.size(); i++) {

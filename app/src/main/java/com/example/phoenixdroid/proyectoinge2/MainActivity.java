@@ -29,11 +29,19 @@ public class MainActivity extends AppCompatActivity {
         askPermission();
     }
 
+
+    /**
+     * Metodo para iniciar el activity para seleccionar entre las distintas zonas de Santa Ana.
+     * @param v recibe el boton con el que se ejecutará el método.
+     */
     public void iniciarActZonas (View v){
         Intent i = new Intent(getApplicationContext(), ZonasActivity.class);
         startActivity(i);
     }
 
+    /**
+     * Método para solicitar permiso para utilizar los servicios de ubicación.
+     */
     private boolean askPermission(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 112);

@@ -21,6 +21,10 @@ public class ZonasActivity extends AppCompatActivity {
         askPermission();
     }
 
+    /**
+     * Metodo para seleccionar entre las distintas zonas de Santa Ana y guardar la seleccion en la clase Config.
+     * @param v recibe el boton con el que se ejecutará el método.
+     */
     public void actVideos (View v){
         Intent i = new Intent(getApplicationContext(), VideosActivity.class);
         switch(v.getId())
