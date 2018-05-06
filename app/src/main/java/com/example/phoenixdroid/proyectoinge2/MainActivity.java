@@ -15,6 +15,10 @@ import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Metodo que se ejecuta cuando se crea esta actividad.
+     * @param savedInstanceState: la instancia previa de esta actividad.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

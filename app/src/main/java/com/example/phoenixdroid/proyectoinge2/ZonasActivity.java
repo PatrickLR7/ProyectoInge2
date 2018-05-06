@@ -14,6 +14,10 @@ import com.example.phoenixdroid.proyectoinge2.Utils.Zona;
 
 public class ZonasActivity extends AppCompatActivity {
 
+    /**
+     * Metodo que se ejecuta cuando se crea esta actividad.
+     * @param savedInstanceState: la instancia previa de esta actividad.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

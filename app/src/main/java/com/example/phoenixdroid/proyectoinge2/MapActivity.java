@@ -29,19 +29,27 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements LocationListener {
-
     /** Mapa. */
     MapView mapView;
+
     /** Controlador para el mapa. */
     MapController mapViewController;
+
     /** Coordenadas de referencia. */
     GeoPoint routeCenter = new GeoPoint(9.91163,-84.1783);
+
     LocationManager locationmanager;
+
     /** Lista de los puntos seguros. */
     ArrayList<PuntoEncuentro> puntosE;
+
     /** Lista de rutas de evacuación. */
     List<RutaEvacuacion> rutasE;
 
+    /**
+     * Metodo que se ejecuta cuando se crea esta actividad.
+     * @param savedInstanceState: la instancia previa de esta actividad.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

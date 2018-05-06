@@ -54,7 +54,7 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
 
     /**
      * Utiliza esta vista para ubicar un marco donde se va a desplegar el video.
-     * @param v
+     * @param v: vista sobre la que se ubica el reproductor de video.
      */
     public void ejecutarVideo(View v){
         mediaController = new MediaController(this);
@@ -110,8 +110,8 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     /**
-     *
-     * @param view
+     * Metodo para manejar el clickeo del boton para empezar el video.
+     * @param view: La vista donde se ubica el objeto clickeado.
      */
     @Override
     public void onClick(View view) {
@@ -119,8 +119,8 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     /**
-     *
-     * @return
+     * Se encarga de obtener permisos del usuario para acceso a ubicacion y uso de memoria del dispositivo.
+     * @return true, si el usuario concedio permisos, false en caso contrario.
      */
     private boolean resultPermission(){
         boolean concedidos = true;
@@ -166,7 +166,7 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     /**
-     * Go to the main activity
+     * Go to the map activity
      */
     public void goToMapActivity(){
         Intent i = new Intent(this, MapActivity.class);
