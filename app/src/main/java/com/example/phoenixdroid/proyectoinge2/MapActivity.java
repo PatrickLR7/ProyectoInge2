@@ -303,6 +303,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
 
     /**
      * Metodo que revisa los cambios en la ubicación del usuario.
+     * @param location ubicación del usuario.
      */
     @Override
     public void onLocationChanged(Location location) {
@@ -322,15 +323,32 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Metodo que se ejecuta cuando el provedor cambia de estado.
+     * @param provider provedor de ubicación.
+     * @param status estado.
+     * @param extras extras.
+     */
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
 
+    /**
+     * Metodo que se ejecuta cuando el provedor es activado por el usuario.
+     * @param provider provedor de ubicación.
+     */
     @Override
     public void onProviderEnabled(String provider) {}
 
+    /**
+     * Metodo que se ejecuta cuando el provedor es desactivado por el usuario.
+     * @param provider provedor de ubicación.
+     */
     @Override
     public void onProviderDisabled(String provider) {}
 
+    /**
+     * Metodo que se ejecuta cuando el activity se cierra, para terminar todos los procesos que estuvieran en ejecución.
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();

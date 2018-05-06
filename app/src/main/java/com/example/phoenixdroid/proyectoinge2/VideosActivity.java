@@ -118,6 +118,9 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
         ejecutarVideo(view);
     }
 
+
+
+
     /**
      * Se encarga de obtener permisos del usuario para acceso a ubicacion y uso de memoria del dispositivo.
      * @return true, si el usuario concedio permisos, false en caso contrario.
