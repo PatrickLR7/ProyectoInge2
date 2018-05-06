@@ -1,6 +1,7 @@
 package com.example.phoenixdroid.proyectoinge2;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,6 +18,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polyline;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -28,11 +30,16 @@ import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements LocationListener {
 
+    /** Mapa. */
     MapView mapView;
+    /** Controlador para el mapa. */
     MapController mapViewController;
+    /** Coordenadas de referencia. */
     GeoPoint routeCenter = new GeoPoint(9.91163,-84.1783);
     LocationManager locationmanager;
+    /** Lista de los puntos seguros. */
     ArrayList<PuntoEncuentro> puntosE;
+    /** Lista de rutas de evacuación. */
     List<RutaEvacuacion> rutasE;
 
     @Override
@@ -64,6 +71,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         } catch (SecurityException ignored) { }
     }
 
+    /**
+     * Crea un marker y lo agrega al mapa.
+     * @param Center Coordenadas del marker
+     * @param nombre Descripción del marker.
+     */
     public void addMarker(GeoPoint Center, String nombre) {
         Marker marker = new Marker(mapView);
         marker.setPosition(Center);
@@ -72,11 +84,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         mapView.invalidate();
     }
 
+    /**
+     * Agrega un marker en el mapa.
+     * @param m Marker que se quiere agregar.
+     */
     public void addMarker(Marker m) {
         mapView.getOverlays().add(m);
         mapView.invalidate();
     }
 
+    /**
+     * Borra un marker del mapa.
+     * @param m Marker que se quiere borrar.
+     */
     public void deleteMarker(Marker m) {
         mapView.getOverlays().remove(m);
         mapView.invalidate();
@@ -104,6 +124,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         } catch (XmlPullParserException ignored) { } catch (IOException ignored) { }
     }
 
+    /**
+     * Lee desde un archivo XML las rutas de evacuación y  y las enlista.
+     * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de rutas de evacuación.
+     */
     public void processParsingRE(XmlPullParser parser) throws IOException, XmlPullParserException {
         int eventType = parser.getEventType();
         PuntoRuta pRActual = null;
@@ -183,6 +207,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         }
     }
 
+    /**
+     * Busca un punto en la lista de puntos de las rutas de evacuación.
+     * @param lista Lista de puntos de la ruta de evacuación.
+     * @param ID Punto que se quiere buscar.
+     * @return Indice en la lista del punto que se busca; -1 si el punto no se encuentra.
+     */
     private int buscar (LinkedList<PuntoRuta> lista, int ID) {
         int resultado = -1;
         for (int x = 0; x < lista.size(); x++) {
@@ -228,6 +258,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         }
     }
 
+    /**
+     * Dibuja en el mapa las diferentes rutas de evacuación.
+     */
     public void dibujarRutasEvacuacion() {
         if (rutasE != null && !rutasE.isEmpty()) {
             /*Polyline polyline = new Polyline();
@@ -236,14 +269,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
             polyline.setColor(Color.RED);
             mapView.getOverlays().add(polyline);
             polyline.setPoints(pathPoints);*/
-            /*for (int x = 0; x < rutasE.size(); x++) {
+            for (int x = 0; x < rutasE.size(); x++) {
                 Polyline polyline = new Polyline();
                 List<GeoPoint> pathPoints = rutasE.get(x).camino;
 
                 polyline.setColor(Color.RED);
                 mapView.getOverlays().add(polyline);
                 polyline.setPoints(pathPoints);
-            }*/
+            }
         }
     }
 
@@ -260,22 +293,22 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         }
     }
 
+    /**
+     * Metodo que revisa los cambios en la ubicación del usuario.
+     */
     @Override
     public void onLocationChanged(Location location) {
         GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
-        /*Marker m = new Marker(mapView);
-        m.setTitle("Mi ubicación");
-        m.setPosition(miPosicion);*/
         addMarker(miPosicion, "Mi ubicacion");
         PuntoEncuentro puntoMasCercano = null;
         double distanciaMin = Integer.MAX_VALUE;
         for (int x = 0; x < puntosE.size(); x++) {
-                    PuntoEncuentro puntoSeguro = puntosE.get(x);
-                    GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
-                    double dist = miPosicion.distanceToAsDouble(aux);
-                    if (dist < distanciaMin) {
-                        puntoMasCercano = puntoSeguro;
-                        distanciaMin = dist;
+            PuntoEncuentro puntoSeguro = puntosE.get(x);
+            GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
+            double dist = miPosicion.distanceToAsDouble(aux);
+            if (dist < distanciaMin) {
+                puntoMasCercano = puntoSeguro;
+                distanciaMin = dist;
             }
         }
         Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
