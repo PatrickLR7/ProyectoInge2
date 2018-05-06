@@ -29,22 +29,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements LocationListener {
-    /** Mapa. */
-    MapView mapView;
 
-    /** Controlador para el mapa. */
-    MapController mapViewController;
+    MapView mapView; // Mapa
 
-    /** Coordenadas de referencia. */
-    GeoPoint routeCenter = new GeoPoint(9.91163,-84.1783);
 
-    LocationManager locationmanager;
+    MapController mapViewController; //Controlador para el mapa.
 
-    /** Lista de los puntos seguros. */
-    ArrayList<PuntoEncuentro> puntosE;
 
-    /** Lista de rutas de evacuación. */
-    List<RutaEvacuacion> rutasE;
+    GeoPoint routeCenter = new GeoPoint(9.91163,-84.1783); //Coordenadas de referencia.
+
+    LocationManager locationmanager; //Controlador de ubicación
+
+
+    ArrayList<PuntoEncuentro> puntosE; //Lista de los puntos seguros.
+
+
+    List<RutaEvacuacion> rutasE; //Lista de rutas de evacuación.
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
