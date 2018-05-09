@@ -16,9 +16,10 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
             android:layout_weight="1"
-            app:srcCompat="@drawable/vector" />
+            app:srcCompat="@drawable/vector"/>
     </LinearLayout>
 
     <LinearLayout
@@ -49,7 +50,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Matinilla" />
+                    android:text="Matinilla"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnQNavajas"
@@ -57,7 +59,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Quebrada Navajas" />
+                    android:text="Quebrada Navajas"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnAlvarez"
@@ -65,7 +68,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Calle Los Álvarez" />
+                    android:text="Calle Los Álvarez"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnCPRioUruca"
@@ -73,7 +77,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Calle Paralela Río Uruca" />
+                    android:text="Calle Paralela Río Uruca"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnSPitier"
@@ -81,7 +86,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Salida Quebrada Pitier" />
+                    android:text="Salida Quebrada Pitier"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnQTapezco"
@@ -89,7 +95,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Quebrada Tapezco" />
+                    android:text="Quebrada Tapezco"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnCDelgado"
@@ -97,7 +104,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Calle Los Delgado" />
+                    android:text="Calle Los Delgado"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnLaFuente"
@@ -105,7 +113,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Puente Sector la Fuente" />
+                    android:text="Puente Sector la Fuente"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnSanguijuela"
@@ -113,7 +122,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Quebrada Sanguijuela" />
+                    android:text="Quebrada Sanguijuela"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnCruceP"
@@ -121,7 +131,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Cruce a P." />
+                    android:text="Cruce a P."
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnQCanoas"
@@ -129,7 +140,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Quebrada Canoas" />
+                    android:text="Quebrada Canoas"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnCañada"
@@ -137,7 +149,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Calle de la Cañada" />
+                    android:text="Calle de la Cañada"
+                    android:textSize="40px"/>
 
                 <Button
                     android:id="@+id/btnPMachete"
@@ -145,7 +158,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_border"
                     android:onClick="actVideos"
-                    android:text="Paso Machete" />
+                    android:text="Paso Machete"
+                    android:textSize="40px"/>
 
             </LinearLayout>
         </ScrollView>

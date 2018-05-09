@@ -13,8 +13,9 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
             android:layout_weight="1"
             app:srcCompat="@drawable/vector4" />
     </LinearLayout>
@@ -38,7 +39,8 @@
                 android:layout_weight=".50"
                 android:background="@drawable/btn_border"
                 android:text="Empezar Video"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="40px"/>
 
             <Button
                 android:id="@+id/botonMapa"
@@ -47,7 +49,8 @@
                 android:layout_weight=".50"
                 android:background="@drawable/btn_border"
                 android:text="Ver Mapa"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="40px"/>
 
         </LinearLayout>
 
@@ -61,8 +64,9 @@
             <VideoView
                 android:id="@+id/videoView"
                 android:layout_width="match_parent"
-                android:layout_height="200sp"
-                android:layout_weight="1" />
+                android:layout_height="274dp"
+                android:layout_weight="1"
+                android:visibility="invisible" />
         </LinearLayout>
 
     </LinearLayout>

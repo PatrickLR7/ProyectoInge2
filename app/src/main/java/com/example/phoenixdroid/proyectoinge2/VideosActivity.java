@@ -103,6 +103,7 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
         }
         ruta += numZona;
         Uri uri = Uri.parse(ruta);
+        video.setVisibility(View.VISIBLE);
         video.setVideoURI(uri);
         video.setMediaController(mediaController);
         mediaController.setAnchorView(video);
