@@ -40,7 +40,7 @@
                 android:background="@drawable/btn_border"
                 android:text="Empezar Video"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="40px"/>
+                android:textSize="50px"/>
 
             <Button
                 android:id="@+id/botonMapa"
@@ -50,7 +50,7 @@
                 android:background="@drawable/btn_border"
                 android:text="Ver Mapa"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="40px"/>
+                android:textSize="50px"/>
 
         </LinearLayout>
 
