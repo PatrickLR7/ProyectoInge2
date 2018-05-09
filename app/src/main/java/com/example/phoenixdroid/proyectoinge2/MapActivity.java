@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
@@ -27,24 +28,23 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements LocationListener {
+public class MapActivity extends AppCompatActivity implements LocationListener, TextToSpeech.OnInitListener {
 
     MapView mapView; // Mapa
 
-
     MapController mapViewController; //Controlador para el mapa.
-
 
     GeoPoint routeCenter = new GeoPoint(9.91163,-84.1783); //Coordenadas de referencia.
 
     LocationManager locationmanager; //Controlador de ubicación
 
-
     ArrayList<PuntoEncuentro> puntosE; //Lista de los puntos seguros.
 
-
     List<RutaEvacuacion> rutasE; //Lista de rutas de evacuación.
+
+    private TextToSpeech tts;
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -77,6 +77,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
             assert locationmanager != null;
             locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
         } catch (SecurityException ignored) { }
+
+        tts = new TextToSpeech(this, this);
     }
 
     /**
@@ -355,5 +357,25 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         if (locationmanager != null) {
             locationmanager.removeUpdates(this);
         }
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+    }
+
+    @Override
+    public void onInit(int status)
+    {
+        if (status == TextToSpeech.SUCCESS)
+        {
+            Locale locSpanish = new Locale("spa", "MEX");
+            tts.setLanguage(locSpanish);
+            speakOut();
+        }
+    }
+
+    public void speakOut()
+    {
+        //tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
     }
 }
