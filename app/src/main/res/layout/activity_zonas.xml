@@ -33,7 +33,8 @@
             android:layout_height="wrap_content"
             android:text="@string/seleccione_zona"
             android:textAlignment="center"
-            android:textColor="@android:color/background_dark" />
+            android:textColor="@android:color/background_dark"
+            android:textSize="50px"/>
 
         <ScrollView
             android:layout_width="match_parent"
