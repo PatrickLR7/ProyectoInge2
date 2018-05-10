@@ -2,6 +2,7 @@ package com.example.phoenixdroid.proyectoinge2;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -75,7 +76,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
 
         try {
             assert locationmanager != null;
-            locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
+            locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
         } catch (SecurityException ignored) { }
     }
 
@@ -83,11 +84,27 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
      * Crea un marker y lo agrega al mapa.
      * @param Center Coordenadas del marker
      * @param nombre Descripción del marker.
+     * @param tipo Descripción del tipo(persona 1, señal vertical 2, zona segura 3).
      */
-    public void addMarker(GeoPoint Center, String nombre) {
+    public void addMarker(GeoPoint Center, String nombre, int tipo) {
+
+
+
+
         Marker marker = new Marker(mapView);
         marker.setPosition(Center);
         marker.setTitle(nombre);
+        if(tipo == 1) {
+            Drawable d = getResources().getDrawable(R.drawable.icon_persona);
+            marker.setIcon(d);
+        }else  if(tipo == 2) {
+            Drawable d = getResources().getDrawable(R.drawable.icon_senal);
+            marker.setIcon(d);
+        }else  if(tipo == 3) {
+            Drawable d = getResources().getDrawable(R.drawable.icon_senal);
+            marker.setIcon(d);
+        }
+
         mapView.getOverlays().add(marker);
         mapView.invalidate();
     }
@@ -296,7 +313,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
             for (int i = 0; i < puntosE.size(); i++) {
                 routeCenter.setLatitude(puntosE.get(i).latitud);
                 routeCenter.setLongitude(puntosE.get(i).longitud);
-                addMarker(routeCenter, puntosE.get(i).nombre);
+                addMarker(routeCenter, puntosE.get(i).nombre,2);
             }
         }
     }
@@ -308,7 +325,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
-        addMarker(miPosicion, "Mi ubicacion");
+        addMarker(miPosicion, "Mi ubicacion",1);
+
         PuntoEncuentro puntoMasCercano = null;
         double distanciaMin = Integer.MAX_VALUE;
         for (int x = 0; x < puntosE.size(); x++) {
