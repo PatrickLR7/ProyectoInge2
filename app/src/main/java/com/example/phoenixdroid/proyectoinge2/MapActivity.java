@@ -105,7 +105,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             Drawable d = getResources().getDrawable(R.drawable.icon_senal);
             marker.setIcon(d);
         }else  if(tipo == 3) {
-            Drawable d = getResources().getDrawable(R.drawable.icon_senal);
+            Drawable d = getResources().getDrawable(R.drawable.icon_zona_segura);
             marker.setIcon(d);
         }
 
@@ -337,7 +337,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         if (rutasE != null && !rutasE.isEmpty()) {
             /*Polyline polyline = new Polyline();
             List<GeoPoint> pathPoints = rutasE.get(0).camino;
-
             polyline.setColor(Color.RED);
             mapView.getOverlays().add(polyline);
             polyline.setPoints(pathPoints);*/
@@ -345,7 +344,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                 Polyline polyline = new Polyline();
                 List<GeoPoint> pathPoints = rutasE.get(x).camino;
 
-                polyline.setColor(Color.RED);
+                int brownColorValue = Color.parseColor("#B6523C");
+                polyline.setColor(brownColorValue);
                 mapView.getOverlays().add(polyline);
                 polyline.setPoints(pathPoints);
             }
@@ -386,7 +386,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }*/
             Polyline polyline = new Polyline();
 
-            polyline.setColor(Color.GREEN);
+            int brownColorValue = Color.parseColor("#B6523C");
+            polyline.setColor(brownColorValue);
             mapView.getOverlays().add(polyline);
             polyline.setPoints(shortestPathPoints);
         }
