@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <node>
+	  <lat>9.88694928173</lat>
+	  <lon>-84.1709000417</lon>
+	  <lado>DERECHA</lado>
+	  <num>591</num>
+  </node>
+
+  <node>
+	  <lat>9.8873503969</lat>
+	  <lon>-84.17103143696</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>592</num>
+  </node>
+
+  <node>
+	  <lat>9.88818345006</lat>
+	  <lon>-84.17129211064</lon>
+	  <lado>DERECHA</lado>
+	  <num>593</num>
+  </node>
+
+  <node>
+	  <lat>9.88662300018</lat>
+	  <lon>-84.17216662798</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>594</num>
+  </node>
+
+  <node>
+	  <lat>9.88780834634</lat>
+	  <lon>-84.17184177337</lon>
+	  <lado>DERECHA</lado>
+	  <num>595</num>
+  </node>
+
+  <node>
+	  <lat>9.88805178474</lat>
+	  <lon>-84.17183980185</lon>
+	  <lado>DERECHA</lado>
+	  <num>596</num>
+  </node>
+
+  <node>
+	  <lat>9.88877093728</lat>
+	  <lon>-84.17185983865</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>597</num>
+  </node>
+
+  <node>
+	  <lat>9.89006478739</lat>
+	  <lon>-84.17163811211</lon>
+	  <lado>DERECHA</lado>
+	  <num>598</num>
+  </node>
+
+  <node>
+	  <lat>9.890376017</lat>
+	  <lon>-84.1722794035</lon>
+	  <lado>DERECHA</lado>
+	  <num>599</num>
+  </node>
+
+  <node>
+	  <lat>9.89236187248</lat>
+	  <lon>-84.17475650076</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>600</num>
+  </node>
+
+  <node>
+	  <lat>9.89391890456</lat>
+	  <lon>-84.17390368598</lon>
+	  <lado>DERECHA</lado>
+	  <num>601</num>
+  </node>
+
+  <node>
+	  <lat>9.89439808589</lat>
+	  <lon>-84.17397758739</lon>
+	  <lado>DERECHA</lado>
+	  <num>602</num>
+  </node>
+
+  <node>
+	  <lat>9.89561210181</lat>
+	  <lon>-84.17340307064</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>603</num>
+  </node>
+
+  <node>
+	  <lat>9.89620649397</lat>
+	  <lon>-84.17391470744</lon>
+	  <lado>DERECHA</lado>
+	  <num>604</num>
+  </node>
+
+  <node>
+	  <lat>9.89727334686</lat>
+	  <lon>-84.17541987641</lon>
+	  <lado>DERECHA</lado>
+	  <num>605</num>
+  </node>
+
+  <node>
+	  <lat>9.89781497528</lat>
+	  <lon>-84.17578491782</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>606</num>
+  </node>
+
+  <node>
+	  <lat>9.89953420073</lat>
+	  <lon>-84.17732905112</lon>
+	  <lado>DERECHA</lado>
+	  <num>607</num>
+  </node>
+
+  <node>
+	  <lat>9.9032887307</lat>
+	  <lon>-84.17724337307</lon>
+	  <lado>DERECHA</lado>
+	  <num>608</num>
+  </node>
+
+  <node>
+	  <lat>9.9035565431</lat>
+	  <lon>-84.17714740382</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>609</num>
+  </node>
+
+  <node>
+	  <lat>9.90616182259</lat>
+	  <lon>-84.17746240151</lon>
+	  <lado>DERECHA</lado>
+	  <num>610</num>
+  </node>
+
+  <node>
+	  <lat>9.90756521977</lat>
+	  <lon>-84.17859097572</lon>
+	  <lado>DERECHA</lado>
+	  <num>611</num>
+  </node>
+
+  <node>
+	  <lat>9.90695675481</lat>
+	  <lon>-84.17895293156</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>612</num>
+  </node>
+
+  <node>
+	  <lat>9.90582563895</lat>
+	  <lon>-84.18060121214</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>613</num>
+  </node>
+
+  <node>
+	  <lat>9.90558239833</lat>
+	  <lon>-84.1819979531</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>614</num>
+  </node>
+
+  <node>
+	  <lat>9.91224289531</lat>
+	  <lon>-84.1790743474</lon>
+	  <lado>DERECHA</lado>
+	  <num>615</num>
+  </node>
+
+  <node>
+	  <lat>9.91327669694</lat>
+	  <lon>-84.17955822991</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>616</num>
+  </node>
+
+  <node>
+	  <lat>9.91524048065</lat>
+	  <lon>-84.17945483699</lon>
+	  <lado>DERECHA</lado>
+	  <num>617</num>
+  </node>
+
+  <node>
+	  <lat>9.91515546163</lat>
+	  <lon>-84.18011718898</lon>
+	  <lado>DERECHA</lado>
+	  <num>618</num>
+  </node>
+
+  <node>
+	  <lat>9.91521913932</lat>
+	  <lon>-84.18092718607</lon>
+	  <lado>DERECHA</lado>
+	  <num>619</num>
+  </node>
+
+  <node>
+	  <lat>9.91491676315</lat>
+	  <lon>-84.18071727592</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>620</num>
+  </node>
+
+  <node>
+	  <lat>9.91445556659</lat>
+	  <lon>-84.18083142832</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>621</num>
+  </node>
+
+  <node>
+	  <lat>9.91749033132</lat>
+	  <lon>-84.17932341909</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>622</num>
+  </node>
+
+  <node>
+	  <lat>9.91746165858</lat>
+	  <lon>-84.1791426735</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>623</num>
+  </node>
+
+  <node>
+	  <lat>9.921179198</lat>
+	  <lon>-84.18276347334</lon>
+	  <lado>IZQUIERDA</lado>
+	  <num>624</num>
+  </node>
+</resources>

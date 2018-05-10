@@ -9,11 +9,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
 import com.example.phoenixdroid.proyectoinge2.Utils.RutaEvacuacion;
+import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
+
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -28,24 +31,25 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements LocationListener {
+public class MapActivity extends AppCompatActivity implements LocationListener, TextToSpeech.OnInitListener {
 
     MapView mapView; // Mapa
 
-
     MapController mapViewController; //Controlador para el mapa.
-
 
     GeoPoint routeCenter = new GeoPoint(9.91163,-84.1783); //Coordenadas de referencia.
 
     LocationManager locationmanager; //Controlador de ubicación
 
-
     ArrayList<PuntoEncuentro> puntosE; //Lista de los puntos seguros.
 
+    ArrayList<SenalVertical> senalesV; // Lista de las señales verticales.
 
     List<RutaEvacuacion> rutasE; //Lista de rutas de evacuación.
+
+    private TextToSpeech tts;
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -78,6 +82,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
             assert locationmanager != null;
             locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
         } catch (SecurityException ignored) { }
+
+        tts = new TextToSpeech(this, this);
     }
 
     /**
@@ -146,6 +152,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
             processParsingRE(parser);
+
+            parserFactory = XmlPullParserFactory.newInstance();
+            parser = parserFactory.newPullParser();
+            is = getAssets().open("senalesVerticales.xml");
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(is, null);
+            processParsingSV(parser);
         } catch (XmlPullParserException ignored) { } catch (IOException ignored) { }
     }
 
@@ -284,6 +297,42 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     }
 
     /**
+     * Lee las señales verticales desde un archivo XML y los guarda en un ArrayList.
+     * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de puntos de encuentro.
+     */
+    public void processParsingSV(XmlPullParser parser) throws IOException, XmlPullParserException {
+        senalesV = new ArrayList<>();
+        int eventType = parser.getEventType();
+        SenalVertical senalVActual = null;
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            String tag;
+
+            switch(eventType){
+                case XmlPullParser.START_TAG:
+                    tag = parser.getName();
+
+                    if ("node".equals(tag)) {
+                        senalVActual = new SenalVertical();
+                        senalesV.add(senalVActual);
+                    } else if (senalVActual != null) {
+                        if ("num".equals(tag)){
+                            senalVActual.id = Integer.parseInt(parser.nextText());
+                        } else if ("lat".equals(tag)) {
+                            senalVActual.latSV = Double.parseDouble(parser.nextText());
+                        } else if ("lon".equals(tag)) {
+                            senalVActual.lonSV = Double.parseDouble(parser.nextText());
+                        } else if ("lado".equals(tag)){
+                            senalVActual.lado = parser.nextText();
+                        }
+                    }
+                    break;
+            }
+            eventType = parser.next();
+        }
+    }
+
+    /**
      * Dibuja en el mapa las diferentes rutas de evacuación.
      */
     public void dibujarRutasEvacuacion() {
@@ -339,6 +388,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
             }
         }
         Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
+        speakOut(distanciaMin);
     }
 
     /**
@@ -373,5 +423,26 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         if (locationmanager != null) {
             locationmanager.removeUpdates(this);
         }
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+    }
+
+    @Override
+    public void onInit(int status)
+    {
+        if (status == TextToSpeech.SUCCESS)
+        {
+            Locale locSpanish = new Locale("spa", "MEX");
+            tts.setLanguage(locSpanish);
+        }
+    }
+
+    public void speakOut(double distancia)
+    {
+        int api = Integer.valueOf(android.os.Build.VERSION.SDK);
+        String texto = "La distancia es" + distancia;
+        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
     }
 }
