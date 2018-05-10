@@ -14,6 +14,8 @@ import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
 import com.example.phoenixdroid.proyectoinge2.Utils.RutaEvacuacion;
+import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
+
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
@@ -41,6 +43,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     LocationManager locationmanager; //Controlador de ubicación
 
     ArrayList<PuntoEncuentro> puntosE; //Lista de los puntos seguros.
+
+    ArrayList<SenalVertical> senalesV; // Lista de las señales verticales.
 
     List<RutaEvacuacion> rutasE; //Lista de rutas de evacuación.
 
@@ -131,6 +135,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
             processParsingRE(parser);
+
+            parserFactory = XmlPullParserFactory.newInstance();
+            parser = parserFactory.newPullParser();
+            is = getAssets().open("senalesVerticales.xml");
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(is, null);
+            processParsingSV(parser);
         } catch (XmlPullParserException ignored) { } catch (IOException ignored) { }
     }
 
@@ -260,6 +271,42 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                             puntoEActual.latitud = Double.parseDouble(parser.nextText());
                         } else if ("lon".equals(tag)) {
                             puntoEActual.longitud = Double.parseDouble(parser.nextText());
+                        }
+                    }
+                    break;
+            }
+            eventType = parser.next();
+        }
+    }
+
+    /**
+     * Lee las señales verticales desde un archivo XML y los guarda en un ArrayList.
+     * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de puntos de encuentro.
+     */
+    public void processParsingSV(XmlPullParser parser) throws IOException, XmlPullParserException {
+        senalesV = new ArrayList<>();
+        int eventType = parser.getEventType();
+        SenalVertical senalVActual = null;
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            String tag;
+
+            switch(eventType){
+                case XmlPullParser.START_TAG:
+                    tag = parser.getName();
+
+                    if ("node".equals(tag)) {
+                        senalVActual = new SenalVertical();
+                        senalesV.add(senalVActual);
+                    } else if (senalVActual != null) {
+                        if ("num".equals(tag)){
+                            senalVActual.id = Integer.parseInt(parser.nextText());
+                        } else if ("lat".equals(tag)) {
+                            senalVActual.latSV = Double.parseDouble(parser.nextText());
+                        } else if ("lon".equals(tag)) {
+                            senalVActual.lonSV = Double.parseDouble(parser.nextText());
+                        } else if ("lado".equals(tag)){
+                            senalVActual.lado = parser.nextText();
                         }
                     }
                     break;
