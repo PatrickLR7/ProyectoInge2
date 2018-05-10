@@ -50,6 +50,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     List<RutaEvacuacion> rutasE; //Lista de rutas de evacuación.
 
     private TextToSpeech tts;
+    double latActual = 0;
+    double lonActual = 0;
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -74,8 +76,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         mapView.setTileSource(new XYTileSource("tiles", 10, 18, 256, ".png", new String[0]));
 
         parseXML();
-        dibujarRutasEvacuacion();
-        markersPuntosE();
+        //dibujarRutasEvacuacion();
         locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         try {
@@ -84,6 +85,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         } catch (SecurityException ignored) { }
 
         tts = new TextToSpeech(this, this);
+        markersPuntosE();
     }
 
     /**
@@ -93,10 +95,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      * @param tipo Descripción del tipo(persona 1, señal vertical 2, zona segura 3).
      */
     public void addMarker(GeoPoint Center, String nombre, int tipo) {
-
-
-
-
         Marker marker = new Marker(mapView);
         marker.setPosition(Center);
         marker.setTitle(nombre);
@@ -355,6 +353,46 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     }
 
     /**
+     * Dibuja en el mapa las diferentes rutas de evacuación.
+     */
+    public void dibujarRutasEvacuacion(GeoPoint gp) {
+        if (rutasE != null && !rutasE.isEmpty()) {
+            double distancia = Double.MAX_VALUE;
+            List<GeoPoint> shortestPathPoints = rutasE.get(0).camino;
+            GeoPoint cercano = rutasE.get(0).camino.get(0);
+            for (int x = 0; x < rutasE.size(); x++) {
+                List<GeoPoint> pathPoints = rutasE.get(x).camino;
+                for (int y = 0; y < pathPoints.size(); y++) {
+                    double aux = pathPoints.get(y).distanceToAsDouble(gp);
+                    if (aux < distancia) {
+                        distancia = aux;
+                        shortestPathPoints = pathPoints;
+                        cercano = pathPoints.get(y);
+                    }
+                }
+            }
+            /*shortestPathPoints.add(gp);
+            boolean encontrado = false;
+            for (int x = 0; x < shortestPathPoints.size(); x++) {
+                double aux = shortestPathPoints.get(x).distanceToAsDouble(gp);
+                if (encontrado) {
+                    if (aux != 0) {
+                        shortestPathPoints.remove(x);
+                    }
+                }
+                if (aux == distancia) {
+                    encontrado = true;
+                }
+            }*/
+            Polyline polyline = new Polyline();
+
+            polyline.setColor(Color.GREEN);
+            mapView.getOverlays().add(polyline);
+            polyline.setPoints(shortestPathPoints);
+        }
+    }
+
+    /**
      * Coloca marcadores en el mapa en la posición en la que se ubican los puntos de encuentro.
      */
     public void markersPuntosE() {
@@ -362,7 +400,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             for (int i = 0; i < puntosE.size(); i++) {
                 routeCenter.setLatitude(puntosE.get(i).latitud);
                 routeCenter.setLongitude(puntosE.get(i).longitud);
-                addMarker(routeCenter, puntosE.get(i).nombre,2);
+                addMarker(routeCenter, puntosE.get(i).nombre,3);
             }
         }
     }
@@ -374,21 +412,25 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     @Override
     public void onLocationChanged(Location location) {
         GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
-        addMarker(miPosicion, "Mi ubicacion",1);
-
-        PuntoEncuentro puntoMasCercano = null;
-        double distanciaMin = Integer.MAX_VALUE;
-        for (int x = 0; x < puntosE.size(); x++) {
-            PuntoEncuentro puntoSeguro = puntosE.get(x);
-            GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
-            double dist = miPosicion.distanceToAsDouble(aux);
-            if (dist < distanciaMin) {
-                puntoMasCercano = puntoSeguro;
-                distanciaMin = dist;
+        if (latActual != miPosicion.getLatitude() || lonActual != miPosicion.getLongitude()) {
+            latActual = miPosicion.getLatitude();
+            lonActual = miPosicion.getLongitude();
+            PuntoEncuentro puntoMasCercano = null;
+            double distanciaMin = Integer.MAX_VALUE;
+            for (int x = 0; x < puntosE.size(); x++) {
+                PuntoEncuentro puntoSeguro = puntosE.get(x);
+                GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
+                double dist = miPosicion.distanceToAsDouble(aux);
+                if (dist < distanciaMin) {
+                    puntoMasCercano = puntoSeguro;
+                    distanciaMin = dist;
+                }
             }
+            Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
+            dibujarRutasEvacuacion(miPosicion);
+            addMarker(miPosicion, "Mi ubicacion", 1);
+            speakOut(distanciaMin);
         }
-        Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
-        speakOut(distanciaMin);
     }
 
     /**
