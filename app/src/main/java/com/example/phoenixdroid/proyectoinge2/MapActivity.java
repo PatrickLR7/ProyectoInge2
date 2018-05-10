@@ -370,6 +370,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }
         }
         Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
+        speakOut(distanciaMin);
     }
 
     /**
@@ -417,12 +418,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         {
             Locale locSpanish = new Locale("spa", "MEX");
             tts.setLanguage(locSpanish);
-            speakOut();
         }
     }
 
-    public void speakOut()
+    public void speakOut(double distancia)
     {
-        //tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        int api = Integer.valueOf(android.os.Build.VERSION.SDK);
+        String texto = "La distancia es" + distancia;
+        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
     }
 }
