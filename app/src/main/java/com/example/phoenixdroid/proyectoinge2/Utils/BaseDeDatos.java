@@ -106,12 +106,13 @@ public class BaseDeDatos extends SQLiteOpenHelper {
 
     /**
      * Metodo usado para cargar una ruta a la base de datos.
-     * @param nombre: El nombre de la ruta o NULL si no tiene.
+     * @param id: El ID de la ruta.
      * @return true si la ruta se agrega exitosamente.
      */
-    public boolean agregarRuta(String nombre){
+    public boolean agregarRuta(int id){
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        contentValues.put(RUTA_ID, id);
         long result = database.insert(TABLA_2, null, contentValues);
         return result != -1;
     }
