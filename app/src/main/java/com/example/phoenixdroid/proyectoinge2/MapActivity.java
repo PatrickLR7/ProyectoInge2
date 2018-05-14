@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 import android.speech.tts.TextToSpeech;
 
+import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
+import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
@@ -49,6 +51,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
     List<RutaEvacuacion> rutasE; //Lista de rutas de evacuación.
 
+    BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
+
     private TextToSpeech tts;
     double latActual = 0;
     double lonActual = 0;
@@ -75,15 +79,33 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         mapViewController.animateTo(routeCenter);
         mapView.setTileSource(new XYTileSource("tiles", 10, 18, 256, ".png", new String[0]));
 
-        parseXML();
-        //dibujarRutasEvacuacion();
-        locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if(Config.basededatos == null) {
+            parseXML();
+            //dibujarRutasEvacuacion();
 
-        try {
-            assert locationmanager != null;
-            locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10,10,this);
-        } catch (SecurityException ignored) { }
+            bdMapa = new BaseDeDatos(getApplicationContext());
+            //Agregar puntos seguros a la bd.
+            for (int i = 0; i < puntosE.size(); i++){
+                bdMapa.agregarPuntoSeguro(puntosE.get(i).latitud, puntosE.get(i).longitud, puntosE.get(i).nombre);
+            }
 
+            //Agregar señales verticales a la bd.
+            for (int i = 0; i < senalesV.size(); i++){
+                bdMapa.agregarSeñalVertical(senalesV.get(i).id, senalesV.get(i).lado,
+                                            senalesV.get(i).latSV, senalesV.get(i).lonSV);
+            }
+
+
+            locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            try {
+                assert locationmanager != null;
+                locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 10, this);
+            } catch (SecurityException ignored) {
+            }
+
+        } else{
+
+        }
         tts = new TextToSpeech(this, this);
         markersPuntosE();
     }

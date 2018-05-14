@@ -44,7 +44,8 @@
             <Button
                 android:id="@+id/button"
                 android:layout_width="match_parent"
-                android:layout_height="209dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
                 android:background="@drawable/btn_border"
                 android:onClick="iniciarActZonas"
                 android:text="Modo Vidente"
@@ -53,11 +54,12 @@
             <Button
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
-                android:layout_height="248dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
                 android:background="@drawable/btn_border"
                 android:text="Modo No Vidente"
-                tools:text="Modo No Vidente"
-                android:textSize="80px"/>
+                android:textSize="80px"
+                tools:text="Modo No Vidente" />
 
         </LinearLayout>
 
