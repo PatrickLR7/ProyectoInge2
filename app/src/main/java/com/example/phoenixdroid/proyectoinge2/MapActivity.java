@@ -57,6 +57,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     double latActual = 0;
     double lonActual = 0;
 
+    Marker markerUbi;
+
+
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
      * @param savedInstanceState: la instancia previa de esta actividad.
@@ -108,6 +111,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         }
         tts = new TextToSpeech(this, this);
         markersPuntosE();
+
+        markerUbi = new Marker(mapView);
+
     }
 
     /**
@@ -120,6 +126,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         Marker marker = new Marker(mapView);
         marker.setPosition(Center);
         marker.setTitle(nombre);
+        String markerID = marker.getId();
         if(tipo == 1) {
             Drawable d = getResources().getDrawable(R.drawable.icon_persona);
             marker.setIcon(d);
@@ -449,7 +456,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     distanciaMin = dist;
                 }
             }
-            Toast.makeText(this,"Distancia: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Distancia a la zona segura más cercana: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
             dibujarRutasEvacuacion(miPosicion);
             addMarker(miPosicion, "Mi ubicacion", 1);
             speakOut(distanciaMin);
@@ -507,7 +514,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     public void speakOut(double distancia)
     {
         int api = Integer.valueOf(android.os.Build.VERSION.SDK);
-        String texto = "La distancia es" + distancia;
+        String texto = "La distancia es" + (int) distancia + "metros";
         tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
     }
 }
