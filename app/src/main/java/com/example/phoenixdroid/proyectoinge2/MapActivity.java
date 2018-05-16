@@ -59,6 +59,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
     Marker markerUbi;
 
+    PuntoEncuentro puntoMasCercano = null;
+
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -82,35 +84,25 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         mapViewController.animateTo(routeCenter);
         mapView.setTileSource(new XYTileSource("tiles", 10, 18, 256, ".png", new String[0]));
 
-        if(Config.basededatos == null) {
-            parseXML();
-            //dibujarRutasEvacuacion();
 
-            bdMapa = new BaseDeDatos(getApplicationContext());
-            //Agregar puntos seguros a la bd.
-            for (int i = 0; i < puntosE.size(); i++){
-                bdMapa.agregarPuntoSeguro(puntosE.get(i).latitud, puntosE.get(i).longitud, puntosE.get(i).nombre);
-            }
+        bdMapa = new BaseDeDatos(getApplicationContext());
+        parseXML();
+        //dibujarRutasEvacuacion();
 
-            //Agregar señales verticales a la bd.
-            for (int i = 0; i < senalesV.size(); i++){
-                bdMapa.agregarSenalVertical(senalesV.get(i).id, senalesV.get(i).lado,
-                                            senalesV.get(i).latSV, senalesV.get(i).lonSV);
-            }
-
-
-            locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            try {
-                assert locationmanager != null;
-                locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 10, this);
+        locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        try {
+            assert locationmanager != null;
+            locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 10, this);
             } catch (SecurityException ignored) {
             }
 
-        } else{
 
-        }
+        //
+        //
+        //
         tts = new TextToSpeech(this, this);
         markersPuntosE();
+        markersSenalesV();
 
         markerUbi = new Marker(mapView);
 
@@ -126,9 +118,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         Marker marker = new Marker(mapView);
         marker.setPosition(Center);
         marker.setTitle(nombre);
+        String markerID = marker.getId();
         if(tipo == 1) {
-            marker.setId("radio");
-            String markerID = marker.getId();
             Drawable d = getResources().getDrawable(R.drawable.radius_circle);
             marker.setIcon(d);
         }else  if(tipo == 2) {
@@ -140,7 +131,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         }
 
         mapView.getOverlays().add(marker);
-        //mapView.getOverlays().
         mapView.invalidate();
     }
 
@@ -247,7 +237,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                             if (rEActual != null) {
                                 rEActual.camino.add(new GeoPoint(aux.lat, aux.lon));
                             }
-                            listaPR.remove(pos);
+                            //listaPR.remove(pos);
                         }
                     }
                     break;
@@ -280,7 +270,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      * @param ID Punto que se quiere buscar.
      * @return Indice en la lista del punto que se busca; -1 si el punto no se encuentra.
      */
-    private int buscar (List<PuntoRuta> lista, int ID) {
+    private int buscar (LinkedList<PuntoRuta> lista, int ID) {
         int resultado = -1;
         for (int x = 0; x < lista.size(); x++) {
             if (lista.get(x).id == ID) {
@@ -310,14 +300,17 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     if ("node".equals(tag)) {
                         puntoEActual = new PuntoEncuentro();
                         puntosE.add(puntoEActual);
-                    } else if (puntoEActual != null) {
+
+                    } else {
                         if ("nombre".equals(tag)){
                             puntoEActual.nombre = parser.nextText();
                         } else if ("lat".equals(tag)) {
                             puntoEActual.latitud = Double.parseDouble(parser.nextText());
                         } else if ("lon".equals(tag)) {
                             puntoEActual.longitud = Double.parseDouble(parser.nextText());
+                            bdMapa.agregarPuntoSeguro(puntoEActual.latitud, puntoEActual.longitud, puntoEActual.nombre);
                         }
+
                     }
                     break;
             }
@@ -390,7 +383,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         if (rutasE != null && !rutasE.isEmpty()) {
             double distancia = Double.MAX_VALUE;
             List<GeoPoint> shortestPathPoints = rutasE.get(0).camino;
-            GeoPoint cercano;
+            GeoPoint cercano = rutasE.get(0).camino.get(0);
             for (int x = 0; x < rutasE.size(); x++) {
                 List<GeoPoint> pathPoints = rutasE.get(x).camino;
                 for (int y = 0; y < pathPoints.size(); y++) {
@@ -402,7 +395,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     }
                 }
             }
-
+            /*shortestPathPoints.add(gp);
+            boolean encontrado = false;
+            for (int x = 0; x < shortestPathPoints.size(); x++) {
+                double aux = shortestPathPoints.get(x).distanceToAsDouble(gp);
+                if (encontrado) {
+                    if (aux != 0) {
+                        shortestPathPoints.remove(x);
+                    }
+                }
+                if (aux == distancia) {
+                    encontrado = true;
+                }
+            }*/
             Polyline polyline = new Polyline();
 
             int brownColorValue = Color.parseColor("#B6523C");
@@ -413,36 +418,29 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     }
 
     /**
-     *
-     * @param punto: el punto desde el que se calcula otro mas cercano.
-     * @param ruta: el camino donde se debe buscar el punto desde el que se quiere calcular el punto mas cercano.
-     * @return el GeoPoint mas cercano dentro de la ruta hacia el punto de origen.
-     */
-    public GeoPoint obtenerPuntoMasCercanoEntrePuntoYRuta(GeoPoint punto, List<GeoPoint> ruta){
-        GeoPoint cercano = null;
-        if(punto != null && ruta != null && !ruta.isEmpty()){
-            double distancia = Double.MAX_VALUE;
-            for (int y = 0; y < ruta.size(); y++) {
-                GeoPoint puntoMasCercano = ruta.get(y);
-                double distAux = puntoMasCercano.distanceToAsDouble(punto);
-                if (distAux < distancia) {
-                    distancia = distAux;
-                    cercano = puntoMasCercano;
-                }
-            }
-        }
-        return cercano;
-    }
-
-    /**
      * Coloca marcadores en el mapa en la posición en la que se ubican los puntos de encuentro.
      */
     public void markersPuntosE() {
+
         if (puntosE != null && !puntosE.isEmpty()) {
             for (int i = 0; i < puntosE.size(); i++) {
                 routeCenter.setLatitude(puntosE.get(i).latitud);
                 routeCenter.setLongitude(puntosE.get(i).longitud);
                 addMarker(routeCenter, puntosE.get(i).nombre,3);
+            }
+        }
+    }
+
+    /**
+     * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
+     */
+
+    public void markersSenalesV(){
+        if (senalesV != null && !senalesV.isEmpty()) {
+            for (int i = 0; i < senalesV.size(); i++) {
+                routeCenter.setLatitude(senalesV.get(i).latSV);
+                routeCenter.setLongitude(senalesV.get(i).lonSV);
+                addMarker(routeCenter, "Señal: " + Integer.toString(senalesV.get(i).id),2);
             }
         }
     }
@@ -457,8 +455,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         if (latActual != miPosicion.getLatitude() || lonActual != miPosicion.getLongitude()) {
             latActual = miPosicion.getLatitude();
             lonActual = miPosicion.getLongitude();
-            PuntoEncuentro puntoMasCercano = null;
-            double distanciaMin = Double.MAX_VALUE;
+
+            double distanciaMin = Integer.MAX_VALUE;
             for (int x = 0; x < puntosE.size(); x++) {
                 PuntoEncuentro puntoSeguro = puntosE.get(x);
                 GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
