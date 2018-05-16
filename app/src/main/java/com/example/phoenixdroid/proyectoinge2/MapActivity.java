@@ -126,9 +126,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         Marker marker = new Marker(mapView);
         marker.setPosition(Center);
         marker.setTitle(nombre);
-        String markerID = marker.getId();
         if(tipo == 1) {
-            Drawable d = getResources().getDrawable(R.drawable.icon_persona);
+            marker.setId("radio");
+            String markerID = marker.getId();
+            Drawable d = getResources().getDrawable(R.drawable.radius_circle);
             marker.setIcon(d);
         }else  if(tipo == 2) {
             Drawable d = getResources().getDrawable(R.drawable.icon_senal);
@@ -139,6 +140,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         }
 
         mapView.getOverlays().add(marker);
+        //mapView.getOverlays().
         mapView.invalidate();
     }
 
