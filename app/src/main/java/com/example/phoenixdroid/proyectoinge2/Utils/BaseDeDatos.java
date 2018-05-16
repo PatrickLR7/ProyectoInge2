@@ -25,7 +25,7 @@ public class BaseDeDatos extends SQLiteOpenHelper {
     private static final String TABLA_3 = "Puntos_Seguros";
     private static final String DESCRIPION = "Descripcion";
 
-    // Esquema tabla para las señales verticales
+    // Esquema tabla para las señales verticales, también incluye latitud y longitud
     private static final String TABLA_4 = "Señales_Verticales";
     private static final String NUMERO_SE = "NumeroDeSeñal";
     private static final String LADO_SE = "LadoDeSeñal";
@@ -125,7 +125,7 @@ public class BaseDeDatos extends SQLiteOpenHelper {
      * @param longitud: Coordenada longitud.
      * @return true si la señal se agrega exitosamente
      */
-    public boolean agregarSeñalVertical(int num, String lado, double latitud, double longitud){
+    public boolean agregarSenalVertical(int num, String lado, double latitud, double longitud){
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(LATITUD, latitud);
