@@ -19,10 +19,8 @@ public class PuntoCardinal {
         double longitudeZ = zona.getLongitude();
         boolean north = (latitudeU <= latitudeZ);
         boolean east = (longitudeU <= longitudeZ);
-        double distanceY = 0;
-        double distanceX = 0;
-        double percentageY = 0;
-        double percentageX = 0;
+        double distanceY;
+        double distanceX;
 
         if(north){
             distanceY = latitudeZ - latitudeU;
@@ -39,7 +37,7 @@ public class PuntoCardinal {
         }
 
         boolean longer = (distanceY <= distanceX);
-        double percentage = 0;
+        double percentage;
 
         if(longer) {
             percentage = distanceY/distanceX;
