@@ -415,7 +415,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
      */
     public void markersSenalesV(){
-        if (senalesV != null && !senalesV.isEmpty()) {
+        if(senalesV != null && !senalesV.isEmpty()) {
             for (int i = 0; i < senalesV.size(); i++) {
                 routeCenter.setLatitude(senalesV.get(i).latSV);
                 routeCenter.setLongitude(senalesV.get(i).lonSV);
