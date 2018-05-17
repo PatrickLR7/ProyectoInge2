@@ -96,10 +96,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             } catch (SecurityException ignored) {
             }
 
-
-        //
-        //
-        //
         tts = new TextToSpeech(this, this);
         markersPuntosE();
         markersSenalesV();
@@ -270,7 +266,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      * @param ID Punto que se quiere buscar.
      * @return Indice en la lista del punto que se busca; -1 si el punto no se encuentra.
      */
-    private int buscar (LinkedList<PuntoRuta> lista, int ID) {
+    private int buscar (List<PuntoRuta> lista, int ID) {
         int resultado = -1;
         for (int x = 0; x < lista.size(); x++) {
             if (lista.get(x).id == ID) {
@@ -359,11 +355,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      */
     public void dibujarRutasEvacuacion() {
         if (rutasE != null && !rutasE.isEmpty()) {
-            /*Polyline polyline = new Polyline();
-            List<GeoPoint> pathPoints = rutasE.get(0).camino;
-            polyline.setColor(Color.RED);
-            mapView.getOverlays().add(polyline);
-            polyline.setPoints(pathPoints);*/
+
             for (int x = 0; x < rutasE.size(); x++) {
                 Polyline polyline = new Polyline();
                 List<GeoPoint> pathPoints = rutasE.get(x).camino;
@@ -377,13 +369,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     }
 
     /**
-     * Dibuja en el mapa las diferentes rutas de evacuación.
+     * Dibuja en el mapa la ruta de evacuación más cercana a un punto dado.
+     * @param gp: El punto desde el que se calcula la ruta más corta.
      */
     public void dibujarRutasEvacuacion(GeoPoint gp) {
         if (rutasE != null && !rutasE.isEmpty()) {
             double distancia = Double.MAX_VALUE;
             List<GeoPoint> shortestPathPoints = rutasE.get(0).camino;
-            GeoPoint cercano = rutasE.get(0).camino.get(0);
+            GeoPoint cercano; // Punta dentro la ruta más cercano a gp
             for (int x = 0; x < rutasE.size(); x++) {
                 List<GeoPoint> pathPoints = rutasE.get(x).camino;
                 for (int y = 0; y < pathPoints.size(); y++) {
@@ -395,21 +388,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     }
                 }
             }
-            /*shortestPathPoints.add(gp);
-            boolean encontrado = false;
-            for (int x = 0; x < shortestPathPoints.size(); x++) {
-                double aux = shortestPathPoints.get(x).distanceToAsDouble(gp);
-                if (encontrado) {
-                    if (aux != 0) {
-                        shortestPathPoints.remove(x);
-                    }
-                }
-                if (aux == distancia) {
-                    encontrado = true;
-                }
-            }*/
-            Polyline polyline = new Polyline();
 
+            Polyline polyline = new Polyline();
             int brownColorValue = Color.parseColor("#B6523C");
             polyline.setColor(brownColorValue);
             mapView.getOverlays().add(polyline);
@@ -434,7 +414,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     /**
      * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
      */
-
     public void markersSenalesV(){
         if (senalesV != null && !senalesV.isEmpty()) {
             for (int i = 0; i < senalesV.size(); i++) {
