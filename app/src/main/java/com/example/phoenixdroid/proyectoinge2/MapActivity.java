@@ -98,7 +98,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
         tts = new TextToSpeech(this, this);
         markersPuntosE();
-        markersSenalesV();
+        //markersSenalesV();
 
         markerUbi = new Marker(mapView);
 
@@ -374,17 +374,17 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      */
     public void dibujarRutasEvacuacion(GeoPoint gp) {
         if (rutasE != null && !rutasE.isEmpty()) {
-            double distancia = Double.MAX_VALUE;
-            List<GeoPoint> shortestPathPoints = rutasE.get(0).camino;
-            GeoPoint cercano; // Punta dentro la ruta más cercano a gp
+            double menorDistancia = Double.MAX_VALUE;
+            List<GeoPoint> rutaMasCercana = rutasE.get(0).camino;
+            GeoPoint puntoCercanoRuta; // Punta dentro la ruta más cercano a gp
             for (int x = 0; x < rutasE.size(); x++) {
-                List<GeoPoint> pathPoints = rutasE.get(x).camino;
-                for (int y = 0; y < pathPoints.size(); y++) {
-                    double aux = pathPoints.get(y).distanceToAsDouble(gp);
-                    if (aux < distancia) {
-                        distancia = aux;
-                        shortestPathPoints = pathPoints;
-                        cercano = pathPoints.get(y);
+                List<GeoPoint> rutaActual = rutasE.get(x).camino;
+                for (int y = 0; y < rutaActual.size(); y++) {
+                    double aux = rutaActual.get(y).distanceToAsDouble(gp);
+                    if (aux < menorDistancia) {
+                        menorDistancia = aux;
+                        rutaMasCercana = rutaActual;
+                        puntoCercanoRuta = rutaActual.get(y);
                     }
                 }
             }
@@ -393,7 +393,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             int brownColorValue = Color.parseColor("#B6523C");
             polyline.setColor(brownColorValue);
             mapView.getOverlays().add(polyline);
-            polyline.setPoints(shortestPathPoints);
+            polyline.setPoints(rutaMasCercana);
         }
     }
 
@@ -425,6 +425,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     }
 
     /**
+     * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
+     */
+    public void markersSenalesV(int senal){
+        if (senalesV != null && !senalesV.isEmpty()) {
+            SenalVertical aux = senalesV.get(senal);
+            routeCenter.setLatitude(aux.latSV);
+            routeCenter.setLongitude(aux.lonSV);
+            addMarker(routeCenter, "Señal: " + Integer.toString(aux.id),2);
+        }
+    }
+
+
+    /**
      * Metodo que revisa los cambios en la ubicación del usuario.
      * @param location ubicación del usuario.
      */
@@ -445,9 +458,23 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     distanciaMin = dist;
                 }
             }
+
+            int pos = 0;
+            double distanciaMin2 = Integer.MAX_VALUE;
+            for (int x = 0; x < senalesV.size(); x++) {
+                SenalVertical senal = senalesV.get(x);
+                GeoPoint aux = new GeoPoint(senal.latSV, senal.lonSV);
+                double dist = miPosicion.distanceToAsDouble(aux);
+                if (dist < distanciaMin2) {
+                    pos = x;
+                    distanciaMin2 = dist;
+                }
+            }
+
             Toast.makeText(this,"Distancia a la zona segura más cercana: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
             dibujarRutasEvacuacion(miPosicion);
             addMarker(miPosicion, "Mi ubicacion", 1);
+            markersSenalesV(pos);
             speakOut(distanciaMin);
         }
     }
