@@ -9,15 +9,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
-import android.speech.tts.TextToSpeech;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
-import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
 import com.example.phoenixdroid.proyectoinge2.Utils.RutaEvacuacion;
 import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
+import com.example.phoenixdroid.proyectoinge2.Utils.SintetizadorVoz;
 
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -33,9 +32,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
-public class MapActivity extends AppCompatActivity implements LocationListener, TextToSpeech.OnInitListener {
+public class MapActivity extends AppCompatActivity implements LocationListener{
 
     MapView mapView; // Mapa
 
@@ -53,7 +51,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
 
-    private TextToSpeech tts;
+    SintetizadorVoz sv;
     double latActual = 0;
     double lonActual = 0;
 
@@ -96,7 +94,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             } catch (SecurityException ignored) {
             }
 
-        tts = new TextToSpeech(this, this);
+        sv = new SintetizadorVoz(this);
         markersPuntosE();
         //markersSenalesV();
 
@@ -475,7 +473,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             dibujarRutasEvacuacion(miPosicion);
             addMarker(miPosicion, "Mi ubicacion", 1);
             markersSenalesV(pos);
-            speakOut(distanciaMin);
+            sv.speakOut(distanciaMin);
         }
     }
 
@@ -511,26 +509,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         if (locationmanager != null) {
             locationmanager.removeUpdates(this);
         }
-        if (tts != null) {
-            tts.stop();
-            tts.shutdown();
-        }
-    }
-
-    @Override
-    public void onInit(int status)
-    {
-        if (status == TextToSpeech.SUCCESS)
-        {
-            Locale locSpanish = new Locale("spa", "MEX");
-            tts.setLanguage(locSpanish);
-        }
-    }
-
-    public void speakOut(double distancia)
-    {
-        int api = Integer.valueOf(android.os.Build.VERSION.SDK);
-        String texto = "La distancia es" + (int) distancia + "metros";
-        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+        sv.stop();
     }
 }
