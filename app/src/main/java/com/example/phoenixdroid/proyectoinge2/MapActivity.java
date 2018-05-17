@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
+import com.example.phoenixdroid.proyectoinge2.Utils.Brujula;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
@@ -52,6 +53,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
 
     SintetizadorVoz sv;
+    Brujula brujula;
     double latActual = 0;
     double lonActual = 0;
 
@@ -95,6 +97,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
             }
 
         sv = new SintetizadorVoz(this);
+        brujula = new Brujula(this);
         markersPuntosE();
         //markersSenalesV();
 
@@ -473,7 +476,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
             dibujarRutasEvacuacion(miPosicion);
             addMarker(miPosicion, "Mi ubicacion", 1);
             markersSenalesV(pos);
-            sv.speakOut(distanciaMin);
+            sv.decirDistancia(distanciaMin);
         }
     }
 
@@ -510,5 +513,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
             locationmanager.removeUpdates(this);
         }
         sv.stop();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        brujula.Resume();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        brujula.Pause();
     }
 }
