@@ -98,10 +98,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
 
         sv = new SintetizadorVoz(this);
         brujula = new Brujula(this);
-        markersPuntosE();
+        //markersPuntosE();
         //markersSenalesV();
 
-        markerUbi = new Marker(mapView);
+        //markerUbi = new Marker(mapView);
 
     }
 
@@ -473,9 +473,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
             }
 
             Toast.makeText(this,"Distancia a la zona segura más cercana: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
-            dibujarRutasEvacuacion(miPosicion);
-            addMarker(miPosicion, "Mi ubicacion", 1);
-            markersSenalesV(pos);
+            //dibujarRutasEvacuacion(miPosicion);
+            //addMarker(miPosicion, "Mi ubicacion", 1);
+            // markersSenalesV(pos);
             sv.decirDistancia(distanciaMin);
         }
     }
@@ -515,6 +515,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
         sv.stop();
     }
 
+    /*
     @Override
     public void onResume()
     {
@@ -528,4 +529,5 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
         super.onPause();
         brujula.Pause();
     }
+    */
 }

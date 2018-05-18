@@ -13,7 +13,10 @@ import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
+    Button btn_vidente;
+    Button btn_no_vidente;
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -25,10 +28,12 @@ public class MainActivity extends AppCompatActivity {
         //
         //
         setContentView(R.layout.activity_main);
-        Button b2 = (Button) findViewById(R.id.button2);
-        b2.setOnClickListener( new View.OnClickListener() {
+
+        btn_no_vidente = (Button) findViewById(R.id.button2);
+        btn_no_vidente.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Actualmente no disponible." ,Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"Actualmente no disponible." ,Toast.LENGTH_LONG).show();
+                iniciarNoVidente();
             }
         });
 
@@ -40,8 +45,15 @@ public class MainActivity extends AppCompatActivity {
      * Metodo para iniciar el activity para seleccionar entre las distintas zonas de Santa Ana.
      * @param v recibe el boton con el que se ejecutará el método.
      */
-    public void iniciarActZonas (View v){
+    public void iniciarActZonas (View v)
+    {
         Intent i = new Intent(getApplicationContext(), ZonasActivity.class);
+        startActivity(i);
+    }
+
+    private void iniciarNoVidente()
+    {
+        Intent i = new Intent(getApplicationContext(), NoVidente.class);
         startActivity(i);
     }
 
