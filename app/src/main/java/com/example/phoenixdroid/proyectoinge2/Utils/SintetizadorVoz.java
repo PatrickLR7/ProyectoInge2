@@ -42,7 +42,7 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
         hablar(texto);
     }
 
-    private void hablar(String texto)
+    public void hablar(String texto)
     {
         tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
     }

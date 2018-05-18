@@ -1,19 +1,22 @@
 package com.example.phoenixdroid.proyectoinge2;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.phoenixdroid.proyectoinge2.Utils.Brujula;
 import com.example.phoenixdroid.proyectoinge2.Utils.SintetizadorVoz;
 
-public class NoVidente extends AppCompatActivity implements View.OnClickListener
+public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener
 {
-    private Brujula brujula;
     private Button btn_guiar;
-    private int puntoCardinal;
+    private int grados, puntoCardinal;
     private SintetizadorVoz sv;
+    private SensorManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +26,11 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         btn_guiar = findViewById(R.id.btn_guiarNoVidente);
         btn_guiar.setOnClickListener(this);
 
-        brujula = new Brujula(this);
+        manager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sv = new SintetizadorVoz(this);
+
+        grados = 0;
+        puntoCardinal = 0;
     }
 
     @Override
@@ -37,11 +43,11 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     {
         String texto = "La orientación es ";
         texto = puntoCardinal(texto);
+        sv.hablar(texto);
     }
 
     private String puntoCardinal(String texto)
     {
-        int grados = brujula.getGrados();
         texto = texto + grados;
 
         if ((grados >= 337.5 && grados <= 360) || (grados >= 0 && grados < 22.5))
@@ -91,14 +97,18 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     public void onResume()
     {
         super.onResume();
-        brujula.Resume();
+        // for the system's orientation sensor registered listeners
+        manager.registerListener(this,
+                                    manager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                                    SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-        brujula.Pause();
+        // to stop the listener and save battery
+        manager.unregisterListener(this);
     }
 
     @Override
@@ -106,5 +116,17 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     {
         super.onDestroy();
         sv.stop();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event)
+    {
+        grados = Math.round(event.values[0]);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i)
+    {
+        //No se usa
     }
 }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.phoenixdroid.proyectoinge2"
-    android:installLocation="preferExternal"> //The app install in the phone memory
+    android:installLocation="preferExternal">
+    //The app install in the phone memory
 
     <!-- Permisos que usa la app -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -27,7 +28,8 @@
         </activity>
         <activity android:name=".ZonasActivity" />
         <activity android:name=".VideosActivity" />
-        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".MapActivity" />
+        <activity android:name=".NoVidente"></activity>
     </application>
 
 </manifest>
