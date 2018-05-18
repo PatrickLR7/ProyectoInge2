@@ -18,17 +18,20 @@ import android.widget.TextView;
 
 public class Brujula implements SensorEventListener
 {
-    private float orientacion;
     private SensorManager manager;
     private Context contexto;
-    private SintetizadorVoz sv;
+    private int grados;
 
     public Brujula(Context context)
     {
-        orientacion = 0f;
+        grados = 0;
         contexto = context;
-        sv = new SintetizadorVoz(contexto);
         Resume();
+    }
+
+    public int getGrados()
+    {
+        return grados;
     }
 
     public void Resume()
@@ -48,9 +51,7 @@ public class Brujula implements SensorEventListener
     public void onSensorChanged(SensorEvent event)
     {
         // get the angle around the z-axis rotated
-        float grados = Math.round(event.values[0]);
-        sv.decirOrientacion(grados);
-        //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+        grados = Math.round(event.values[0]);
     }
 
     @Override

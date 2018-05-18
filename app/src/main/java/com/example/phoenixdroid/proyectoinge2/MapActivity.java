@@ -11,13 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
-import com.example.phoenixdroid.proyectoinge2.Utils.Brujula;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
 import com.example.phoenixdroid.proyectoinge2.Utils.RutaEvacuacion;
 import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
-import com.example.phoenixdroid.proyectoinge2.Utils.SintetizadorVoz;
 
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -52,8 +50,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
 
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
 
-    SintetizadorVoz sv;
-    Brujula brujula;
     double latActual = 0;
     double lonActual = 0;
 
@@ -96,8 +92,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
             } catch (SecurityException ignored) {
             }
 
-        sv = new SintetizadorVoz(this);
-        brujula = new Brujula(this);
         //markersPuntosE();
         //markersSenalesV();
 
@@ -473,10 +467,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
             }
 
             Toast.makeText(this,"Distancia a la zona segura más cercana: " + Double.toString(distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
-            //dibujarRutasEvacuacion(miPosicion);
-            //addMarker(miPosicion, "Mi ubicacion", 1);
-            // markersSenalesV(pos);
-            sv.decirDistancia(distanciaMin);
+            dibujarRutasEvacuacion(miPosicion);
+            addMarker(miPosicion, "Mi ubicacion", 1);
+            markersSenalesV(pos);
         }
     }
 
@@ -512,22 +505,5 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
         if (locationmanager != null) {
             locationmanager.removeUpdates(this);
         }
-        sv.stop();
     }
-
-    /*
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        brujula.Resume();
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        brujula.Pause();
-    }
-    */
 }

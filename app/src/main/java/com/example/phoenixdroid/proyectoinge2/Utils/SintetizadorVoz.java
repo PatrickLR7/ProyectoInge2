@@ -33,12 +33,17 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
     public void decirDistancia(double distancia)
     {
         String texto = "La distancia es" + (int) distancia + "metros";
-        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+        hablar(texto);
     }
 
-    public void decirOrientacion(float grados)
+    public void decirOrientacion(int grados)
     {
         String texto = "La orientacion es" + grados;
+        hablar(texto);
+    }
+
+    private void hablar(String texto)
+    {
         tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
     }
 
