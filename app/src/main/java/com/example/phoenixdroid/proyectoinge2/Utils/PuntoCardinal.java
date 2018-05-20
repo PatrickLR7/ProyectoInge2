@@ -8,7 +8,8 @@ import org.osmdroid.util.GeoPoint;
 
 public class PuntoCardinal {
 
-    public PuntoCardinal(){
+    public PuntoCardinal()
+    {
 
     }
 
@@ -57,12 +58,47 @@ public class PuntoCardinal {
 
         int Ultimate = 0;
 
-        switch (verticalDominance) {
-            case 0:  if(north){ Ultimate = 0; } else{ Ultimate = 4; }
+        switch (verticalDominance)
+        {
+            case 0:
+                if(north)
+                {
+                    Ultimate = 0;
+                }
+                else
+                    {
+                        Ultimate = 4;
+                    }
                 break;
-            case 1:  if(north && east){ Ultimate = 1; } else if(!north && east){ Ultimate = 3; } else if(!north && !east) { Ultimate = 5; } else { Ultimate = 7; }
+
+            case 1:
+                if (north && east)
+                {
+                    Ultimate = 1;
+                }
+                else if(!north && east)
+                {
+                    Ultimate = 3;
+                }
+                else if(!north && !east)
+                {
+                    Ultimate = 5;
+                }
+                else
+                    {
+                        Ultimate = 7;
+                    }
                 break;
-            case 2:  if(east){ Ultimate = 2; } else{ Ultimate = 6; }
+
+            case 2:
+                if(east)
+                {
+                    Ultimate = 2;
+                }
+                else
+                    {
+                        Ultimate = 6;
+                    }
                 break;
         }
 
