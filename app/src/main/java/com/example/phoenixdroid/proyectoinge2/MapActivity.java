@@ -16,6 +16,7 @@ import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
 import com.example.phoenixdroid.proyectoinge2.Utils.RutaEvacuacion;
 import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
+import com.example.phoenixdroid.proyectoinge2.Utils.XmlParser;
 
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -82,7 +83,11 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
 
 
         bdMapa = new BaseDeDatos(getApplicationContext());
-        parseXML();
+        XmlParser parser = new XmlParser(this);
+        parser.parseXML();
+        puntosE = parser.getPuntosE();
+        rutasE  = parser.getRutasE();
+        senalesV = parser.getSenalesV();
         //dibujarRutasEvacuacion();
 
         locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -92,11 +97,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
             } catch (SecurityException ignored) {
             }
 
-        //markersPuntosE();
-        //markersSenalesV();
+        markersPuntosE();
+        markersSenalesV();
 
-        //markerUbi = new Marker(mapView);
-
+        markerUbi = new Marker(mapView);
     }
 
     /**
@@ -141,208 +145,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
     public void deleteMarker(Marker m) {
         mapView.getOverlays().remove(m);
         mapView.invalidate();
-    }
-
-    /**
-     * Metodo para leer datos desde un archivo XML.
-     */
-    private void parseXML() {
-        XmlPullParserFactory parserFactory;
-        try {
-            parserFactory = XmlPullParserFactory.newInstance();
-            XmlPullParser parser = parserFactory.newPullParser();
-            InputStream is = getAssets().open("puntos_encuentro.xml");
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(is, null);
-            processParsingPE(parser);
-
-            parserFactory = XmlPullParserFactory.newInstance();
-            parser = parserFactory.newPullParser();
-            is = getAssets().open("rutasEvacuacion.xml");
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(is, null);
-            processParsingRE(parser);
-
-            parserFactory = XmlPullParserFactory.newInstance();
-            parser = parserFactory.newPullParser();
-            is = getAssets().open("senalesVerticales.xml");
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(is, null);
-            processParsingSV(parser);
-        } catch (XmlPullParserException ignored) { } catch (IOException ignored) { }
-    }
-
-    /**
-     * Lee desde un archivo XML las rutas de evacuación y  y las enlista.
-     * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de rutas de evacuación.
-     */
-    public void processParsingRE(XmlPullParser parser) throws IOException, XmlPullParserException {
-        int eventType = parser.getEventType();
-        PuntoRuta pRActual = null;
-        LinkedList<PuntoRuta> listaPR = new LinkedList<>();
-
-        RutaEvacuacion rEActual = null;
-        rutasE = new LinkedList<>();
-        boolean idFlag = false;
-        boolean puntoFlag = false;
-
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            String tag;
-
-            switch (eventType) {
-                case XmlPullParser.START_TAG:
-                    tag = parser.getName();
-
-                    if ("node".equals(tag)) {
-                        pRActual = new PuntoRuta();
-                    }
-                    if ("way".equals(tag)) {
-                        rEActual = new RutaEvacuacion();
-                    }
-                    if ("id".equals(tag)) {
-                        idFlag = true;
-                    }
-                    if ("punto".equals(tag)) {
-                        puntoFlag = true;
-                    }
-                    break;
-
-                case XmlPullParser.TEXT:
-                    if (pRActual != null) {
-                        String aux = parser.getText();
-                        String[] partes = aux.split(" ");
-                        pRActual.id = Integer.parseInt(partes[0].substring(4, partes[0].length() - 1));
-                        pRActual.lat = Double.parseDouble(partes[1].substring(5, partes[1].length() - 1));
-                        pRActual.lon = Double.parseDouble(partes[2].substring(5, partes[2].length() - 1));
-                    }
-                    if (idFlag) {
-                        if (rEActual != null) {
-                            rEActual.id = Integer.parseInt(parser.getText());
-                        }
-                    }
-                    if (puntoFlag) {
-                        int miID = Integer.parseInt(parser.getText());
-                        int pos = buscar(listaPR, miID);
-                        if (pos != -1) {
-                            PuntoRuta aux = listaPR.get(pos);
-                            if (rEActual != null) {
-                                rEActual.camino.add(new GeoPoint(aux.lat, aux.lon));
-                            }
-                            //listaPR.remove(pos);
-                        }
-                    }
-                    break;
-
-                case XmlPullParser.END_TAG:
-                    tag = parser.getName();
-                    if (tag.equals("node")) {
-                        listaPR.add(pRActual);
-                        pRActual = null;
-                    }
-                    if (tag.equals("way")) {
-                        rutasE.add(rEActual);
-                        rEActual = null;
-                    }
-                    if ("id".equals(tag)) {
-                        idFlag = false;
-                    }
-                    if ("punto".equals(tag)) {
-                        puntoFlag = false;
-                    }
-                    break;
-            }
-            eventType = parser.next();
-        }
-    }
-
-    /**
-     * Busca un punto en la lista de puntos de las rutas de evacuación.
-     * @param lista Lista de puntos de la ruta de evacuación.
-     * @param ID Punto que se quiere buscar.
-     * @return Indice en la lista del punto que se busca; -1 si el punto no se encuentra.
-     */
-    private int buscar (List<PuntoRuta> lista, int ID) {
-        int resultado = -1;
-        for (int x = 0; x < lista.size(); x++) {
-            if (lista.get(x).id == ID) {
-                resultado = x;
-                x = lista.size() * 5;
-            }
-        }
-        return resultado;
-    }
-
-    /**
-     * Lee los puntos de encuentro desde un archivo XML y los guarda en un ArrayList.
-     * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de puntos de encuentro.
-     */
-    public void processParsingPE(XmlPullParser parser) throws IOException, XmlPullParserException {
-        puntosE = new ArrayList<>();
-        int eventType = parser.getEventType();
-        PuntoEncuentro puntoEActual = null;
-
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            String tag;
-
-            switch(eventType){
-                case XmlPullParser.START_TAG:
-                    tag = parser.getName();
-
-                    if ("node".equals(tag)) {
-                        puntoEActual = new PuntoEncuentro();
-                        puntosE.add(puntoEActual);
-
-                    } else {
-                        if ("nombre".equals(tag)){
-                            puntoEActual.nombre = parser.nextText();
-                        } else if ("lat".equals(tag)) {
-                            puntoEActual.latitud = Double.parseDouble(parser.nextText());
-                        } else if ("lon".equals(tag)) {
-                            puntoEActual.longitud = Double.parseDouble(parser.nextText());
-                            bdMapa.agregarPuntoSeguro(puntoEActual.latitud, puntoEActual.longitud, puntoEActual.nombre);
-                        }
-
-                    }
-                    break;
-            }
-            eventType = parser.next();
-        }
-    }
-
-    /**
-     * Lee las señales verticales desde un archivo XML y los guarda en un ArrayList.
-     * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de puntos de encuentro.
-     */
-    public void processParsingSV(XmlPullParser parser) throws IOException, XmlPullParserException {
-        senalesV = new ArrayList<>();
-        int eventType = parser.getEventType();
-        SenalVertical senalVActual = null;
-
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            String tag;
-
-            switch(eventType){
-                case XmlPullParser.START_TAG:
-                    tag = parser.getName();
-
-                    if ("node".equals(tag)) {
-                        senalVActual = new SenalVertical();
-                        senalesV.add(senalVActual);
-                    } else if (senalVActual != null) {
-                        if ("num".equals(tag)){
-                            senalVActual.id = Integer.parseInt(parser.nextText());
-                        } else if ("lat".equals(tag)) {
-                            senalVActual.latSV = Double.parseDouble(parser.nextText());
-                        } else if ("lon".equals(tag)) {
-                            senalVActual.lonSV = Double.parseDouble(parser.nextText());
-                        } else if ("lado".equals(tag)){
-                            senalVActual.lado = parser.nextText();
-                        }
-                    }
-                    break;
-            }
-            eventType = parser.next();
-        }
     }
 
     /**
