@@ -1,13 +1,21 @@
 package com.example.phoenixdroid.proyectoinge2;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
@@ -33,7 +41,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements LocationListener{
+public class MapActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
 
     MapView mapView; // Mapa
 
@@ -51,6 +59,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
 
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
 
+    SensorManager sensorManager;
+
     SintetizadorVoz sv;
     double latActual = 0;
     double lonActual = 0;
@@ -58,18 +68,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
     int markerUbi = -1;
 
     GeoPoint puntoEMasCercano = null;
-
-
-
-
-
-
-
-
-
-
-
-
+    ImageView orientacionUsuario;
+    float grados = 0f;
 
 
 
@@ -77,6 +77,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
      * Metodo que se ejecuta cuando se crea esta actividad.
      * @param savedInstanceState: la instancia previa de esta actividad.
      */
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +108,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
             } catch (SecurityException ignored) {
             }
 
+        orientacionUsuario = findViewById(R.drawable.icon_persona); //CAMBIAR POR CONO
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Sensor de la orientación del teléfono
         sv = new SintetizadorVoz(this);
         markersPuntosE();
         //markersSenalesV();
@@ -378,7 +381,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
     }
 
     /**
-     * Dibuja en el mapa las diferentes rutas de evacuación.
+     * Dibuja en el mapa todas las rutas de evacuación.
      */
     public void dibujarRutasEvacuacion() {
         if (rutasE != null && !rutasE.isEmpty()) {
@@ -545,4 +548,48 @@ public class MapActivity extends AppCompatActivity implements LocationListener{
         }
         sv.stop();
     }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event)
+    {
+        float newGrados = Math.round(event.values[0]);
+
+        // create a rotation animation (reverse turn degree degrees)
+        RotateAnimation ra = new RotateAnimation(
+                grados,
+                -newGrados,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+
+        // set the animation after the end of the reservation status
+        ra.setFillAfter(true);
+
+        // Start the animation
+        orientacionUsuario.startAnimation(ra);
+        grados = -newGrados;
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {}
 }
