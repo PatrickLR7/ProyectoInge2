@@ -40,7 +40,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     double latActual, lonActual, distancia;
     GeoPoint puntoUsuario, puntoProximo;
-    int grados, puntoCardinalTel; //Grados de 0 a 360 de la orientación,
+    int grados, puntoCardinalTel, puntoCardinalZona; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
     LocationManager locationManager; //Controlador de ubicación
     PuntoCardinal pc;
     PuntoEncuentro puntoMasCercano;
@@ -93,8 +93,9 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         String texto = "";
         //texto = "La orientación es " + grados + " grados. ";
         texto = puntoCardinalTel(texto) + ", ";
-        texto = puntoCardinalPunto(texto);
-        texto = texto + " y la distancia es " + (int) distancia + " metros. ";
+        texto = puntoCardinalPunto(texto) + ". ";
+        texto = instruccion(texto);
+        //texto = texto + " y la distancia es " + (int) distancia + " metros. ";
         sv.hablar(texto);
     }
 
@@ -146,6 +147,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     private String puntoCardinalPunto(String texto)
     {
         int direccion = pc.determinateDirection(puntoUsuario, puntoProximo);
+        puntoCardinalZona = direccion;
         switch (direccion)
         {
             case 0:
@@ -176,6 +178,36 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         return texto;
     }
 
+    private String instruccion(String texto)
+    {
+        if(puntoCardinalTel == puntoCardinalZona)
+        {
+            texto = texto + "Siga hacia adelante. ";
+        }
+        else if(puntoCardinalTel - puntoCardinalZona == 4 || puntoCardinalZona - puntoCardinalTel == 4 ||
+                puntoCardinalTel - puntoCardinalZona == 5 || puntoCardinalZona - puntoCardinalTel == 5 ||
+                puntoCardinalTel - puntoCardinalZona == 3 || puntoCardinalZona - puntoCardinalTel == 3)
+        {
+            texto = texto + "Gire 180 grados. ";
+        }
+        else if(puntoCardinalTel - puntoCardinalZona == 2 || puntoCardinalZona - puntoCardinalTel == 6)
+        {
+            texto = texto + "Gire 90 grados a la izquierda. ";
+        }
+        else if(puntoCardinalTel - puntoCardinalZona == 6 || puntoCardinalZona - puntoCardinalTel == 2)
+        {
+            texto = texto + "Gire 90 grados a la derecha. ";
+        }
+        else if(puntoCardinalTel - puntoCardinalZona == 1 || puntoCardinalZona - puntoCardinalTel == 7)
+        {
+            texto = texto + "Gire 45 grados a la izquierda. ";
+        }
+        else if(puntoCardinalTel - puntoCardinalZona == 7 || puntoCardinalZona - puntoCardinalTel == 1)
+        {
+            texto = texto + "Gire 45 grados a la derecha. ";
+        }
+        return texto;
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) //Sensor de la brújula
