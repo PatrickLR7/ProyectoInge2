@@ -345,7 +345,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     }
 
     /**
-     * Lee las señales verticales desde un archivo XML y los guarda en un ArrayList.
+     * Lee las  señales verticales desde un archivo XML y los guarda en un ArrayList.
      * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de puntos de encuentro.
      */
     public void processParsingSV(XmlPullParser parser) throws IOException, XmlPullParserException {
