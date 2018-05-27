@@ -14,12 +14,19 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
     private TextToSpeech tts;
     Context context;
 
+    /**
+     * Constructor de la clase a través del cual se le envía el contexto del activity que lo ocupa.
+     */
     public SintetizadorVoz(Context contexto)
     {
         context = contexto;
         tts = new TextToSpeech(context, this);
     }
 
+    /**
+     * Metodo que inicializa el servicio.
+     * @param status: estado en el que logró inicializarse el TextToSpeech.
+     */
     @Override
     public void onInit(int status)
     {
@@ -30,23 +37,37 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
         }
     }
 
+    /**
+     * Metodo para decir la distancia que se debe recorrer.
+     * @param distancia: distancia en metros que hay hasta el siguiente punto.
+     */
     public void decirDistancia(double distancia)
     {
         String texto = "La distancia es" + (int) distancia + "metros";
         hablar(texto);
     }
 
+    /**
+     * Metodo para decir la orientación del teléfono.
+     * @param grados: orientación en grados el dispositivo.
+     */
     public void decirOrientacion(int grados)
     {
         String texto = "La orientacion es" + grados;
         hablar(texto);
     }
 
+    /**
+     * Metodo que simplemente lee una cadena.
+     */
     public void hablar(String texto)
     {
         tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+    /**
+     * Metodo para detener el servicio de TextToSpeech.
+     */
     public void stop()
     {
         if (tts != null)

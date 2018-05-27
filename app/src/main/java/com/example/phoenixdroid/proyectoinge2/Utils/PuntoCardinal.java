@@ -6,13 +6,19 @@ import org.osmdroid.util.GeoPoint;
  * Created by admlab105 on 5/17/2018.
  */
 
-public class PuntoCardinal {
+public class PuntoCardinal
+{
 
-    public PuntoCardinal()
-    {
+    /**
+     * Constructor vacío
+     */
+    public PuntoCardinal() { }
 
-    }
-
+    /**
+     * Metodo calcula el punto cardinal al que se encuentra un lugar en relación a la posición del usuario.
+     * @param usuario: ubicación geográfica el usuario.
+     * @param  zona: ubicación geográfica del lugar a comparar.
+     */
     public int determinateDirection(GeoPoint usuario, GeoPoint zona) {
         double latitudeU = usuario.getLatitude();
         double longitudeU = usuario.getLongitude();

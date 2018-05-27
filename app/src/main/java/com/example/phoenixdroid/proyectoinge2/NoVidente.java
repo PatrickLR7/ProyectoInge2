@@ -39,15 +39,19 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
 {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     double latActual, lonActual, distancia;
-    GeoPoint puntoUsuario, puntoProximo;
+    GeoPoint puntoUsuario, puntoProximo; //Puntos necesarios para determinar puntos cardinales
     int grados, puntoCardinalTel, puntoCardinalZona; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
     LocationManager locationManager; //Controlador de ubicación
-    PuntoCardinal pc;
-    PuntoEncuentro puntoMasCercano;
-    SintetizadorVoz sv;
-    SensorManager sensorManager;
+    PuntoCardinal pc; //Clase que determina un punto cardinal según dos GeoPoints
+    PuntoEncuentro puntoMasCercano; //Siguiente punto al que se debe dirigir el usuario
+    SintetizadorVoz sv; //Clase con TextToSpeech
+    SensorManager sensorManager; //Controlador de la orientación del teléfono
     XmlParser parser;
 
+    /**
+     * Metodo que se ejecuta cuando se crea esta actividad.
+     * @param savedInstanceState: la instancia previa de esta actividad.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +76,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         sv = new SintetizadorVoz(this); //Clase con TextToSpeech
 
         grados = 0; //Orientación del teléfono
-        puntoCardinalTel = 0; //
+        puntoCardinalTel = 0; //Punto cardinal según la orientación
         latActual = 0;
         lonActual = 0;
         puntoMasCercano = null;
@@ -82,23 +86,34 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         pc = new PuntoCardinal();
     }
 
+    /**
+     * Metodo que se ejecuta cuando se hace tap.
+     * @param view: objeto sobre el que se hizo tap.
+     */
     @Override
     public void onClick(View view)
     {
         guiar();
     }
 
+    /**
+     * Metodo que arma la información completa que requiere el usuario y luego la dice
+     */
     private void guiar()
     {
         String texto = "";
         //texto = "La orientación es " + grados + " grados. ";
-        texto = puntoCardinalTel(texto) + ", ";
-        texto = puntoCardinalPunto(texto) + ". ";
-        texto = instruccion(texto);
-        //texto = texto + " y la distancia es " + (int) distancia + " metros. ";
-        sv.hablar(texto);
+        texto = puntoCardinalTel(texto) + ", "; //Orientación del teléfono.
+        texto = puntoCardinalPunto(texto) + ". "; //Orientación en la que se encuentra el punto
+        texto = instruccion(texto); //Instrucción más útil para el no vidente
+        //texto = texto + " y la distancia es " + (int) distancia + " metros. "; //Distancia hasta el punto
+        sv.hablar(texto); //Llama a la clase con el TextToSpeech
     }
 
+    /**
+     * Metodo que determina la orientación del dispositivo según el registro en grados devuelto por el sensor.
+     * @param texto texto al que se le va a concatenar la información sobre la orientación.
+     */
     private String puntoCardinalTel(String texto)
     {
         if ((grados >= 337.5 && grados <= 360) || (grados >= 0 && grados < 22.5))
@@ -144,6 +159,10 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         return texto;
     }
 
+    /**
+     * Metodo que determina el punto cardinal hacia el que se encuentra el siguiente punto
+     * @param texto texto al que se le va a concatenar el lugar del punto.
+     */
     private String puntoCardinalPunto(String texto)
     {
         int direccion = pc.determinateDirection(puntoUsuario, puntoProximo);
@@ -178,37 +197,45 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         return texto;
     }
 
+    /**
+     * Metodo que genera la instrucción más específica que tendrá que seguir el usuario no vidente.
+     * @param texto texto al que se le va a concatenar la instrucción.
+     */
     private String instruccion(String texto)
     {
-        if(puntoCardinalTel == puntoCardinalZona)
+        if(puntoCardinalTel == puntoCardinalZona) //El dispositivo está viendo hacia donde está el punto
         {
             texto = texto + "Siga hacia adelante. ";
         }
         else if(puntoCardinalTel - puntoCardinalZona == 4 || puntoCardinalZona - puntoCardinalTel == 4 ||
                 puntoCardinalTel - puntoCardinalZona == 5 || puntoCardinalZona - puntoCardinalTel == 5 ||
                 puntoCardinalTel - puntoCardinalZona == 3 || puntoCardinalZona - puntoCardinalTel == 3)
-        {
+        { //El dispositivo está viendo hacia el sentido contrario
             texto = texto + "Gire 180 grados. ";
         }
         else if(puntoCardinalTel - puntoCardinalZona == 2 || puntoCardinalZona - puntoCardinalTel == 6)
-        {
+        { //El dispositivo está girado
             texto = texto + "Gire 90 grados a la izquierda. ";
         }
         else if(puntoCardinalTel - puntoCardinalZona == 6 || puntoCardinalZona - puntoCardinalTel == 2)
-        {
+        { //El dispositivo está girado
             texto = texto + "Gire 90 grados a la derecha. ";
         }
         else if(puntoCardinalTel - puntoCardinalZona == 1 || puntoCardinalZona - puntoCardinalTel == 7)
-        {
+        { //El dispositivo está un poco girado
             texto = texto + "Gire 45 grados a la izquierda. ";
         }
         else if(puntoCardinalTel - puntoCardinalZona == 7 || puntoCardinalZona - puntoCardinalTel == 1)
-        {
+        { //El dispositivo está un poco girado
             texto = texto + "Gire 45 grados a la derecha. ";
         }
         return texto;
     }
 
+    /**
+     * Metodo que se ejecuta por evento de cuando se registra un cambio en la orientación del dispositivo
+     * @param event evento de cambio en la orientación.
+     */
     @Override
     public void onSensorChanged(SensorEvent event) //Sensor de la brújula
     {
@@ -238,8 +265,8 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                     distanciaMin = dist;
                 }
             }
-            distancia = distanciaMin;
-            puntoProximo = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud);
+            distancia = distanciaMin; //Actualiza la distancia al siguiente punto
+            puntoProximo = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud); //Guarda la información del siguiente punto
 
             int pos = 0;
             double distanciaMin2 = Integer.MAX_VALUE;
@@ -253,10 +280,12 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                     distanciaMin2 = dist;
                 }
             }
-
         }
     }
 
+    /**
+     * Metodo que vuelva a activar el sensor de cambio de orientación.
+     */
     @Override
     public void onResume()
     {
@@ -266,6 +295,9 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                 SensorManager.SENSOR_DELAY_GAME);
     }
 
+    /**
+     * Metodo que desactiva el sensor para ahorrar batería
+     */
     @Override
     public void onPause()
     {
@@ -287,11 +319,14 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * Metodo que no se usa, pero es necesario tener escrito por el SensorEventListener.
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {}
 
     /**
-     * Metodo que se ejecuta cuando el provedor cambia de estado.
+     * Metodo que se ejecuta cuando el provedor cambia de estado. No se usa, pero es necesario tener por el SensorEventListener.
      * @param provider provedor de ubicación.
      * @param status estado.
      * @param extras extras.
