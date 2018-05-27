@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
+public class MapActivity extends AppCompatActivity implements LocationListener {
 
     MapView mapView; // Mapa
 
@@ -549,47 +549,4 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         sv.stop();
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        sensorManager.registerListener(this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-                SensorManager.SENSOR_DELAY_GAME);
-    }
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event)
-    {
-        float newGrados = Math.round(event.values[0]);
-
-        // create a rotation animation (reverse turn degree degrees)
-        RotateAnimation ra = new RotateAnimation(
-                grados,
-                -newGrados,
-                Animation.RELATIVE_TO_SELF,
-                0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
-
-        // how long the animation will take place
-        ra.setDuration(210);
-
-        // set the animation after the end of the reservation status
-        ra.setFillAfter(true);
-
-        // Start the animation
-        orientacionUsuario.startAnimation(ra);
-        grados = -newGrados;
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {}
 }
