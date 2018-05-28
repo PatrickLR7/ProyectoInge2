@@ -1,7 +1,6 @@
 package com.example.phoenixdroid.proyectoinge2;
 
 
-import android.os.SystemClock;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -30,13 +29,13 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class EscogerZona {
+public class escogerVideo {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void escogerZona() {
+    public void escogerVideo() {
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.button), withText("Modo Vidente"),
                         childAtPosition(
@@ -47,44 +46,46 @@ public class EscogerZona {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        SystemClock.sleep(2000);
-
-
         ViewInteraction button = onView(
-                allOf(withId(R.id.btnAlvarez),
+                allOf(withId(R.id.btnMatinilla),
                         childAtPosition(
                                 childAtPosition(
                                         IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
                                         0),
-                                2),
+                                0),
                         isDisplayed()));
         button.check(matches(isDisplayed()));
 
-        SystemClock.sleep(2000);
-
         ViewInteraction button2 = onView(
-                allOf(withId(R.id.btnQTapezco),
+                allOf(withId(R.id.btnCPRioUruca),
                         childAtPosition(
                                 childAtPosition(
                                         IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
                                         0),
-                                5),
+                                3),
                         isDisplayed()));
         button2.check(matches(isDisplayed()));
 
-        SystemClock.sleep(2000);
-
         ViewInteraction button3 = onView(
-                allOf(withId(R.id.btnSPitier),
+                allOf(withId(R.id.btnSanguijuela),
                         childAtPosition(
                                 childAtPosition(
                                         IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
                                         0),
-                                4),
+                                8),
                         isDisplayed()));
         button3.check(matches(isDisplayed()));
 
-        SystemClock.sleep(2000);
+        ViewInteraction textView = onView(
+                allOf(withId(R.id.textView2), withText("Seleccione la zona en la que vive:"),
+                        childAtPosition(
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.view.ViewGroup.class),
+                                        0),
+                                0),
+                        isDisplayed()));
+        textView.check(matches(withText("Seleccione la zona en la que vive:")));
+
     }
 
     private static Matcher<View> childAtPosition(
