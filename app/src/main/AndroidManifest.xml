@@ -29,7 +29,8 @@
         <activity android:name=".ZonasActivity" />
         <activity android:name=".VideosActivity" />
         <activity android:name=".MapActivity" />
-        <activity android:name=".NoVidente"></activity>
+        <activity android:name=".NoVidente" />
+        <activity android:name=".SimpleCameraActivity"></activity>
     </application>
 
 </manifest>
