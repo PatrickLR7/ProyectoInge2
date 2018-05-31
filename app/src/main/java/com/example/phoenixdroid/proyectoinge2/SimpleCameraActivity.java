@@ -1,5 +1,6 @@
 package com.example.phoenixdroid.proyectoinge2;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -52,6 +53,9 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
         // Start home activity
         requestPermission(Permiso, 1);
+
+
+        askPermission();
 
         // Hide the window title.
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -152,6 +156,7 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
     }
 
+
     /**
      *
      * @param provider:
@@ -206,5 +211,21 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
      */
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {}
+
+
+
+
+    /**
+     * Método para solicitar permiso para utilizar los servicios de ubicación.
+     */
+    private boolean askPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 112);
+            return false;
+        }
+        else return true;
+    }
+
+
 
 }
