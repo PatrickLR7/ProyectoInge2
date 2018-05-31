@@ -31,7 +31,9 @@
         <activity android:name=".VideosActivity" />
         <activity android:name=".MapActivity" />
         <activity android:name=".NoVidente" />
-        <activity android:name=".SimpleCameraActivity"></activity>
+        <activity android:name=".SimpleCameraActivity"
+            android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>
