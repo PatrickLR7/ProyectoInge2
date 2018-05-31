@@ -2,6 +2,7 @@ package com.example.phoenixdroid.proyectoinge2;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -13,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -455,6 +457,15 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
                 addMarker(routeCenter, "Señal: " + Integer.toString(senalesV.get(i).id),2);
             }
         }
+    }
+
+    /**
+     * Inicia el activity SimpleCamera
+     */
+
+    public void iSimpleCamera(View v){
+        Intent i = new Intent(this, SimpleCameraActivity.class);
+        startActivity(i);
     }
 
     /**

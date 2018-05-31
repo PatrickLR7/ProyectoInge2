@@ -73,11 +73,13 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
         mWorld.onResume();
 
-        //
-        //
-        // Aqui se puede hacer algo con la posicion del usuario, atributo user
-        //
-        //
+        //Posicion del usuario.
+        user = new GeoObject(1000l);
+        user.setGeoPosition(mWorld.getLatitude(), mWorld.getLongitude());
+        user.setImageResource(R.drawable.icon_persona);
+        user.setName("Posicion del usuario");
+        mWorld.addBeyondarObject(user);
+
 
         //Permitimos que BeyondAR actualice automáticamente la posición del mundo con respecto al usuario
         BeyondarLocationManager.addWorldLocationUpdate(mWorld);

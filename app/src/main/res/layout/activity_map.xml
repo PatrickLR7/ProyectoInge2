@@ -6,10 +6,25 @@
     android:layout_height="match_parent"
     tools:context="com.example.phoenixdroid.proyectoinge2.MapActivity">
 
-    <org.osmdroid.views.MapView
-        android:id="@+id/mapview"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true" />
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnRA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="iSimpleCamera"
+            android:text="RA" />
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/mapview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true" />
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
