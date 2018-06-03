@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
+import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
@@ -345,6 +346,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }
             eventType = parser.next();
         }
+
+        Config.puntosEncuentro = puntosE;
+
     }
 
     /**
@@ -487,6 +491,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     @Override
     public void onLocationChanged(Location location) {
         GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
+        Config.usuarioLat = location.getLatitude();
+        Config.usuarioLon = location.getLongitude();
         routeCenter = miPosicion;
         mapViewController.animateTo(routeCenter);
         if (latActual != miPosicion.getLatitude() || lonActual != miPosicion.getLongitude()) {

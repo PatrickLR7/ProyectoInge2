@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
+import com.example.phoenixdroid.proyectoinge2.R;
+
+import java.util.ArrayList;
 
 /**
  * Clase que crea el entorno de realidad aumentada.
@@ -12,14 +15,16 @@ import com.beyondar.android.world.World;
 public class CustomWorldHelper {
 
     public static final int LIST_TYPE_EXAMPLE_1 = 1;
-    /** Representa el ambiente o entorno del juego. */
+    /** Representa el ambiente o entorno de la RA. */
     private World sharedWorld;
+    /** Lista de objetos que actualmente se muestran en la camara. */
+    private ArrayList<GeoObject> geoObjects;
 
     /**
      * Class Constructor.
      */
     public CustomWorldHelper(){
-
+        geoObjects = new ArrayList<>();
     }
 
     /**
@@ -37,6 +42,17 @@ public class CustomWorldHelper {
         // Hacerle aquí cambios al World que se va a generar
         // Posiblemente agregar los puntos de encuentro y señales verticales
         //
+
+        for(int i = 0; i < Config.puntosEncuentro.size(); i++){
+            GeoObject go1 = new GeoObject(i);
+            go1.setGeoPosition(Config.puntosEncuentro.get(i).latitud, Config.puntosEncuentro.get(i).longitud);
+            go1.setImageResource(R.drawable.icon_zona_segura);
+            go1.setName("" + Config.puntosEncuentro.get(i).nombre);
+            sharedWorld.addBeyondarObject(go1);
+            geoObjects.add(go1);
+        }
+
+        sharedWorld.setGeoPosition(Config.usuarioLat, Config.usuarioLon);
 
         return sharedWorld;
     }
