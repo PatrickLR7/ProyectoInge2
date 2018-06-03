@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:onClick="iSimpleCamera"
             android:text="RA" />
 
@@ -24,6 +25,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/brujumas"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:visibility="visible"
+            app:srcCompat="@android:drawable/ic_input_add" />
 
     </RelativeLayout>
 

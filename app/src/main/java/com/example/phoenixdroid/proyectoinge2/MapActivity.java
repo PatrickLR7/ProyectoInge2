@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements LocationListener {
+public class MapActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
 
     MapView mapView; // Mapa
 
@@ -71,9 +71,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
 
     GeoPoint puntoEMasCercano = null;
     ImageView orientacionUsuario;
-    float grados = 0f;
+    float gradosAux = 0f;
 
-
+    ImageView brujula;
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -115,6 +115,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         sv = new SintetizadorVoz(this);
         markersPuntosE();
         //markersSenalesV();
+        brujula = findViewById(R.id.brujumas);
     }
 
 
@@ -462,7 +463,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
     /**
      * Inicia el activity SimpleCamera
      */
-
     public void iSimpleCamera(View v){
         Intent i = new Intent(this, SimpleCameraActivity.class);
         startActivity(i);
@@ -479,7 +479,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
             addMarker(routeCenter, "Señal: " + Integer.toString(aux.id),2);
         }
     }
-
 
     /**
      * Metodo que revisa los cambios en la ubicación del usuario.
@@ -560,4 +559,53 @@ public class MapActivity extends AppCompatActivity implements LocationListener {
         sv.stop();
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float grados = Math.round(event.values[0]);
+        // create a rotation animation (reverse turn degree degrees)
+        RotateAnimation ra = new RotateAnimation(
+                gradosAux,
+                -grados,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+
+        // set the animation after the end of the reservation status
+        ra.setFillAfter(true);
+
+        // Start the animation
+        brujula.startAnimation(ra);
+        gradosAux = -grados;
+    }
+
+    /**
+     * Metodo que no se usa, pero es necesario tener escrito por el SensorEventListener.
+     */
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {}
+
+    /**
+     * Metodo que vuelva a activar el sensor de cambio de orientación.
+     */
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    /**
+     * Metodo que desactiva el sensor para ahorrar batería
+     */
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
 }
