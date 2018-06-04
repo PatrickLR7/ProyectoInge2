@@ -106,7 +106,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         texto = puntoCardinalTel(texto) + ", "; //Orientación del teléfono.
         texto = puntoCardinalPunto(texto) + ". "; //Orientación en la que se encuentra el punto
         texto = instruccion(texto); //Instrucción más útil para el no vidente
-        //texto = texto + " y la distancia es " + (int) distancia + " metros. "; //Distancia hasta el punto
+        texto = texto + " y la distancia es " + (int) distancia + " metros. "; //Distancia hasta el punto
         sv.hablar(texto); //Llama a la clase con el TextToSpeech
     }
 

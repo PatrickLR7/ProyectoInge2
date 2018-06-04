@@ -18,13 +18,13 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:onClick="iSimpleCamera"
-            android:text="RA" />
+            android:text="@string/ra" />
 
         <org.osmdroid.views.MapView
             android:id="@+id/mapview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="true" />
+            android:clickable="true" android:focusable="true" />
 
     </RelativeLayout>
 
@@ -32,13 +32,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Switch
+            android:id="@+id/luz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/luz" />
+
         <ImageView
             android:id="@+id/imageView5"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            app:srcCompat="@drawable/back" />
+            app:srcCompat="@drawable/back" android:contentDescription="@string/todo" />
 
         <ImageView
             android:id="@+id/brujumas"
@@ -47,7 +53,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:visibility="visible"
-            app:srcCompat="@drawable/fore" />
+            app:srcCompat="@drawable/fore" android:contentDescription="@string/todo" />
 
     </RelativeLayout>
 

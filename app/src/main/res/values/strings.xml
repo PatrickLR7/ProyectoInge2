@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Evacuación: Cuenca Río Uruca</string>
     <string name="seleccione_zona">Seleccione la zona en la que vive:</string>
+    <string name="ra">RA</string>
+    <string name="luz">LUZ</string>
+    <string name="todo">TODO</string>
 </resources>

@@ -3,21 +3,27 @@ package com.example.phoenixdroid.proyectoinge2;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
@@ -76,6 +82,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
     ImageView brujula;
 
+    private Switch buttonEnable;
+    private static final int CAMERA_REQUEST = 50;
+    private boolean flashLightStatus = false;
+
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
      * @param savedInstanceState: la instancia previa de esta actividad.
@@ -117,12 +127,21 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         markersPuntosE();
         //markersSenalesV();
         brujula = findViewById(R.id.brujumas);
+
+        buttonEnable = (Switch) findViewById(R.id.luz);
+
+        buttonEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean q) {
+                if(flashLightStatus == false){
+                    flashLightOn();
+                }
+                else{
+                    flashLightOff();
+                }
+                flashLightStatus ^= true;
+            }
+        });
     }
-
-
-
-
-
 
     /**
      * Crea un marker y lo agrega al mapa.
@@ -613,5 +632,40 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     {
         super.onPause();
         sensorManager.unregisterListener(this);
+    }
+
+    private void flashLightOn() {
+        CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+
+        try {
+            String cameraId = cameraManager.getCameraIdList()[0];
+            cameraManager.setTorchMode(cameraId, true);
+        } catch (CameraAccessException e) {
+        }
+    }
+
+    private void flashLightOff() {
+        CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+
+        try {
+            String cameraId = cameraManager.getCameraIdList()[0];
+            cameraManager.setTorchMode(cameraId, false);
+        } catch (CameraAccessException e) {
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode) {
+            case CAMERA_REQUEST :
+                if (grantResults.length > 0  &&  grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    buttonEnable.setEnabled(false);
+                    buttonEnable.setText("Camera Enabled");
+                } else {
+                    Toast.makeText(MapActivity.this, "Permission Denied for the Camera",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 }
