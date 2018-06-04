@@ -404,6 +404,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }
             eventType = parser.next();
         }
+
+        Config.senalesVerticales = senalesV;
+
     }
 
     /**

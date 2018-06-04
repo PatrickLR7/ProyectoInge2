@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beyondar.android.fragment.BeyondarFragmentSupport;
 import com.beyondar.android.plugin.radar.RadarView;
@@ -21,7 +22,14 @@ import com.beyondar.android.plugin.radar.RadarWorldPlugin;
 import com.beyondar.android.util.location.BeyondarLocationManager;
 import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
+import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.CustomWorldHelper;
+import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
+import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
+
+import org.osmdroid.util.GeoPoint;
+
+import java.util.ArrayList;
 
 public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, android.location.LocationListener{
 
@@ -42,6 +50,18 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
     private RadarWorldPlugin mRadarPlugin;
     private SeekBar mSeekBarMaxDistance;
     private TextView mTextviewMaxDistance;
+
+    /** Lista de los puntos seguros. */
+    ArrayList<PuntoEncuentro> puntosE;
+
+    /** Lista de las señales verticales. */
+    ArrayList<SenalVertical> senalesV;
+
+    /** Lista de objetos que actualmente se muestran en la camara. */
+    private ArrayList<GeoObject> geoObjects;
+
+    double latActual = 0;
+    double lonActual = 0;
 
     /** Usuario. */
     private GeoObject user;
@@ -129,7 +149,50 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         mSeekBarMaxDistance.setMax(300);
         mSeekBarMaxDistance.setProgress(23);
         mRadarPlugin.setMaxDistance(45);
+
+
+
+        puntosE = Config.puntosEncuentro;
+        senalesV = Config.senalesVerticales;
+        geoObjects = Config.geoObjetos;
+
+
+
+
     }
+
+
+
+    /**
+     * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
+     */
+    public void markersSenalesV(int senal){
+
+        int id = Config.idGeoObjects;
+
+        if (senalesV != null && !senalesV.isEmpty()) {
+           // SenalVertical aux = senalesV.get(senal);
+          //  routeCenter.setLatitude(aux.latSV);
+          //  routeCenter.setLongitude(aux.lonSV);
+          //  addMarker(routeCenter, "Señal: " + Integer.toString(aux.id),2);
+
+
+            GeoObject go1 = new GeoObject(id++);
+            go1.setGeoPosition(Config.senalesVerticales.get(senal).latSV, Config.senalesVerticales.get(senal).lonSV);
+            go1.setImageResource(R.drawable.icon_senal);
+            go1.setName("Señal: " + senal);
+            mWorld.addBeyondarObject(go1);
+            geoObjects.add(go1);
+        }
+
+        Config.geoObjetos = geoObjects;
+        Config.idGeoObjects = id;
+
+    }
+
+
+
+
 
     /**
      * Metodo encargado de mostrar los dialogos de solicitud de permisos si es necesario.
@@ -153,6 +216,49 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
     @Override
     public void onLocationChanged(Location location) {
+
+
+
+        GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
+        Config.usuarioLat = location.getLatitude();
+        Config.usuarioLon = location.getLongitude();
+
+
+        if (latActual != miPosicion.getLatitude() || lonActual != miPosicion.getLongitude()) {
+            latActual = miPosicion.getLatitude();
+            lonActual = miPosicion.getLongitude();
+
+            double distanciaMin = Integer.MAX_VALUE;
+            for (int x = 0; x < puntosE.size(); x++) {
+                PuntoEncuentro puntoSeguro = puntosE.get(x);
+                GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
+                double dist = miPosicion.distanceToAsDouble(aux);
+                if (dist < distanciaMin) {
+
+                    distanciaMin = dist;
+                }
+            }
+
+            int pos = 0;
+            double distanciaMin2 = Integer.MAX_VALUE;
+            for (int x = 0; x < senalesV.size(); x++) {
+                SenalVertical senal = senalesV.get(x);
+                GeoPoint aux = new GeoPoint(senal.latSV, senal.lonSV);
+                double dist = miPosicion.distanceToAsDouble(aux);
+                if (dist < distanciaMin2) {
+                    pos = x;
+                    distanciaMin2 = dist;
+                }
+            }
+
+
+            markersSenalesV(pos);
+
+        }
+
+
+
+
 
     }
 

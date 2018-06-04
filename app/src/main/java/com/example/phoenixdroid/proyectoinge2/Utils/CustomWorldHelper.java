@@ -42,16 +42,20 @@ public class CustomWorldHelper {
         // Hacerle aquí cambios al World que se va a generar
         // Posiblemente agregar los puntos de encuentro y señales verticales
         //
+        int id = Config.idGeoObjects;
 
         for(int i = 0; i < Config.puntosEncuentro.size(); i++){
-            GeoObject go1 = new GeoObject(i);
+            GeoObject go1 = new GeoObject(id++);
             go1.setGeoPosition(Config.puntosEncuentro.get(i).latitud, Config.puntosEncuentro.get(i).longitud);
             go1.setImageResource(R.drawable.icon_zona_segura);
             go1.setName("" + Config.puntosEncuentro.get(i).nombre);
             sharedWorld.addBeyondarObject(go1);
             geoObjects.add(go1);
+
         }
 
+        Config.geoObjetos = geoObjects;
+        Config.idGeoObjects = id;
         sharedWorld.setGeoPosition(Config.usuarioLat, Config.usuarioLon);
 
         return sharedWorld;
