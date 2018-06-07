@@ -30,8 +30,6 @@ import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
-import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
-import com.example.phoenixdroid.proyectoinge2.Utils.RutaEvacuacion;
 import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
 import com.example.phoenixdroid.proyectoinge2.Utils.SintetizadorVoz;
 
@@ -53,21 +51,13 @@ import java.util.List;
 public class MapActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
 
     MapView mapView; // Mapa
-
     MapController mapViewController; //Controlador para el mapa.
-
     GeoPoint routeCenter = new GeoPoint(9.91163,-84.1783); //Coordenadas de referencia.
-
     LocationManager locationmanager; //Controlador de ubicación
-
     ArrayList<PuntoEncuentro> puntosE; //Lista de los puntos seguros.
-
     ArrayList<SenalVertical> senalesV; // Lista de las señales verticales.
-
-    List<RutaEvacuacion> rutasE; //Lista de rutas de evacuación.
-
+    List<List<GeoPoint>> rutasE = new ArrayList<>(107); //Lista de rutas de evacuación.
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
-
     SensorManager sensorManager;
 
     SintetizadorVoz sv;
@@ -106,41 +96,44 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
         mapViewController = (MapController) mapView.getController();
         mapViewController.setZoom(19);
-       // mapViewController.animateTo(routeCenter);
         mapView.setTileSource(new XYTileSource("tiles", 10, 18, 256, ".png", new String[0]));
-
 
         bdMapa = new BaseDeDatos(getApplicationContext());
         parseXML();
-        //dibujarRutasEvacuacion();
 
         locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         try {
             assert locationmanager != null;
             locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 10, this);
-            } catch (SecurityException ignored) {
-            }
+            } catch (SecurityException ignored) { }
 
         orientacionUsuario = findViewById(R.drawable.icon_persona); //CAMBIAR POR CONO
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Sensor de la orientación del teléfono
         sv = new SintetizadorVoz(this);
+        //dibujarRutasEvacuacion();
         markersPuntosE();
-        //markersSenalesV();
         brujula = findViewById(R.id.brujumas);
 
-        buttonEnable = (Switch) findViewById(R.id.luz);
+        buttonEnable = findViewById(R.id.luz);
 
         buttonEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean q) {
-                if(flashLightStatus == false){
+                if(!flashLightStatus){
                     flashLightOn();
-                }
-                else{
+                } else{
                     flashLightOff();
                 }
                 flashLightStatus ^= true;
             }
         });
+    }
+
+    public void addMarker(GeoPoint gp, String nombre) {
+        Marker m = new Marker(mapView);
+        m.setPosition(gp);
+        m.setTitle(nombre);
+        mapView.getOverlays().add(m);
+        mapView.invalidate();
     }
 
     /**
@@ -155,42 +148,29 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         marker.setTitle(nombre);
 
         if(tipo == 1) {
-            if(0 <= markerUbi){
+            if(0 <= markerUbi) {
                 mapView.getOverlays().remove(markerUbi);
             }
 
+            Marker markerRadio = new Marker(mapView);
+            markerRadio.setPosition(Center);
+            markerRadio.setTitle(nombre);
+            Drawable d = getResources().getDrawable(R.drawable.radius_circle);
+            markerRadio.setIcon(d);
             markerUbi = mapView.getOverlays().size();
-            Drawable d = getResources().getDrawable(R.drawable.radius_circle_person);
-            marker.setIcon(d);
+            mapView.getOverlays().add(markerRadio);
 
-
-        }else  if(tipo == 2) {
+            Drawable dd = getResources().getDrawable(R.drawable.icon_persona);
+            marker.setIcon(dd);
+        } else if(tipo == 2) {
             Drawable d = getResources().getDrawable(R.drawable.icon_senal);
             marker.setIcon(d);
-        }else  if(tipo == 3) {
+        } else if(tipo == 3) {
             Drawable d = getResources().getDrawable(R.drawable.icon_zona_segura);
             marker.setIcon(d);
         }
 
         mapView.getOverlays().add(marker);
-        mapView.invalidate();
-    }
-
-    /**
-     * Agrega un marker en el mapa.
-     * @param m Marker que se quiere agregar.
-     */
-    public void addMarker(Marker m) {
-        mapView.getOverlays().add(m);
-        mapView.invalidate();
-    }
-
-    /**
-     * Borra un marker del mapa.
-     * @param m Marker que se quiere borrar.
-     */
-    public void deleteMarker(Marker m) {
-        mapView.getOverlays().remove(m);
         mapView.invalidate();
     }
 
@@ -220,7 +200,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
             processParsingSV(parser);
-        } catch (XmlPullParserException ignored) { } catch (IOException ignored) { }
+        } catch (XmlPullParserException | IOException ignored) { }
     }
 
     /**
@@ -229,98 +209,46 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      */
     public void processParsingRE(XmlPullParser parser) throws IOException, XmlPullParserException {
         int eventType = parser.getEventType();
-        PuntoRuta pRActual = null;
-        LinkedList<PuntoRuta> listaPR = new LinkedList<>();
-
-        RutaEvacuacion rEActual = null;
-        rutasE = new LinkedList<>();
-        boolean idFlag = false;
-        boolean puntoFlag = false;
+        List<GeoPoint> rEActual = null;
+        int id = 0;
+        boolean flagID = false;
+        boolean flagPunto = false;
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String tag;
-
             switch (eventType) {
                 case XmlPullParser.START_TAG:
                     tag = parser.getName();
+                    if ("way".equals(tag)) { rEActual = new LinkedList<>(); }
+                    if ("id".equals(tag)) { flagID = true; }
+                    if ("punto".equals(tag)) { flagPunto = true; }
 
-                    if ("node".equals(tag)) {
-                        pRActual = new PuntoRuta();
-                    }
-                    if ("way".equals(tag)) {
-                        rEActual = new RutaEvacuacion();
-                    }
-                    if ("id".equals(tag)) {
-                        idFlag = true;
-                    }
-                    if ("punto".equals(tag)) {
-                        puntoFlag = true;
-                    }
                     break;
 
                 case XmlPullParser.TEXT:
-                    if (pRActual != null) {
-                        String aux = parser.getText();
-                        String[] partes = aux.split(" ");
-                        pRActual.id = Integer.parseInt(partes[0].substring(4, partes[0].length() - 1));
-                        pRActual.lat = Double.parseDouble(partes[1].substring(5, partes[1].length() - 1));
-                        pRActual.lon = Double.parseDouble(partes[2].substring(5, partes[2].length() - 1));
-                    }
-                    if (idFlag) {
-                        if (rEActual != null) {
-                            rEActual.id = Integer.parseInt(parser.getText());
-                        }
-                    }
-                    if (puntoFlag) {
-                        int miID = Integer.parseInt(parser.getText());
-                        int pos = buscar(listaPR, miID);
-                        if (pos != -1) {
-                            PuntoRuta aux = listaPR.get(pos);
-                            if (rEActual != null) {
-                                rEActual.camino.add(new GeoPoint(aux.lat, aux.lon));
-                            }
-                            listaPR.remove(pos);
-                        }
+                    String text = parser.getText();
+                    if (flagPunto) {
+                        String[] coordenadas = text.split(" ");
+                        double latitud = Double.parseDouble(coordenadas[0].substring(4));
+                        double longitud = Double.parseDouble(coordenadas[1].substring(4));
+
+                        assert rEActual != null;
+                        rEActual.add(new GeoPoint(latitud, longitud));
+                    } else if (flagID) {
+                        id = Integer.parseInt(text.substring(1));
                     }
                     break;
 
                 case XmlPullParser.END_TAG:
                     tag = parser.getName();
-                    if (tag.equals("node")) {
-                        listaPR.add(pRActual);
-                        pRActual = null;
-                    }
-                    if (tag.equals("way")) {
-                        rutasE.add(rEActual);
-                        rEActual = null;
-                    }
-                    if ("id".equals(tag)) {
-                        idFlag = false;
-                    }
-                    if ("punto".equals(tag)) {
-                        puntoFlag = false;
-                    }
+                    if (tag.equals("way")) { rutasE.add(id, rEActual); }
+                    if ("id".equals(tag)) { flagID = false; }
+                    if ("punto".equals(tag)) { flagPunto = false; }
+
                     break;
             }
             eventType = parser.next();
         }
-    }
-
-    /**
-     * Busca un punto en la lista de puntos de las rutas de evacuación.
-     * @param lista Lista de puntos de la ruta de evacuación.
-     * @param ID Punto que se quiere buscar.
-     * @return Indice en la lista del punto que se busca; -1 si el punto no se encuentra.
-     */
-    private int buscar (List<PuntoRuta> lista, int ID) {
-        int resultado = -1;
-        for (int x = 0; x < lista.size(); x++) {
-            if (lista.get(x).id == ID) {
-                resultado = x;
-                x = lista.size() * 5;
-            }
-        }
-        return resultado;
     }
 
     /**
@@ -342,7 +270,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     if ("node".equals(tag)) {
                         puntoEActual = new PuntoEncuentro();
                         puntosE.add(puntoEActual);
-
                     } else {
                         if ("nombre".equals(tag)){
                             puntoEActual.nombre = parser.nextText();
@@ -352,15 +279,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                             puntoEActual.longitud = Double.parseDouble(parser.nextText());
                             bdMapa.agregarPuntoSeguro(puntoEActual.latitud, puntoEActual.longitud, puntoEActual.nombre);
                         }
-
                     }
                     break;
             }
             eventType = parser.next();
         }
-
         Config.puntosEncuentro = puntosE;
-
     }
 
     /**
@@ -399,25 +323,49 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         }
 
         Config.senalesVerticales = senalesV;
-
     }
 
     /**
-     * Dibuja en el mapa todas las rutas de evacuación.
+     * Dibuja en el mapa TODAS las rutas de evacuación.
      */
     public void dibujarRutasEvacuacion() {
         if (rutasE != null && !rutasE.isEmpty()) {
-
+            int indice;
             for (int x = 0; x < rutasE.size(); x++) {
-                Polyline polyline = new Polyline();
-                List<GeoPoint> pathPoints = rutasE.get(x).camino;
+                List<GeoPoint> rutaActual = rutasE.get(x);
 
                 int brownColorValue = Color.parseColor("#B6523C");
+                Polyline polyline = new Polyline();
+                /*if (x == 8) {
+                    polyline.setColor(Color.RED);
+                    indice = calcularPuntoEncuentroMasCercano(rutaActual.get(0));
+                    addMarker(new GeoPoint(puntosE.get(indice).latitud, puntosE.get(indice).longitud), "Punto seguro1", 3);
+                } else {
+                    polyline.setColor(Color.BLUE);
+                }*/
+                //addMarker(rutaActual.get(0), "Inicio Ruta " + x);
+
                 polyline.setColor(brownColorValue);
                 mapView.getOverlays().add(polyline);
-                polyline.setPoints(pathPoints);
+                polyline.setPoints(rutaActual);
             }
         }
+    }
+
+    private int calcularPuntoEncuentroMasCercano (GeoPoint punto) {
+        double menorDistancia = Double.MAX_VALUE;
+        int indicepuntoSeguro = 0;
+        for (int x = 0; x < puntosE.size(); x++) {
+            PuntoEncuentro pE = puntosE.get(x);
+            GeoPoint puntoEvacuacion = new GeoPoint(pE.latitud, pE.longitud);
+            double aux = punto.distanceToAsDouble(puntoEvacuacion);
+
+            if (aux < menorDistancia) {
+                menorDistancia = aux;
+                indicepuntoSeguro = x;
+            }
+        }
+        return indicepuntoSeguro;
     }
 
     /**
@@ -427,17 +375,15 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     public void dibujarRutasEvacuacion(GeoPoint gp) {
         if (rutasE != null && !rutasE.isEmpty()) {
             double menorDistancia = Double.MAX_VALUE;
-            List<GeoPoint> rutaMasCercana = rutasE.get(0).camino;
+            List<GeoPoint> rutaMasCercana = rutasE.get(0);
             GeoPoint puntoCercanoRuta; // Punto dentro la ruta más cercano a gp
             for (int x = 0; x < rutasE.size(); x++) {
-                List<GeoPoint> rutaActual = rutasE.get(x).camino;
+                List<GeoPoint> rutaActual = rutasE.get(x);
                 for (int y = 0; y < rutaActual.size(); y++) {
                     double aux = rutaActual.get(y).distanceToAsDouble(gp);
-                    double aux2 = rutaActual.get(y).distanceToAsDouble(puntoEMasCercano);
-                    double aux3 = aux + aux2;
 
-                    if (aux3 < menorDistancia) {
-                        menorDistancia = aux3;
+                    if (aux < menorDistancia) {
+                        menorDistancia = aux;
                         rutaMasCercana = rutaActual;
                         puntoCercanoRuta = rutaActual.get(y);
                     }
@@ -456,7 +402,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      * Coloca marcadores en el mapa en la posición en la que se ubican los puntos de encuentro.
      */
     public void markersPuntosE() {
-
         if (puntosE != null && !puntosE.isEmpty()) {
             for (int i = 0; i < puntosE.size(); i++) {
                 routeCenter.setLatitude(puntosE.get(i).latitud);
@@ -541,7 +486,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             dibujarRutasEvacuacion(miPosicion);
             addMarker(miPosicion, "Mi ubicacion", 1);
             markersSenalesV(pos);
-
         }
     }
 
@@ -612,8 +556,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      * Metodo que vuelva a activar el sensor de cambio de orientación.
      */
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
@@ -624,8 +567,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      * Metodo que desactiva el sensor para ahorrar batería
      */
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
     }
@@ -634,22 +576,25 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         try {
+            assert cameraManager != null;
             String cameraId = cameraManager.getCameraIdList()[0];
+
             cameraManager.setTorchMode(cameraId, true);
-        } catch (CameraAccessException e) {
-        }
+        } catch (CameraAccessException ignored) { }
     }
 
     private void flashLightOff() {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         try {
+            assert cameraManager != null;
             String cameraId = cameraManager.getCameraIdList()[0];
+
             cameraManager.setTorchMode(cameraId, false);
-        } catch (CameraAccessException e) {
-        }
+        } catch (CameraAccessException ignored) { }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch(requestCode) {

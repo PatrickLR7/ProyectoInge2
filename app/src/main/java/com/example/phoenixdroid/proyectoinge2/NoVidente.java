@@ -12,31 +12,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoCardinal;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
-import com.example.phoenixdroid.proyectoinge2.Utils.PuntoRuta;
-import com.example.phoenixdroid.proyectoinge2.Utils.RutaEvacuacion;
 import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
 import com.example.phoenixdroid.proyectoinge2.Utils.SintetizadorVoz;
 import com.example.phoenixdroid.proyectoinge2.Utils.XmlParser;
 
 import org.osmdroid.util.GeoPoint;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
-public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener
-{
+public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     double latActual, lonActual, distancia;
     GeoPoint puntoUsuario, puntoProximo; //Puntos necesarios para determinar puntos cardinales
