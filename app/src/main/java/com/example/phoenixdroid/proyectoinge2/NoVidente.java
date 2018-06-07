@@ -91,11 +91,17 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     private void guiar()
     {
         String texto = "";
-        //texto = "La orientación es " + grados + " grados. ";
-        texto = puntoCardinalTel(texto) + ", "; //Orientación del teléfono.
-        texto = puntoCardinalPunto(texto) + ". "; //Orientación en la que se encuentra el punto
-        texto = instruccion(texto); //Instrucción más útil para el no vidente
-        texto = texto + " y la distancia es " + (int) distancia + " metros. "; //Distancia hasta el punto
+        if(distancia <= 20)
+        {
+            texto = texto + "Ha llegado a la zona segura.";
+        }
+        else
+        {
+            texto = puntoCardinalTel(texto) + ", "; //Orientación del teléfono.
+            texto = puntoCardinalPunto(texto) + ". "; //Orientación en la que se encuentra el punto
+            texto = instruccion(texto); //Instrucción más útil para el no vidente
+            texto = texto + " y la distancia es " + (int) distancia + " metros. "; //Distancia hasta el punto
+        }
         sv.hablar(texto); //Llama a la clase con el TextToSpeech
     }
 
@@ -271,6 +277,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             }
         }
     }
+
 
     /**
      * Metodo que vuelva a activar el sensor de cambio de orientación.

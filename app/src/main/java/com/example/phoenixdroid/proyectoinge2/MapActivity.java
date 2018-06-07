@@ -63,6 +63,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     SintetizadorVoz sv;
     double latActual = 0;
     double lonActual = 0;
+    ImageView brujula;
 
     int markerUbi = -1;
 
@@ -70,7 +71,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     ImageView orientacionUsuario;
     float gradosAux = 0f;
 
-    ImageView brujula;
 
     private Switch buttonEnable;
     private static final int CAMERA_REQUEST = 50;
@@ -169,7 +169,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             Drawable d = getResources().getDrawable(R.drawable.icon_zona_segura);
             marker.setIcon(d);
         }
-
         mapView.getOverlays().add(marker);
         mapView.invalidate();
     }
@@ -486,7 +485,23 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             dibujarRutasEvacuacion(miPosicion);
             addMarker(miPosicion, "Mi ubicacion", 1);
             markersSenalesV(pos);
+
+            verificarCercanias(distanciaMin2, distanciaMin);
         }
+    }
+
+    private void verificarCercanias(double distSenal, double distZona)
+    {
+        String texto = "";
+        if(distSenal <= 20)
+        {
+            texto = texto + "Se está aproximando a una señal vertical. Por favor, revísela. ";
+        }
+        if(distZona <= 20)
+        {
+            texto = texto + "Ha llegado a la zona segura.";
+        }
+        sv.hablar(texto);
     }
 
     /**
