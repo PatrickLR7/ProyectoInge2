@@ -50,6 +50,7 @@ public class CustomWorldHelper {
             go1.setImageResource(R.drawable.icon_zona_segura);
             go1.setName("" + Config.puntosEncuentro.get(i).nombre);
 
+
             sharedWorld.addBeyondarObject(go1);
             geoObjects.add(go1);
 

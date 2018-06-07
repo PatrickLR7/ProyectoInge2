@@ -86,7 +86,7 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         mBeyondarFragment = (BeyondarFragmentSupport) getSupportFragmentManager().findFragmentById(R.id.beyondarFragment);
 
         // We create the world and fill it ...
-        mWorld = customWorldHelper.generateObjects(this);
+        mWorld = customWorldHelper.generateObjects(this); // BeyondarOdjects
 
         // Parametros para variar la distancia de los objetos
         mBeyondarFragment.setMaxDistanceToRender(3000); // Asigno distancia máxima de renderización de objetos

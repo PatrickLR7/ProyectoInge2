@@ -9,4 +9,6 @@ public class PuntoEncuentro {
     public String nombre;
     /** Ubicación del punto seguro. */
     public double latitud, longitud;
+
+    public int id;
 }

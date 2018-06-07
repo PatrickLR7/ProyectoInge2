@@ -258,7 +258,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         puntosE = new ArrayList<>();
         int eventType = parser.getEventType();
         PuntoEncuentro puntoEActual = null;
-
+        int ID = 0;
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String tag;
 
@@ -272,6 +272,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     } else {
                         if ("nombre".equals(tag)){
                             puntoEActual.nombre = parser.nextText();
+                            puntoEActual.id = ID;
+                            ++ID;
                         } else if ("lat".equals(tag)) {
                             puntoEActual.latitud = Double.parseDouble(parser.nextText());
                         } else if ("lon".equals(tag)) {
