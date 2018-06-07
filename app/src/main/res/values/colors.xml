@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#3F51B5</color>
     <color name = "background">#85c1e9</color>
+
+    <!-- Switch-->
+    <color name="disabled">#42221f1f</color>
+    <color name="enabled">#46bdbf</color>
 </resources>

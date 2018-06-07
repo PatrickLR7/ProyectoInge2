@@ -30,13 +30,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp">
 
-        <Switch
+        <ImageButton
             android:id="@+id/luz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/luz" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="14dp"
+            android:layout_marginStart="12dp"
+            app:srcCompat="@drawable/light2" />
 
         <ImageView
             android:id="@+id/imageView5"
@@ -44,7 +50,8 @@
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            app:srcCompat="@drawable/back" android:contentDescription="@string/todo" />
+            android:contentDescription="@string/todo"
+            app:srcCompat="@drawable/back" />
 
         <ImageView
             android:id="@+id/brujumas"
@@ -52,8 +59,9 @@
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
+            android:contentDescription="@string/todo"
             android:visibility="visible"
-            app:srcCompat="@drawable/fore" android:contentDescription="@string/todo" />
+            app:srcCompat="@drawable/fore" />
 
     </RelativeLayout>
 

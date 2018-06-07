@@ -21,9 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
@@ -72,7 +71,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     float gradosAux = 0f;
 
 
-    private Switch buttonEnable;
+    private ImageButton buttonEnable;
     private static final int CAMERA_REQUEST = 50;
     private boolean flashLightStatus = false;
 
@@ -116,12 +115,15 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
         buttonEnable = findViewById(R.id.luz);
 
-        buttonEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean q) {
+        buttonEnable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if(!flashLightStatus){
                     flashLightOn();
+                    buttonEnable.setImageResource(R.drawable.light1);
                 } else{
                     flashLightOff();
+                    buttonEnable.setImageResource(R.drawable.light2);
                 }
                 flashLightStatus ^= true;
             }
@@ -618,7 +620,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             case CAMERA_REQUEST :
                 if (grantResults.length > 0  &&  grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     buttonEnable.setEnabled(false);
-                    buttonEnable.setText("Camera Enabled");
                 } else {
                     Toast.makeText(MapActivity.this, "Permission Denied for the Camera",
                             Toast.LENGTH_SHORT).show();
