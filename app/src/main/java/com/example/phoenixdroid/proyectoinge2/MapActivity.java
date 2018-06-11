@@ -143,17 +143,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             if(0 <= markerUbi) {
                 mapView.getOverlays().remove(markerUbi);
             }
-
-            Marker markerRadio = new Marker(mapView);
-            markerRadio.setPosition(Center);
-            markerRadio.setTitle(nombre);
-            Drawable d = getResources().getDrawable(R.drawable.radius_circle);
-            markerRadio.setIcon(d);
             markerUbi = mapView.getOverlays().size();
-            mapView.getOverlays().add(markerRadio);
 
-            Drawable dd = getResources().getDrawable(R.drawable.icon_persona);
-            marker.setIcon(dd);
+            Drawable d = getResources().getDrawable(R.drawable.radius_circle_person);
+            marker.setIcon(d);
         } else if (tipo == 2) {
             Drawable d = getResources().getDrawable(R.drawable.icon_senal);
             marker.setIcon(d);
