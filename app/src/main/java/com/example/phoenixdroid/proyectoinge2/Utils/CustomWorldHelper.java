@@ -52,6 +52,9 @@ public class CustomWorldHelper {
 
 
             sharedWorld.addBeyondarObject(go1);
+
+
+
             geoObjects.add(go1);
 
         }
