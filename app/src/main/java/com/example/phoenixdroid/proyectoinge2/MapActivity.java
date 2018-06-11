@@ -44,7 +44,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class MapActivity extends AppCompatActivity implements LocationListener, SensorEventListener {
@@ -55,7 +54,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     LocationManager locationmanager; //Controlador de ubicación
     ArrayList<PuntoEncuentro> puntosE; //Lista de los puntos seguros.
     ArrayList<SenalVertical> senalesV; // Lista de las señales verticales.
-    List<List<GeoPoint>> rutasE = new ArrayList<>(107); //Lista de rutas de evacuación.
+    List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     SensorManager sensorManager;
 
@@ -67,9 +66,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     int markerUbi = -1;
 
     GeoPoint puntoEMasCercano = null;
+    List<GeoPoint> rutaALaZonaSegura = null;
     ImageView orientacionUsuario;
     float gradosAux = 0f;
-
 
     private ImageButton buttonEnable;
     private static final int CAMERA_REQUEST = 50;
@@ -104,7 +103,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         try {
             assert locationmanager != null;
             locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 10, this);
-            } catch (SecurityException ignored) { }
+        } catch (SecurityException ignored) { }
 
         orientacionUsuario = findViewById(R.drawable.icon_persona); //CAMBIAR POR CONO
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Sensor de la orientación del teléfono
@@ -114,28 +113,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         brujula = findViewById(R.id.brujumas);
 
         buttonEnable = findViewById(R.id.luz);
-
         buttonEnable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!flashLightStatus){
+                if (!flashLightStatus) {
                     flashLightOn();
                     buttonEnable.setImageResource(R.drawable.light1);
-                } else{
+                } else {
                     flashLightOff();
                     buttonEnable.setImageResource(R.drawable.light2);
                 }
                 flashLightStatus ^= true;
             }
         });
-    }
-
-    public void addMarker(GeoPoint gp, String nombre) {
-        Marker m = new Marker(mapView);
-        m.setPosition(gp);
-        m.setTitle(nombre);
-        mapView.getOverlays().add(m);
-        mapView.invalidate();
     }
 
     /**
@@ -164,10 +154,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
             Drawable dd = getResources().getDrawable(R.drawable.icon_persona);
             marker.setIcon(dd);
-        } else if(tipo == 2) {
+        } else if (tipo == 2) {
             Drawable d = getResources().getDrawable(R.drawable.icon_senal);
             marker.setIcon(d);
-        } else if(tipo == 3) {
+        } else if (tipo == 3) {
             Drawable d = getResources().getDrawable(R.drawable.icon_zona_segura);
             marker.setIcon(d);
         }
@@ -220,10 +210,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             switch (eventType) {
                 case XmlPullParser.START_TAG:
                     tag = parser.getName();
-                    if ("way".equals(tag)) { rEActual = new LinkedList<>(); }
+                    if ("way".equals(tag)) { rEActual = new ArrayList<>(); }
                     if ("id".equals(tag)) { flagID = true; }
                     if ("punto".equals(tag)) { flagPunto = true; }
-
                     break;
 
                 case XmlPullParser.TEXT:
@@ -245,7 +234,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     if (tag.equals("way")) { rutasE.add(id, rEActual); }
                     if ("id".equals(tag)) { flagID = false; }
                     if ("punto".equals(tag)) { flagPunto = false; }
-
                     break;
             }
             eventType = parser.next();
@@ -333,42 +321,16 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      */
     public void dibujarRutasEvacuacion() {
         if (rutasE != null && !rutasE.isEmpty()) {
-            int indice;
             for (int x = 0; x < rutasE.size(); x++) {
                 List<GeoPoint> rutaActual = rutasE.get(x);
 
                 int brownColorValue = Color.parseColor("#B6523C");
                 Polyline polyline = new Polyline();
-                /*if (x == 8) {
-                    polyline.setColor(Color.RED);
-                    indice = calcularPuntoEncuentroMasCercano(rutaActual.get(0));
-                    addMarker(new GeoPoint(puntosE.get(indice).latitud, puntosE.get(indice).longitud), "Punto seguro1", 3);
-                } else {
-                    polyline.setColor(Color.BLUE);
-                }*/
-                //addMarker(rutaActual.get(0), "Inicio Ruta " + x);
-
                 polyline.setColor(brownColorValue);
                 mapView.getOverlays().add(polyline);
                 polyline.setPoints(rutaActual);
             }
         }
-    }
-
-    private int calcularPuntoEncuentroMasCercano (GeoPoint punto) {
-        double menorDistancia = Double.MAX_VALUE;
-        int indicepuntoSeguro = 0;
-        for (int x = 0; x < puntosE.size(); x++) {
-            PuntoEncuentro pE = puntosE.get(x);
-            GeoPoint puntoEvacuacion = new GeoPoint(pE.latitud, pE.longitud);
-            double aux = punto.distanceToAsDouble(puntoEvacuacion);
-
-            if (aux < menorDistancia) {
-                menorDistancia = aux;
-                indicepuntoSeguro = x;
-            }
-        }
-        return indicepuntoSeguro;
     }
 
     /**
@@ -379,16 +341,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         if (rutasE != null && !rutasE.isEmpty()) {
             double menorDistancia = Double.MAX_VALUE;
             List<GeoPoint> rutaMasCercana = rutasE.get(0);
-            GeoPoint puntoCercanoRuta; // Punto dentro la ruta más cercano a gp
             for (int x = 0; x < rutasE.size(); x++) {
                 List<GeoPoint> rutaActual = rutasE.get(x);
                 for (int y = 0; y < rutaActual.size(); y++) {
                     double aux = rutaActual.get(y).distanceToAsDouble(gp);
-
                     if (aux < menorDistancia) {
                         menorDistancia = aux;
                         rutaMasCercana = rutaActual;
-                        puntoCercanoRuta = rutaActual.get(y);
                     }
                 }
             }
@@ -418,11 +377,27 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
      * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
      */
     public void markersSenalesV(){
-        if(senalesV != null && !senalesV.isEmpty()) {
+        if (senalesV != null && !senalesV.isEmpty()) {
             for (int i = 0; i < senalesV.size(); i++) {
                 routeCenter.setLatitude(senalesV.get(i).latSV);
                 routeCenter.setLongitude(senalesV.get(i).lonSV);
                 addMarker(routeCenter, "Señal: " + Integer.toString(senalesV.get(i).id),2);
+            }
+        }
+    }
+
+    /**
+     * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
+     */
+    public void markersSenalesRuta(){
+        if (senalesV != null && !senalesV.isEmpty()) {
+            for (int i = 0; i < senalesV.size(); i++) {
+                GeoPoint senal = new GeoPoint(senalesV.get(i).latSV, senalesV.get(i).lonSV);
+                for (int j = 0;  j < rutaALaZonaSegura.size(); j++) {
+                    if (senal.distanceToAsDouble(rutaALaZonaSegura.get(j)) < 5) {
+                        addMarker(senal, "Señal: " + Integer.toString(senalesV.get(i).id),2);
+                    }
+                }
             }
         }
     }
@@ -433,18 +408,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     public void iSimpleCamera(View v){
         Intent i = new Intent(this, SimpleCameraActivity.class);
         startActivity(i);
-    }
-
-    /**
-     * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
-     */
-    public void markersSenalesV(int senal){
-        if (senalesV != null && !senalesV.isEmpty()) {
-            SenalVertical aux = senalesV.get(senal);
-            routeCenter.setLatitude(aux.latSV);
-            routeCenter.setLongitude(aux.lonSV);
-            addMarker(routeCenter, "Señal: " + Integer.toString(aux.id),2);
-        }
     }
 
     /**
@@ -462,47 +425,73 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             latActual = miPosicion.getLatitude();
             lonActual = miPosicion.getLongitude();
 
-            double distanciaMin = Integer.MAX_VALUE;
-            for (int x = 0; x < puntosE.size(); x++) {
-                PuntoEncuentro puntoSeguro = puntosE.get(x);
-                GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
-                double dist = miPosicion.distanceToAsDouble(aux);
-                if (dist < distanciaMin) {
-                    puntoEMasCercano = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
-                    distanciaMin = dist;
+            //Se obtiene la ruta cercana al usuario
+            double distanciaMin = Double.MAX_VALUE;
+            for (int x = 0; x < rutasE.size(); x++) {
+                List<GeoPoint> rutaTemp = rutasE.get(x);
+                for (int y = 0; y < rutaTemp.size(); y++) {
+                    double dist = rutaTemp.get(y).distanceToAsDouble(miPosicion);
+                    if (dist < distanciaMin) {
+                        distanciaMin = dist;
+                        rutaALaZonaSegura = rutaTemp;
+                    }
                 }
             }
 
-            int pos = 0;
-            double distanciaMin2 = Integer.MAX_VALUE;
-            for (int x = 0; x < senalesV.size(); x++) {
-                SenalVertical senal = senalesV.get(x);
-                GeoPoint aux = new GeoPoint(senal.latSV, senal.lonSV);
-                double dist = miPosicion.distanceToAsDouble(aux);
-                if (dist < distanciaMin2) {
-                    pos = x;
-                    distanciaMin2 = dist;
+            //Basado en la ruta calculada anteriormente, se obtiene el punto seguro
+            int posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(0));
+            if (posPuntoSeguro != -1) {
+                puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
+                distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+            } else {
+                posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(rutaALaZonaSegura.size()-1));
+                if (posPuntoSeguro != -1) {
+                    puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
+                    distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                } else {
+                    for (int x = 0; x < puntosE.size(); x++) {
+                        PuntoEncuentro pETemp =puntosE.get(x);
+                        for (int y = 0; y < rutaALaZonaSegura.size(); y++) {
+                            GeoPoint temp2 = rutaALaZonaSegura.get(y);
+                            if (pETemp.compareTo(temp2)) {
+                                puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);;
+                                distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                                y = 1000000;
+                                x = 1000000;
+                            }
+                        }
+                    }
                 }
             }
-
-            Toast.makeText(this,"Distancia a la zona segura más cercana: " + Double.toString((int)distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
             dibujarRutasEvacuacion(miPosicion);
+            Toast.makeText(this,"Distancia a la zona segura más cercana: " + Integer.toString((int)distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
+            markersSenalesRuta();
             addMarker(miPosicion, "Mi ubicacion", 1);
-            markersSenalesV(pos);
-
-            verificarCercanias(distanciaMin2, distanciaMin);
+            //verificarCercanias(distanciaMin2, distanciaMin);
         }
     }
 
-    private void verificarCercanias(double distSenal, double distZona)
-    {
+    /**
+     * Revisa si el geoPoint que recibe como parametro es una zona segura.
+     * @param gp el punto que se quiere verificar
+     * @return si gp es punto seguro, retorna el indice del mismo en la lista de puntos seguros. Si no es punto seguro, retorna -1;
+     */
+    private int buscarPuntoSeguro(GeoPoint gp) {
+        for (int x = 0; x < puntosE.size(); x++) {
+            PuntoEncuentro pETemp = puntosE.get(x);
+            if (pETemp.compareTo(gp)) {
+                return x;
+            }
+        }
+        return -1;
+    }
+
+    private void verificarCercaniaZona(double distSenal, double distZona) {
         String texto = "";
-        if(distSenal <= 20)
-        {
+        if (distSenal <= 20) {
             texto = texto + "Se está aproximando a una señal vertical. Por favor, revísela. ";
         }
-        if(distZona <= 20)
-        {
+        if (distZona <= 20) {
             texto = texto + "Ha llegado a la zona segura.";
         }
         sv.hablar(texto);
