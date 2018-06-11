@@ -2,6 +2,8 @@ package com.example.phoenixdroid.proyectoinge2.Utils;
 
 import com.beyondar.android.world.GeoObject;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,4 +17,5 @@ public class Config {
     public static double usuarioLat; //Latitud del usuario justo antes iniciar SimpleCamera.
     public static double usuarioLon; //Longitud del usuario justo antes de iniciar SimpleCamera.
     public static int idGeoObjects = 0;  //Id usados para los geoObjetos.
+    public static List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
 }

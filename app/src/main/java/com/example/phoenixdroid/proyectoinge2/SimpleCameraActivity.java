@@ -33,6 +33,7 @@ import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, android.location.LocationListener, OnClickBeyondarObjectListener {
 
@@ -44,9 +45,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
     /** Entorno del juego. */
     private CustomWorldHelper customWorldHelper;
-
-    /** Muestra la cueva actual del jugador. */
-    private TextView textCuevaAct;
 
     /** Vista del radar y otras utilidades que utiliza */
     private RadarView mRadarView;
@@ -62,6 +60,11 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
     /** Lista de objetos que actualmente se muestran en la camara. */
     private ArrayList<GeoObject> geoObjects;
+
+    GeoPoint puntoEMasCercano = null;
+    List<GeoPoint> rutaALaZonaSegura = null;
+
+    public static List<List<GeoPoint>> rutasE; //Lista de rutas de evacuación.
 
     double latActual = 0;
     double lonActual = 0;
@@ -159,10 +162,7 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         puntosE = Config.puntosEncuentro;
         senalesV = Config.senalesVerticales;
         geoObjects = Config.geoObjetos;
-
-
-
-
+        rutasE = Config.rutasE;
     }
 
 
@@ -170,33 +170,34 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
     /**
      * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
      */
-    public void markersSenalesV(int senal){
-
+    public void markersSenalesV(){
         int id = Config.idGeoObjects;
-
         if (senalesV != null && !senalesV.isEmpty()) {
-           // SenalVertical aux = senalesV.get(senal);
-          //  routeCenter.setLatitude(aux.latSV);
-          //  routeCenter.setLongitude(aux.lonSV);
-          //  addMarker(routeCenter, "Señal: " + Integer.toString(aux.id),2);
+            for (int i = 0; i < senalesV.size(); i++) {
+                GeoPoint senal = new GeoPoint(senalesV.get(i).latSV, senalesV.get(i).lonSV);
+                int senalID = 0;
+                for (int j = 0;  j < rutaALaZonaSegura.size(); j++) {
+                    if (senal.distanceToAsDouble(rutaALaZonaSegura.get(j)) < 5) {
+                        // SenalVertical aux = senalesV.get(senal);
+                        //  routeCenter.setLatitude(aux.latSV);
+                        //  routeCenter.setLongitude(aux.lonSV);
+                        //  addMarker(routeCenter, "Señal: " + Integer.toString(aux.id),2);
 
-
-            GeoObject go1 = new GeoObject(id++);
-            go1.setGeoPosition(Config.senalesVerticales.get(senal).latSV, Config.senalesVerticales.get(senal).lonSV);
-            go1.setImageResource(R.drawable.icon_senal);
-            go1.setName("Señal: " + senal);
-            mWorld.addBeyondarObject(go1);
-            geoObjects.add(go1);
+                        GeoObject go1 = new GeoObject(id++);
+                        go1.setGeoPosition(Config.senalesVerticales.get(senalID).latSV, Config.senalesVerticales.get(senalID).lonSV);
+                        go1.setImageResource(R.drawable.icon_senal);
+                        go1.setName("Señal: " + senal);
+                        mWorld.addBeyondarObject(go1);
+                        geoObjects.add(go1);
+                    }
+                }
+            }
         }
 
         Config.geoObjetos = geoObjects;
         Config.idGeoObjects = id;
 
     }
-
-
-
-
 
     /**
      * Metodo encargado de mostrar los dialogos de solicitud de permisos si es necesario.
@@ -221,8 +222,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
     @Override
     public void onLocationChanged(Location location) {
 
-
-
         GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
         Config.usuarioLat = location.getLatitude();
         Config.usuarioLon = location.getLongitude();
@@ -232,38 +231,61 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
             latActual = miPosicion.getLatitude();
             lonActual = miPosicion.getLongitude();
 
-            double distanciaMin = Integer.MAX_VALUE;
-            for (int x = 0; x < puntosE.size(); x++) {
-                PuntoEncuentro puntoSeguro = puntosE.get(x);
-                GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
-                double dist = miPosicion.distanceToAsDouble(aux);
-                if (dist < distanciaMin) {
-
-                    distanciaMin = dist;
+            //Se obtiene la ruta cercana al usuario
+            double distanciaMin = Double.MAX_VALUE;
+            for (int x = 0; x < rutasE.size(); x++) {
+                List<GeoPoint> rutaTemp = rutasE.get(x);
+                for (int y = 0; y < rutaTemp.size(); y++) {
+                    double dist = rutaTemp.get(y).distanceToAsDouble(miPosicion);
+                    if (dist < distanciaMin) {
+                        distanciaMin = dist;
+                        rutaALaZonaSegura = rutaTemp;
+                    }
                 }
             }
 
-            int pos = 0;
-            double distanciaMin2 = Integer.MAX_VALUE;
-            for (int x = 0; x < senalesV.size(); x++) {
-                SenalVertical senal = senalesV.get(x);
-                GeoPoint aux = new GeoPoint(senal.latSV, senal.lonSV);
-                double dist = miPosicion.distanceToAsDouble(aux);
-                if (dist < distanciaMin2) {
-                    pos = x;
-                    distanciaMin2 = dist;
+            //Basado en la ruta calculada anteriormente, se obtiene el punto seguro
+            int posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(0));
+            if (posPuntoSeguro != -1) {
+                puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
+                distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+            } else {
+                posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(rutaALaZonaSegura.size()-1));
+                if (posPuntoSeguro != -1) {
+                    puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
+                    distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                } else {
+                    for (int x = 0; x < puntosE.size(); x++) {
+                        PuntoEncuentro pETemp =puntosE.get(x);
+                        for (int y = 0; y < rutaALaZonaSegura.size(); y++) {
+                            GeoPoint temp2 = rutaALaZonaSegura.get(y);
+                            if (pETemp.compareTo(temp2)) {
+                                puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);;
+                                distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                                y = 1000000;
+                                x = 1000000;
+                            }
+                        }
+                    }
                 }
             }
-
-
-            markersSenalesV(pos);
-
+            markersSenalesV();
         }
+    }
 
-
-
-
-
+    /**
+     * Revisa si el geoPoint que recibe como parametro es una zona segura.
+     * @param gp el punto que se quiere verificar
+     * @return si gp es punto seguro, retorna el indice del mismo en la lista de puntos seguros. Si no es punto seguro, retorna -1;
+     */
+    private int buscarPuntoSeguro(GeoPoint gp) {
+        for (int x = 0; x < puntosE.size(); x++) {
+            PuntoEncuentro pETemp = puntosE.get(x);
+            if (pETemp.compareTo(gp)) {
+                return x;
+            }
+        }
+        return -1;
     }
 
     /**

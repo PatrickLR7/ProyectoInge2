@@ -231,6 +231,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }
             eventType = parser.next();
         }
+        Config.rutasE = rutasE;
     }
 
     /**
@@ -382,7 +383,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     /**
      * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
      */
-    public void markersSenalesRuta(){
+    public void markersSenalesRuta(GeoPoint posicionUsuario){
         if (senalesV != null && !senalesV.isEmpty()) {
             for (int i = 0; i < senalesV.size(); i++) {
                 GeoPoint senal = new GeoPoint(senalesV.get(i).latSV, senalesV.get(i).lonSV);
@@ -458,7 +459,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }
             dibujarRutasEvacuacion(miPosicion);
             Toast.makeText(this,"Distancia a la zona segura más cercana: " + Integer.toString((int)distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
-            markersSenalesRuta();
+            markersSenalesRuta(miPosicion);
             addMarker(miPosicion, "Mi ubicacion", 1);
             //verificarCercaniaZona(distanciaMin2, distanciaMin);
         }
