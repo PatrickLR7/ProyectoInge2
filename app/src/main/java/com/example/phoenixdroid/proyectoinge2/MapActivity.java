@@ -460,7 +460,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             Toast.makeText(this,"Distancia a la zona segura más cercana: " + Integer.toString((int)distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
             markersSenalesRuta();
             addMarker(miPosicion, "Mi ubicacion", 1);
-            //verificarCercanias(distanciaMin2, distanciaMin);
+            //verificarCercaniaZona(distanciaMin2, distanciaMin);
         }
     }
 

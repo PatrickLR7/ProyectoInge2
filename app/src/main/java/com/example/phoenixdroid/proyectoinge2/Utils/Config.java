@@ -3,6 +3,7 @@ package com.example.phoenixdroid.proyectoinge2.Utils;
 import com.beyondar.android.world.GeoObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Config {
     public static boolean esVidente; // Valor que indica si se usa el modo vidente o no.

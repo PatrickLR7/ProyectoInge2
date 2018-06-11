@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
+import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoCardinal;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
@@ -24,6 +25,7 @@ import com.example.phoenixdroid.proyectoinge2.Utils.XmlParser;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
@@ -36,6 +38,10 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     SintetizadorVoz sv; //Clase con TextToSpeech
     SensorManager sensorManager; //Controlador de la orientación del teléfono
     XmlParser parser;
+    List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
+
+    GeoPoint puntoEMasCercano = null;
+    List<GeoPoint> rutaALaZonaSegura = null;
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -73,6 +79,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         puntoProximo = null;
         distancia = 0;
         pc = new PuntoCardinal();
+        rutasE = parser.rutasE;
     }
 
     /**
@@ -243,41 +250,70 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
      */
     @Override
     public void onLocationChanged(Location location) {
-        GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
+        GeoPoint miPosicion = new GeoPoint(location.getLatitude(), location.getLongitude());
+        Config.usuarioLat = location.getLatitude();
+        Config.usuarioLon = location.getLongitude();
         puntoUsuario = miPosicion;
         if (latActual != miPosicion.getLatitude() || lonActual != miPosicion.getLongitude()) {
             latActual = miPosicion.getLatitude();
             lonActual = miPosicion.getLongitude();
 
-            double distanciaMin = Integer.MAX_VALUE;
-            ArrayList<PuntoEncuentro> puntosE = parser.getPuntosE();
-            for (int x = 0; x < puntosE.size(); x++) {
-                PuntoEncuentro puntoSeguro = puntosE.get(x);
-                GeoPoint aux = new GeoPoint(puntoSeguro.latitud, puntoSeguro.longitud);
-                double dist = miPosicion.distanceToAsDouble(aux);
-                if (dist < distanciaMin) {
-                    puntoMasCercano = puntoSeguro;
-                    distanciaMin = dist;
+            //Se obtiene la ruta cercana al usuario
+            double distanciaMin = Double.MAX_VALUE;
+            for (int x = 0; x < rutasE.size(); x++) {
+                List<GeoPoint> rutaTemp = rutasE.get(x);
+                for (int y = 0; y < rutaTemp.size(); y++) {
+                    double dist = rutaTemp.get(y).distanceToAsDouble(miPosicion);
+                    if (dist < distanciaMin) {
+                        distanciaMin = dist;
+                        rutaALaZonaSegura = rutaTemp;
+                    }
                 }
             }
-            distancia = distanciaMin; //Actualiza la distancia al siguiente punto
-            puntoProximo = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud); //Guarda la información del siguiente punto
 
-            int pos = 0;
-            double distanciaMin2 = Integer.MAX_VALUE;
-            ArrayList<SenalVertical> senalesV = parser.getSenalesV();
-            for (int x = 0; x < senalesV.size(); x++) {
-                SenalVertical senal = senalesV.get(x);
-                GeoPoint aux = new GeoPoint(senal.latSV, senal.lonSV);
-                double dist = miPosicion.distanceToAsDouble(aux);
-                if (dist < distanciaMin2) {
-                    pos = x;
-                    distanciaMin2 = dist;
+            //Basado en la ruta calculada anteriormente, se obtiene el punto seguro
+            int posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(0));
+            if (posPuntoSeguro != -1) {
+                puntoEMasCercano = new GeoPoint(parser.getPuntosE().get(posPuntoSeguro).latitud, parser.getPuntosE().get(posPuntoSeguro).longitud);
+                distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+            } else {
+                posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(rutaALaZonaSegura.size() - 1));
+                if (posPuntoSeguro != -1) {
+                    puntoEMasCercano = new GeoPoint(parser.getPuntosE().get(posPuntoSeguro).latitud, parser.getPuntosE().get(posPuntoSeguro).longitud);
+                    distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                } else {
+                    for (int x = 0; x < parser.getPuntosE().size(); x++) {
+                        PuntoEncuentro pETemp = parser.getPuntosE().get(x);
+                        for (int y = 0; y < rutaALaZonaSegura.size(); y++) {
+                            GeoPoint temp2 = rutaALaZonaSegura.get(y);
+                            if (pETemp.compareTo(temp2)) {
+                                puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);
+                                ;
+                                distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                                y = 1000000;
+                                x = 1000000;
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 
+    /**
+     * Revisa si el geoPoint que recibe como parametro es una zona segura.
+     * @param gp el punto que se quiere verificar
+     * @return si gp es punto seguro, retorna el indice del mismo en la lista de puntos seguros. Si no es punto seguro, retorna -1;
+     */
+    private int buscarPuntoSeguro(GeoPoint gp) {
+        for (int x = 0; x < parser.getPuntosE().size(); x++) {
+            PuntoEncuentro pETemp = parser.getPuntosE().get(x);
+            if (pETemp.compareTo(gp)) {
+                return x;
+            }
+        }
+        return -1;
+    }
 
     /**
      * Metodo que vuelva a activar el sensor de cambio de orientación.
