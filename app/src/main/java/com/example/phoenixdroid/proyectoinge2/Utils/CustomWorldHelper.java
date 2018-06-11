@@ -48,7 +48,7 @@ public class CustomWorldHelper {
             GeoObject go1 = new GeoObject(id++);
             go1.setGeoPosition(Config.puntosEncuentro.get(i).latitud, Config.puntosEncuentro.get(i).longitud);
             go1.setImageResource(R.drawable.icon_zona_segura);
-            go1.setName("" + Config.puntosEncuentro.get(i).nombre);
+            go1.setName("Punto de Encuentro: " + Config.puntosEncuentro.get(i).nombre);
 
 
             sharedWorld.addBeyondarObject(go1);

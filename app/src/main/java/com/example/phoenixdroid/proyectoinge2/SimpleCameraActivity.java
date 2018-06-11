@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import com.beyondar.android.fragment.BeyondarFragmentSupport;
 import com.beyondar.android.plugin.radar.RadarView;
 import com.beyondar.android.plugin.radar.RadarWorldPlugin;
 import com.beyondar.android.util.location.BeyondarLocationManager;
+import com.beyondar.android.view.OnClickBeyondarObjectListener;
+import com.beyondar.android.world.BeyondarObject;
 import com.beyondar.android.world.GeoObject;
 import com.beyondar.android.world.World;
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
@@ -31,7 +34,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 
-public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, android.location.LocationListener{
+public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, android.location.LocationListener, OnClickBeyondarObjectListener {
 
     /** Fragmento de BeyondAR, permite la interacción con los objetos del mundo */
     private BeyondarFragmentSupport mBeyondarFragment;
@@ -94,6 +97,7 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         mBeyondarFragment.setPushAwayDistance(0); // Para alejar un poco los objetos que están muy cerca
         mBeyondarFragment.setPullCloserDistance(0); // Para acercar un poco los objetos que están muy lejos
         mBeyondarFragment.setWorld(mWorld);
+        mBeyondarFragment.setOnClickBeyondarObjectListener(this);
 
         mWorld.onResume();
 
@@ -259,6 +263,22 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
 
 
+
+    }
+
+    /**
+     * Metodo para manejar si el usuario toca un geo objeto presente en la camara.
+     * @param arrayList: Lista de los geo objetos presentes. El primer elemento es el objeto que ha sido clickeado.
+     */
+    @Override
+    public void onClickBeyondarObject(ArrayList<BeyondarObject> arrayList) {
+            String nombre = arrayList.get(0).getName();
+            Toast toast1 = Toast.makeText(this, nombre, Toast.LENGTH_SHORT);
+            View customT = toast1.getView();
+            customT.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+            TextView t = customT.findViewById(android.R.id.message);
+            t.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+            toast1.show();
 
     }
 

@@ -11,7 +11,7 @@ public class PuntoEncuentro {
     public String nombre;
     /** Ubicación del punto seguro. */
     public double latitud, longitud;
-
+    /** Identificador del punto seguro*/
     public int id;
 
     public boolean compareTo(GeoPoint gp) {
