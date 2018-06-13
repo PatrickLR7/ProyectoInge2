@@ -57,6 +57,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     SensorManager sensorManager;
+    Sensor sensor;
 
     SintetizadorVoz sv;
     double latActual = 0;
@@ -107,6 +108,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
         orientacionUsuario = findViewById(R.drawable.icon_persona); //CAMBIAR POR CONO
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Sensor de la orientación del teléfono
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
         sv = new SintetizadorVoz(this);
         //dibujarRutasEvacuacion();
         markersPuntosE();
