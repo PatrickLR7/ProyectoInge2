@@ -29,9 +29,9 @@ import java.util.List;
 
 public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
-    double latActual, lonActual, distancia;
+    double latActual, lonActual, distancia, grados; //Grados de 0 a 360 de la orientación
     GeoPoint puntoUsuario, puntoProximo; //Puntos necesarios para determinar puntos cardinales
-    int grados, puntoCardinalTel, puntoCardinalZona; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
+    int puntoCardinalTel, puntoCardinalZona; // Puntos cardinales de posiciones geográficas
     LocationManager locationManager; //Controlador de ubicación
     PuntoCardinal pc; //Clase que determina un punto cardinal según dos GeoPoints
     PuntoEncuentro puntoMasCercano; //Siguiente punto al que se debe dirigir el usuario
