@@ -37,6 +37,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     PuntoEncuentro puntoMasCercano; //Siguiente punto al que se debe dirigir el usuario
     SintetizadorVoz sv; //Clase con TextToSpeech
     SensorManager sensorManager; //Controlador de la orientación del teléfono
+    Sensor sensor;
     XmlParser parser;
     List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
 
@@ -68,6 +69,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         btn_guiar.setOnClickListener(this);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Sensor de la orientación del teléfono
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
         sv = new SintetizadorVoz(this); //Clase con TextToSpeech
 
         grados = 0; //Orientación del teléfono
@@ -288,7 +290,6 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                             GeoPoint temp2 = rutaALaZonaSegura.get(y);
                             if (pETemp.compareTo(temp2)) {
                                 puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);
-                                ;
                                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
                                 y = 1000000;
                                 x = 1000000;
@@ -297,6 +298,8 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                     }
                 }
             }
+            puntoProximo = puntoEMasCercano;
+            distancia = distanciaMin;
         }
     }
 
