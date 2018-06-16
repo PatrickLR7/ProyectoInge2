@@ -14,6 +14,11 @@ public class PuntoEncuentro {
     /** Identificador del punto seguro*/
     public int id;
 
+    /**
+     * Metodo que permite compara Punto de encuentro con cualquier geopunto para saber si son iguales.
+     * @param gp: El geopunto para comparar.
+     * @return true si son iguales, false en caso contrario.
+     */
     public boolean compareTo(GeoPoint gp) {
         return gp.getLatitude() == latitud && gp.getLongitude() == longitud;
     }

@@ -219,6 +219,10 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         return Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1;
     }
 
+    /**
+     * Metodo que revisa los cambios en la ubicación del usuario.
+     * @param location ubicación del usuario.
+     */
     @Override
     public void onLocationChanged(Location location) {
 
@@ -304,7 +308,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
     }
 
-
     /**
      *
      * @param provider:
@@ -360,9 +363,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {}
 
-
-
-
     /**
      * Método para solicitar permiso para utilizar los servicios de ubicación.
      */
@@ -373,7 +373,4 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         }
         else return true;
     }
-
-
-
 }

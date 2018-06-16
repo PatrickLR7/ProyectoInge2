@@ -37,7 +37,7 @@ public class ZonasActivity extends AppCompatActivity {
                 Config.zona = Zona.ENTRADA_CALLE_LOS_ALVAREZ;
                 startActivity(i);
                 break;
-            case R.id.btnCañada:
+            case R.id.btnCanada:
                 Config.zona = Zona.CALLE_LA_CANADA;
                 startActivity(i);
                 break;

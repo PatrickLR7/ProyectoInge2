@@ -1,7 +1,6 @@
 package com.example.phoenixdroid.proyectoinge2;
 
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,15 +9,10 @@ import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
-
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
-
-
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.util.Log;
 
 public class VideosActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -118,9 +112,6 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         ejecutarVideo(view);
     }
-
-
-
 
     /**
      * Se encarga de obtener permisos del usuario para acceso a ubicacion y uso de memoria del dispositivo.

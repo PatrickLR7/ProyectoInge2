@@ -6,7 +6,7 @@ import android.speech.tts.TextToSpeech;
 import java.util.Locale;
 
 /**
- * Created by admlab105 on 5/17/2018.
+ * Created by Carlos Portuguez on 5/17/2018.
  */
 
 public class SintetizadorVoz implements TextToSpeech.OnInitListener

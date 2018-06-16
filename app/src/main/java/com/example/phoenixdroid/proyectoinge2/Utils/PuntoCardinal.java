@@ -3,7 +3,7 @@ package com.example.phoenixdroid.proyectoinge2.Utils;
 import org.osmdroid.util.GeoPoint;
 
 /**
- * Created by admlab105 on 5/17/2018.
+ * Created by Carlos Portuguez on 5/17/2018.
  */
 
 public class PuntoCardinal

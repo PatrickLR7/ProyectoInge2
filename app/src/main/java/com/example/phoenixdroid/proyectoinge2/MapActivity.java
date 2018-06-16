@@ -384,6 +384,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
     /**
      * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
+     * @param posicionUsuario
      */
     public void markersSenalesRuta(GeoPoint posicionUsuario){
         if (senalesV != null && !senalesV.isEmpty()) {
@@ -399,7 +400,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     }
 
     /**
-     * Inicia el activity SimpleCamera
+     * Inicia el activity de Simple Camera.
+     * @param v
      */
     public void iSimpleCamera(View v){
         Intent i = new Intent(this, SimpleCameraActivity.class);
@@ -528,6 +530,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         sv.stop();
     }
 
+    /**
+     * Metodo que se encarga de manejar los cambios en el estado del sensor.
+     * @param event: el tipo de evento registrado por el sensor.
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         float grados = Math.round(event.values[0]);
@@ -576,6 +582,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         sensorManager.unregisterListener(this);
     }
 
+    /**
+     * Metodo encargado de encender la linterna.
+     */
     private void flashLightOn() {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
@@ -587,6 +596,9 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         } catch (CameraAccessException ignored) { }
     }
 
+    /**
+     * Metodo encargado de apagar la linterna.
+     */
     private void flashLightOff() {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
@@ -598,6 +610,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         } catch (CameraAccessException ignored) { }
     }
 
+    /**
+     * Metodo encargado de solicitar permiso para el uso de la camara. Invocado luego de que el usuario elija pasarse al entorno de realidad aumentada.
+     * @param requestCode: Identificador del hardware requerido.
+     * @param permissions: Permisos requeridos.
+     * @param grantResults: Resultados de la solicitud.
+     */
     @SuppressLint("SetTextI18n")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
