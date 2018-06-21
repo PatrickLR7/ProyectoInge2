@@ -47,20 +47,19 @@ public class CustomWorldHelper {
         for(int i = 0; i < Config.puntosEncuentro.size(); i++){
             GeoObject go1 = new GeoObject(id++);
             go1.setGeoPosition(Config.puntosEncuentro.get(i).latitud, Config.puntosEncuentro.get(i).longitud);
-            go1.setImageResource(R.drawable.icon_zona_segura);
+            if((go1.getLatitude() == Config.puntoEncuentroMasCercano.getLatitude()) && (go1.getLongitude() == Config.puntoEncuentroMasCercano.getLongitude())) {
+                go1.setImageResource(R.drawable.icon_zona_segura_2);
+            }else{
+                go1.setImageResource(R.drawable.icon_zona_segura);
+            }
             go1.setName("Punto de Encuentro: " + Config.puntosEncuentro.get(i).nombre);
-
-
-            sharedWorld.addBeyondarObject(go1);
-
-
-
             geoObjects.add(go1);
-
+            sharedWorld.addBeyondarObject(go1);
         }
 
         Config.geoObjetos = geoObjects;
         Config.idGeoObjects = id;
+
         sharedWorld.setGeoPosition(Config.usuarioLat, Config.usuarioLon);
 
         return sharedWorld;
