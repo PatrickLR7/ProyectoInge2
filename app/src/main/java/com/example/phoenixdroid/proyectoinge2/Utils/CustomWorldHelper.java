@@ -47,7 +47,7 @@ public class CustomWorldHelper {
         for(int i = 0; i < Config.puntosEncuentro.size(); i++){
             GeoObject go1 = new GeoObject(id++);
             go1.setGeoPosition(Config.puntosEncuentro.get(i).latitud, Config.puntosEncuentro.get(i).longitud);
-            if((go1.getLatitude() == Config.puntoEncuentroMasCercano.getLatitude()) && (go1.getLongitude() == Config.puntoEncuentroMasCercano.getLongitude())) {
+            if((go1.getLatitude() == Config.puntoEncuentroMasCercano.latitud) && (go1.getLongitude() == Config.puntoEncuentroMasCercano.longitud)) {
                 go1.setImageResource(R.drawable.icon_zona_segura_2);
             }else{
                 go1.setImageResource(R.drawable.icon_zona_segura);
