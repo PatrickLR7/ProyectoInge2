@@ -18,5 +18,5 @@ public class Config {
     public static double usuarioLon; //Longitud del usuario justo antes de iniciar SimpleCamera.
     public static int idGeoObjects = 0;  //Id usados para los geoObjetos.
     public static List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
-    public static GeoPoint puntoEncuentroMasCercano;
+    public static PuntoEncuentro puntoEncuentroMasCercano;
 }

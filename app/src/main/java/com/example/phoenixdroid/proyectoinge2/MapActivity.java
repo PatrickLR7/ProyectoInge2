@@ -440,13 +440,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             int posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(0));
             if (posPuntoSeguro != -1) {
                 puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
-                Config.puntoEncuentroMasCercano = puntoEMasCercano;
+                Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
             } else {
                 posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(rutaALaZonaSegura.size()-1));
                 if (posPuntoSeguro != -1) {
                     puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
-                    Config.puntoEncuentroMasCercano = puntoEMasCercano;
+                    Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
                     distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
                 } else {
                     for (int x = 0; x < puntosE.size(); x++) {
@@ -455,7 +455,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                             GeoPoint temp2 = rutaALaZonaSegura.get(y);
                             if (pETemp.compareTo(temp2)) {
                                 puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);
-                                Config.puntoEncuentroMasCercano = puntoEMasCercano;
+                                Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
                                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
                                 y = 1000000;
                                 x = 1000000;

@@ -72,6 +72,10 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
     /** Usuario. */
     private GeoObject user;
 
+    /** Para poner distancia de PuntoE mas cercano*/
+    private double distPuntoMC = 0;
+    private String nombrePuntoMC = Config.puntoEncuentroMasCercano.nombre;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -253,11 +257,15 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
             if (posPuntoSeguro != -1) {
                 puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                distPuntoMC = distanciaMin;
+                nombrePuntoMC = puntosE.get(posPuntoSeguro).nombre;
             } else {
                 posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(rutaALaZonaSegura.size()-1));
                 if (posPuntoSeguro != -1) {
                     puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
                     distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                    distPuntoMC = distanciaMin;
+                    nombrePuntoMC = puntosE.get(posPuntoSeguro).nombre;
                 } else {
                     for (int x = 0; x < puntosE.size(); x++) {
                         PuntoEncuentro pETemp =puntosE.get(x);
@@ -266,6 +274,8 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
                             if (pETemp.compareTo(temp2)) {
                                 puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);;
                                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                                distPuntoMC = distanciaMin;
+                                nombrePuntoMC = pETemp.nombre;
                                 y = 1000000;
                                 x = 1000000;
                             }
@@ -299,12 +309,24 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
     @Override
     public void onClickBeyondarObject(ArrayList<BeyondarObject> arrayList) {
             String nombre = arrayList.get(0).getName();
-            Toast toast1 = Toast.makeText(this, nombre, Toast.LENGTH_SHORT);
-            View customT = toast1.getView();
-            customT.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
-            TextView t = customT.findViewById(android.R.id.message);
-            t.setTextColor(ContextCompat.getColor(this, android.R.color.white));
-            toast1.show();
+
+            if(("Punto de Encuentro: " + nombrePuntoMC).equals(nombre)){
+                Toast toast1 = Toast.makeText(this, nombre + " Distancia: " + Integer.toString((int)distPuntoMC) + " metros", Toast.LENGTH_SHORT);
+                View customT = toast1.getView();
+                customT.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+                TextView t = customT.findViewById(android.R.id.message);
+                t.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+                toast1.show();
+
+            } else{
+
+                Toast toast1 = Toast.makeText(this, nombre, Toast.LENGTH_SHORT);
+                View customT = toast1.getView();
+                customT.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+                TextView t = customT.findViewById(android.R.id.message);
+                t.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+                toast1.show();
+            }
 
     }
 
