@@ -29,9 +29,9 @@ import java.util.List;
 
 public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
-    double latActual, lonActual, distancia, grados; //Grados de 0 a 360 de la orientación
+    double latActual, lonActual, distanciaPunto, distanciaZona;
     GeoPoint puntoUsuario, puntoProximo; //Puntos necesarios para determinar puntos cardinales
-    int puntoCardinalTel, puntoCardinalZona; // Puntos cardinales de posiciones geográficas
+    int grados, puntoCardinalTel, puntoCardinalZona; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
     LocationManager locationManager; //Controlador de ubicación
     PuntoCardinal pc; //Clase que determina un punto cardinal según dos GeoPoints
     PuntoEncuentro puntoMasCercano; //Siguiente punto al que se debe dirigir el usuario
@@ -79,9 +79,17 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         puntoMasCercano = null;
         puntoUsuario = null;
         puntoProximo = null;
-        distancia = 0;
+        distanciaPunto = 0;
+        distanciaZona = 0;
         pc = new PuntoCardinal();
         rutasE = parser.rutasE;
+
+        String punto = puntoCardinalPunto("");
+        punto = punto + "Se le darán instrucciones sobre cómo avanzar por la ruta";
+        String aviso = "Advertencia: En la siguiente pantalla se le dan instrucciones de cómo avanzar, mas no sobre obstáculos en la vía como huecos o alcantarillas. ";
+        aviso = aviso + punto;
+        sv.hablar(aviso);
+
     }
 
     /**
@@ -100,17 +108,18 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     private void guiar()
     {
         String texto = "";
-        if(distancia <= 20)
+        if(distanciaZona <= 25)
         {
-            texto = texto + "Ha llegado a la zona segura.";
+            texto = "Ha llegado a la zona segura, por favor espere instrucciones o que llegue un miembro de la cruz roja";
         }
         else
         {
             texto = puntoCardinalTel(texto) + ", "; //Orientación del teléfono.
-            texto = puntoCardinalPunto(texto) + ". "; //Orientación en la que se encuentra el punto
+            //texto = puntoCardinalPunto(texto) + ". "; //Orientación en la que se encuentra el punto
             texto = instruccion(texto); //Instrucción más útil para el no vidente
-            texto = texto + " y la distancia es " + (int) distancia + " metros. "; //Distancia hasta el punto
+            texto = texto + " y la distancia es " + (int) distanciaPunto + " metros. "; //Distancia hasta el punto
         }
+
         sv.hablar(texto); //Llama a la clase con el TextToSpeech
     }
 
@@ -174,28 +183,28 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         switch (direccion)
         {
             case 0:
-                texto = texto  + " el punto esta hacia el norte";
+                texto = texto  + "Su punto seguro esta hacia el norte. ";
                 break;
             case 1:
-                texto = texto  + " el punto esta hacia el noreste";
+                texto = texto  + "Su punto seguro esta hacia el noreste. ";
                 break;
             case 2:
-                texto = texto  + " el punto esta hacia el este";
+                texto = texto  + "Su punto seguro esta hacia el este. ";
                 break;
             case 3:
-                texto = texto  + " el punto esta hacia el sureste";
+                texto = texto  + "Su punto seguro esta hacia el sureste. ";
                 break;
             case 4:
-                texto = texto  + " el punto esta hacia el sur";
+                texto = texto  + "Su punto seguro esta hacia el sur. ";
                 break;
             case 5:
-                texto = texto  + " el punto esta hacia el suroeste";
+                texto = texto  + "Su punto seguro esta hacia el suroeste. ";
                 break;
             case 6:
-                texto = texto  + " el punto esta hacia el oeste";
+                texto = texto  + "Su punto seguro esta hacia el oeste. ";
                 break;
             case 7:
-                texto = texto  + " el punto esta hacia el noroeste";
+                texto = texto  + "Su punto seguro esta hacia el noroeste. ";
                 break;
         }
         return texto;
@@ -272,6 +281,8 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                     }
                 }
             }
+            distanciaZona = distanciaMin; //Actualiza la distancia al siguiente punto
+            puntoProximo = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud); //Guarda la información del siguiente punto
 
             //Basado en la ruta calculada anteriormente, se obtiene el punto seguro
             int posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(0));
@@ -299,7 +310,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                 }
             }
             puntoProximo = puntoEMasCercano;
-            distancia = distanciaMin;
+            distanciaPunto = distanciaMin;
         }
     }
 
