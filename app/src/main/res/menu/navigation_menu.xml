@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/nav_Inicio"
+        android:title="Inicio"
+        android:icon="@drawable/baseline_home_black_24dp"/>
+    <item android:id="@+id/nav_Ayuda"
+        android:title="Ayuda"
+        android:icon="@drawable/baseline_help_black_24dp"/>
+    <item android:id="@+id/nav_Acerca"
+        android:title="Acerca de..."
+        android:icon="@drawable/baseline_info_black_24dp"/>
+
+</menu>

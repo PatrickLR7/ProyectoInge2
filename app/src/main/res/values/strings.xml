@@ -4,4 +4,6 @@
     <string name="ra">RA</string>
     <string name="luz">LUZ</string>
     <string name="todo">TODO</string>
+    <string name="Open">OPEN</string>
+    <string name="Close">CLOSE</string>
 </resources>
