@@ -313,47 +313,39 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     }
 
     /**
-     * Dibuja en el mapa TODAS las rutas de evacuación.
-     */
-    public void dibujarRutasEvacuacion() {
-        if (rutasE != null && !rutasE.isEmpty()) {
-            for (int x = 0; x < rutasE.size(); x++) {
-                List<GeoPoint> rutaActual = rutasE.get(x);
-
-                int brownColorValue = Color.parseColor("#B6523C");
-                Polyline polyline = new Polyline();
-                polyline.setColor(brownColorValue);
-                mapView.getOverlays().add(polyline);
-                polyline.setPoints(rutaActual);
-            }
-        }
-    }
-
-    /**
      * Dibuja en el mapa la ruta de evacuación más cercana a un punto dado.
-     * @param gp: El punto desde el que se calcula la ruta más corta.
      */
-    public void dibujarRutasEvacuacion(GeoPoint gp) {
-        if (rutasE != null && !rutasE.isEmpty()) {
-            double menorDistancia = Double.MAX_VALUE;
-            List<GeoPoint> rutaMasCercana = rutasE.get(0);
-            for (int x = 0; x < rutasE.size(); x++) {
-                List<GeoPoint> rutaActual = rutasE.get(x);
-                for (int y = 0; y < rutaActual.size(); y++) {
-                    double aux = rutaActual.get(y).distanceToAsDouble(gp);
-                    if (aux < menorDistancia) {
-                        menorDistancia = aux;
-                        rutaMasCercana = rutaActual;
-                    }
+    public void dibujarRutasEvacuacion(GeoPoint puntoUsuario, List<GeoPoint> ruta, int posPuntoSeguro, int posUsuario, int tipoRuta) {
+        List<GeoPoint> rutaSegura = new ArrayList<>();
+        if (tipoRuta == 0) {
+            for (int x = 0; x < posUsuario; x++) {
+                rutaSegura.add(ruta.get(x));
+            }
+            rutaSegura.add(puntoUsuario);
+        } else if (tipoRuta == 1) {
+            rutaSegura.add(puntoUsuario);
+            for (int x = posUsuario; x < ruta.size(); x++) {
+                rutaSegura.add(ruta.get(x));
+            }
+        } else {
+            if (posPuntoSeguro < posUsuario) {
+                rutaSegura.add(puntoUsuario);
+                for (int x = posPuntoSeguro; x < posUsuario; x++) {
+                    rutaSegura.add(ruta.get(x));
+                }
+
+            } else {
+                rutaSegura.add(puntoUsuario);
+                for (int x = posUsuario; x < posPuntoSeguro; x++) {
+                    rutaSegura.add(ruta.get(x));
                 }
             }
-
-            Polyline polyline = new Polyline();
-            int brownColorValue = Color.parseColor("#B6523C");
-            polyline.setColor(brownColorValue);
-            mapView.getOverlays().add(polyline);
-            polyline.setPoints(rutaMasCercana);
         }
+
+        Polyline polyline = new Polyline();
+        polyline.setColor(Color.parseColor("#B6523C"));
+        mapView.getOverlays().add(polyline);
+        polyline.setPoints(rutaSegura);
     }
 
     /**
@@ -424,12 +416,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             lonActual = miPosicion.getLongitude();
 
             //Se obtiene la ruta cercana al usuario
+            int posUsuarioEnRuta = 0;
             double distanciaMin = Double.MAX_VALUE;
             for (int x = 0; x < rutasE.size(); x++) {
                 List<GeoPoint> rutaTemp = rutasE.get(x);
                 for (int y = 0; y < rutaTemp.size(); y++) {
                     double dist = rutaTemp.get(y).distanceToAsDouble(miPosicion);
                     if (dist < distanciaMin) {
+                        posUsuarioEnRuta = y;
                         distanciaMin = dist;
                         rutaALaZonaSegura = rutaTemp;
                     }
@@ -438,16 +432,19 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
             //Basado en la ruta calculada anteriormente, se obtiene el punto seguro
             int posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(0));
+            int tipoRuta = -1;
             if (posPuntoSeguro != -1) {
                 puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
                 Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                tipoRuta = 0;
             } else {
                 posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(rutaALaZonaSegura.size()-1));
                 if (posPuntoSeguro != -1) {
                     puntoEMasCercano = new GeoPoint(puntosE.get(posPuntoSeguro).latitud, puntosE.get(posPuntoSeguro).longitud);
                     Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
                     distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                    tipoRuta = 1;
                 } else {
                     for (int x = 0; x < puntosE.size(); x++) {
                         PuntoEncuentro pETemp =puntosE.get(x);
@@ -457,6 +454,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                                 puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);
                                 Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
                                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                                tipoRuta = 2;
                                 y = 1000000;
                                 x = 1000000;
                             }
@@ -464,7 +462,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     }
                 }
             }
-            dibujarRutasEvacuacion(miPosicion);
+            dibujarRutasEvacuacion(miPosicion, rutaALaZonaSegura, posPuntoSeguro, posUsuarioEnRuta, tipoRuta);
             Toast.makeText(this,"Distancia a la zona segura más cercana: " + Integer.toString((int)distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
             markersSenalesRuta(miPosicion);
             addMarker(miPosicion, "Mi ubicacion", 1);
