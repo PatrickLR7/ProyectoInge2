@@ -38,6 +38,7 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -58,6 +59,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     SensorManager sensorManager;
     Sensor sensor;
+    RotationGestureOverlay mRotationGestureOverlay; // Para utilizar gestos para rotar el mapa.
 
     SintetizadorVoz sv;
     double latActual = 0;
@@ -89,7 +91,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
         mapView.setClickable(true);
         mapView.setBuiltInZoomControls(true);
+        mRotationGestureOverlay = new RotationGestureOverlay(mapView);
+        mRotationGestureOverlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
+        mapView.getOverlays().add(this.mRotationGestureOverlay);
         mapView.setUseDataConnection(false);
         CopyFolder.copyAssets(this);
 
