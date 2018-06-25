@@ -625,6 +625,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     }
 
     /**
+     * Pruebas Menu
+     */
+    public void menuAct(View v){
+        Intent i = new Intent(getApplicationContext(), Menu.class);
+        startActivity(i);
+    }
+
+    /**
      * Metodo encargado de solicitar permiso para el uso de la camara. Invocado luego de que el usuario elija pasarse al entorno de realidad aumentada.
      * @param requestCode: Identificador del hardware requerido.
      * @param permissions: Permisos requeridos.
