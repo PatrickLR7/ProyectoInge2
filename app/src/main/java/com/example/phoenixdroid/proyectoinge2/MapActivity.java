@@ -313,14 +313,13 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }
             eventType = parser.next();
         }
-
         Config.senalesVerticales = senalesV;
     }
 
     /**
      * Dibuja en el mapa la ruta de evacuación más cercana a un punto dado.
      */
-    public void dibujarRutasEvacuacion(GeoPoint puntoUsuario, List<GeoPoint> ruta, int posPuntoSeguro, int posUsuario, int tipoRuta) {
+    private void dibujarRutasEvacuacion(GeoPoint puntoUsuario, List<GeoPoint> ruta, int posPuntoSeguro, int posUsuario, int tipoRuta) {
         List<GeoPoint> rutaSegura = new ArrayList<>();
         if (tipoRuta == 0) {
             for (int x = 0; x < posUsuario; x++) {
@@ -346,6 +345,16 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                 }
             }
         }
+
+        if (rutaALaZonaSegura != null) {
+            Polyline polyline = new Polyline();
+            polyline.setColor(Color.TRANSPARENT);
+            mapView.getOverlays().add(polyline);
+            polyline.setPoints(rutaALaZonaSegura);
+        }
+
+        rutaALaZonaSegura = rutaSegura;
+        Config.rutaHaciaLaZonaSegura = rutaALaZonaSegura;
 
         Polyline polyline = new Polyline();
         polyline.setColor(Color.parseColor("#B6523C"));
@@ -381,9 +390,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
     /**
      * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
-     * @param posicionUsuario
      */
-    public void markersSenalesRuta(GeoPoint posicionUsuario){
+    private void markersSenalesRuta(){
         if (senalesV != null && !senalesV.isEmpty()) {
             for (int i = 0; i < senalesV.size(); i++) {
                 GeoPoint senal = new GeoPoint(senalesV.get(i).latSV, senalesV.get(i).lonSV);
@@ -469,7 +477,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }
             dibujarRutasEvacuacion(miPosicion, rutaALaZonaSegura, posPuntoSeguro, posUsuarioEnRuta, tipoRuta);
             Toast.makeText(this,"Distancia a la zona segura más cercana: " + Integer.toString((int)distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
-            markersSenalesRuta(miPosicion);
+            markersSenalesRuta();
             addMarker(miPosicion, "Mi ubicacion", 1);
             //verificarCercaniaZona(distanciaMin2, distanciaMin);
         }

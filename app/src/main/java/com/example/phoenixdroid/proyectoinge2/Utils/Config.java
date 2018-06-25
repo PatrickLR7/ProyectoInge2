@@ -19,4 +19,5 @@ public class Config {
     public static int idGeoObjects = 0;  //Id usados para los geoObjetos.
     public static List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
     public static PuntoEncuentro puntoEncuentroMasCercano;
+    public static List<GeoPoint> rutaHaciaLaZonaSegura;
 }
