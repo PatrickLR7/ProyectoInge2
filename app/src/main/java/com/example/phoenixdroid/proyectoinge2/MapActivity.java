@@ -92,10 +92,10 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
         mapView.setClickable(true);
         mapView.setBuiltInZoomControls(true);
-        mRotationGestureOverlay = new RotationGestureOverlay(mapView);
-        mRotationGestureOverlay.setEnabled(true);
+        //mRotationGestureOverlay = new RotationGestureOverlay(mapView);
+       // mRotationGestureOverlay.setEnabled(true);
         mapView.setMultiTouchControls(true);
-        mapView.getOverlays().add(this.mRotationGestureOverlay);
+       // mapView.getOverlays().add(this.mRotationGestureOverlay);
         mapView.setUseDataConnection(false);
         CopyFolder.copyAssets(this);
 
