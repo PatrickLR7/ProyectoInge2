@@ -70,6 +70,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
     GeoPoint puntoEMasCercano = null;
     List<GeoPoint> rutaALaZonaSegura = null;
+    Polyline rutaActual = null;
     ImageView orientacionUsuario;
     float gradosAux = 0f;
 
@@ -347,11 +348,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             }
         }
 
-        if (rutaALaZonaSegura != null) {
-            Polyline polyline = new Polyline();
-            polyline.setColor(Color.TRANSPARENT);
-            mapView.getOverlays().add(polyline);
-            polyline.setPoints(rutaALaZonaSegura);
+        if (rutaActual != null) {
+            rutaActual.setVisible(false);
         }
 
         rutaALaZonaSegura = rutaSegura;
@@ -361,6 +359,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         polyline.setColor(Color.parseColor("#B6523C"));
         mapView.getOverlays().add(polyline);
         polyline.setPoints(rutaSegura);
+        rutaActual = polyline;
+        polyline.setVisible(true);
     }
 
     /**
