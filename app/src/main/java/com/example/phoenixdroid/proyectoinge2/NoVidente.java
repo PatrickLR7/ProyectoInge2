@@ -123,6 +123,11 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         sv.hablar(texto); //Llama a la clase con el TextToSpeech
     }
 
+
+
+
+
+
     /**
      * Metodo que determina la orientación del dispositivo según el registro en grados devuelto por el sensor.
      * @param texto texto al que se le va a concatenar la información sobre la orientación.
@@ -170,7 +175,15 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             puntoCardinalTel = 7;
         }
         return texto;
+
+
+
     }
+
+
+
+
+
 
     /**
      * Metodo que determina el punto cardinal hacia el que se encuentra el siguiente punto
@@ -209,6 +222,10 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         }
         return texto;
     }
+
+
+
+
 
     /**
      * Metodo que genera la instrucción más específica que tendrá que seguir el usuario no vidente.
@@ -253,6 +270,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     public void onSensorChanged(SensorEvent event) //Sensor de la brújula
     {
         grados = Math.round(event.values[0]);
+
     }
 
     /**

@@ -102,6 +102,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         mapViewController.setZoom(19);
         mapView.setTileSource(new XYTileSource("tiles", 10, 18, 256, ".png", new String[0]));
 
+
         bdMapa = new BaseDeDatos(getApplicationContext());
         parseXML();
 
@@ -568,6 +569,8 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         // Start the animation
         brujula.startAnimation(ra);
         gradosAux = -grados;
+        mapView.setMapOrientation(gradosAux);
+
     }
 
     /**
