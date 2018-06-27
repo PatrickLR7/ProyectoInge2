@@ -116,7 +116,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         orientacionUsuario = findViewById(R.drawable.icon_persona); //CAMBIAR POR CONO
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Sensor de la orientación del teléfono
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
-        sv = new SintetizadorVoz(this);
+        sv = new SintetizadorVoz(this, 2);
         //dibujarRutasEvacuacion();
         markersPuntosE();
         brujula = findViewById(R.id.brujumas);

@@ -13,12 +13,14 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
 {
     private TextToSpeech tts;
     Context context;
+    private int pantallaUso;
 
     /**
      * Constructor de la clase a través del cual se le envía el contexto del activity que lo ocupa.
      */
-    public SintetizadorVoz(Context contexto)
+    public SintetizadorVoz(Context contexto, int pantalla)
     {
+        pantallaUso = pantalla;
         context = contexto;
         tts = new TextToSpeech(context, this);
     }
@@ -34,6 +36,11 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
         {
             Locale locSpanish = new Locale("spa", "MEX");
             tts.setLanguage(locSpanish);
+            if(pantallaUso == 1)
+            {
+                String aviso = "Advertencia: En esta pantalla se le dan instrucciones de cómo avanzar, mas no sobre obstáculos en la vía como huecos o alcantarillas. ";
+                hablar(aviso);
+            }
         }
     }
 

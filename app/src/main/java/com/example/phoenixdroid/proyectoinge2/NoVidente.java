@@ -29,9 +29,9 @@ import java.util.List;
 
 public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
-    double latActual, lonActual, distanciaPunto, distanciaZona;
+    double latActual, lonActual, distanciaPunto, distanciaZona, distanciaAnterior;
     GeoPoint puntoUsuario, puntoProximo; //Puntos necesarios para determinar puntos cardinales
-    int grados, puntoCardinalTel, puntoCardinalZona; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
+    int grados, puntoCardinalTel, puntoCardinalProximo; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
     LocationManager locationManager; //Controlador de ubicación
     PuntoCardinal pc; //Clase que determina un punto cardinal según dos GeoPoints
     PuntoEncuentro puntoMasCercano; //Siguiente punto al que se debe dirigir el usuario
@@ -43,6 +43,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
 
     GeoPoint puntoEMasCercano = null;
     List<GeoPoint> rutaALaZonaSegura = null;
+    boolean primerCalculo = true;
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -70,7 +71,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Sensor de la orientación del teléfono
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
-        sv = new SintetizadorVoz(this); //Clase con TextToSpeech
+        sv = new SintetizadorVoz(this, 1); //Clase con TextToSpeech
 
         grados = 0; //Orientación del teléfono
         puntoCardinalTel = 0; //Punto cardinal según la orientación
@@ -80,16 +81,9 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         puntoUsuario = null;
         puntoProximo = null;
         distanciaPunto = 0;
-        distanciaZona = 0;
+        distanciaZona = 26;
         pc = new PuntoCardinal();
         rutasE = parser.rutasE;
-
-        String punto = puntoCardinalPunto("");
-        punto = punto + "Se le darán instrucciones sobre cómo avanzar por la ruta";
-        String aviso = "Advertencia: En la siguiente pantalla se le dan instrucciones de cómo avanzar, mas no sobre obstáculos en la vía como huecos o alcantarillas. ";
-        aviso = aviso + punto;
-        sv.hablar(aviso);
-
     }
 
     /**
@@ -115,11 +109,10 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         else
         {
             texto = puntoCardinalTel(texto) + ", "; //Orientación del teléfono.
-            //texto = puntoCardinalPunto(texto) + ". "; //Orientación en la que se encuentra el punto
             texto = instruccion(texto); //Instrucción más útil para el no vidente
-            texto = texto + " y la distancia es " + (int) distanciaPunto + " metros. "; //Distancia hasta el punto
+            if(distanciaPunto != 0)
+                texto = texto + " y la distancia es " + (int) distanciaPunto + " metros. "; //Distancia hasta el punto
         }
-
         sv.hablar(texto); //Llama a la clase con el TextToSpeech
     }
 
@@ -136,42 +129,42 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     {
         if ((grados >= 337.5 && grados <= 360) || (grados >= 0 && grados < 22.5))
         {
-            texto = texto + "Esta viendo hacia el norte";
+            texto = texto + "Esta viendo al norte";
             puntoCardinalTel = 0;
         }
         else if (grados >= 22.5 &&  grados < 67.5)
         {
-            texto = texto + "Esta viendo hacia el noreste";
+            texto = texto + "Esta viendo al noreste";
             puntoCardinalTel = 1;
         }
         else if (grados >= 67.5 &&  grados < 112.5)
         {
-            texto = texto + "Esta viendo hacia el este";
+            texto = texto + "Esta viendo al este";
             puntoCardinalTel = 2;
         }
         else if (grados >= 112.5 &&  grados < 157.5)
         {
-            texto = texto + "Esta viendo hacia el sureste";
+            texto = texto + "Esta viendo al sureste";
             puntoCardinalTel = 3;
         }
         else if (grados >= 157.5 &&  grados < 202.5)
         {
-            texto = texto + "Esta viendo hacia el sur";
+            texto = texto + "Esta viendo al sur";
             puntoCardinalTel = 4;
         }
         else if (grados >= 202.5 &&  grados < 247.5)
         {
-            texto = texto + "Esta viendo hacia el suroeste";
+            texto = texto + "Esta viendo al suroeste";
             puntoCardinalTel = 5;
         }
         else if (grados >= 247.5 &&  grados < 292.5)
         {
-            texto = texto + "Esta viendo hacia el oeste";
+            texto = texto + "Esta viendo al oeste";
             puntoCardinalTel = 6;
         }
         else if (grados >= 292.5 &&  grados < 337.5)
         {
-            texto = texto + "Esta viendo hacia el noroeste";
+            texto = texto + "Esta viendo al noroeste";
             puntoCardinalTel = 7;
         }
         return texto;
@@ -181,10 +174,6 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     }
 
 
-
-
-
-
     /**
      * Metodo que determina el punto cardinal hacia el que se encuentra el siguiente punto
      * @param texto texto al que se le va a concatenar el lugar del punto.
@@ -192,7 +181,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     private String puntoCardinalPunto(String texto)
     {
         int direccion = pc.determinateDirection(puntoUsuario, puntoProximo);
-        puntoCardinalZona = direccion;
+        puntoCardinalProximo = direccion;
         switch (direccion)
         {
             case 0:
@@ -227,35 +216,37 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
 
 
 
+
+
     /**
      * Metodo que genera la instrucción más específica que tendrá que seguir el usuario no vidente.
      * @param texto texto al que se le va a concatenar la instrucción.
      */
     private String instruccion(String texto)
     {
-        if(puntoCardinalTel == puntoCardinalZona) //El dispositivo está viendo hacia donde está el punto
+        if(puntoCardinalTel == puntoCardinalProximo) //El dispositivo está viendo hacia donde está el punto
         {
             texto = texto + "Siga hacia adelante. ";
         }
-        else if(puntoCardinalTel - puntoCardinalZona == 4 || puntoCardinalZona - puntoCardinalTel == 4 ||
-                puntoCardinalTel - puntoCardinalZona == 5 || puntoCardinalZona - puntoCardinalTel == 5 ||
-                puntoCardinalTel - puntoCardinalZona == 3 || puntoCardinalZona - puntoCardinalTel == 3)
+        else if(puntoCardinalTel - puntoCardinalProximo == 4 || puntoCardinalProximo - puntoCardinalTel == 4 ||
+                puntoCardinalTel - puntoCardinalProximo == 5 || puntoCardinalProximo - puntoCardinalTel == 5 ||
+                puntoCardinalTel - puntoCardinalProximo == 3 || puntoCardinalProximo - puntoCardinalTel == 3)
         { //El dispositivo está viendo hacia el sentido contrario
             texto = texto + "Gire 180 grados. ";
         }
-        else if(puntoCardinalTel - puntoCardinalZona == 2 || puntoCardinalZona - puntoCardinalTel == 6)
+        else if(puntoCardinalTel - puntoCardinalProximo == 2 || puntoCardinalProximo - puntoCardinalTel == 6)
         { //El dispositivo está girado
             texto = texto + "Gire 90 grados a la izquierda. ";
         }
-        else if(puntoCardinalTel - puntoCardinalZona == 6 || puntoCardinalZona - puntoCardinalTel == 2)
+        else if(puntoCardinalTel - puntoCardinalProximo == 6 || puntoCardinalProximo - puntoCardinalTel == 2)
         { //El dispositivo está girado
             texto = texto + "Gire 90 grados a la derecha. ";
         }
-        else if(puntoCardinalTel - puntoCardinalZona == 1 || puntoCardinalZona - puntoCardinalTel == 7)
+        else if(puntoCardinalTel - puntoCardinalProximo == 1 || puntoCardinalProximo - puntoCardinalTel == 7)
         { //El dispositivo está un poco girado
             texto = texto + "Gire 45 grados a la izquierda. ";
         }
-        else if(puntoCardinalTel - puntoCardinalZona == 7 || puntoCardinalZona - puntoCardinalTel == 1)
+        else if(puntoCardinalTel - puntoCardinalProximo == 7 || puntoCardinalProximo - puntoCardinalTel == 1)
         { //El dispositivo está un poco girado
             texto = texto + "Gire 45 grados a la derecha. ";
         }
@@ -299,8 +290,10 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                     }
                 }
             }
+
             distanciaZona = distanciaMin; //Actualiza la distancia al siguiente punto
-            puntoProximo = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud); //Guarda la información del siguiente punto
+            //PuntoZona para lo del punto cardinal
+            //puntoProximo = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud); //Guarda la información del siguiente punto
 
             //Basado en la ruta calculada anteriormente, se obtiene el punto seguro
             int posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(0));
@@ -330,6 +323,20 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             puntoProximo = puntoEMasCercano;
             distanciaPunto = distanciaMin;
         }
+        /*
+        if(primerCalculo)
+        {
+            String punto = puntoCardinalPunto("");
+            punto = punto + "Se le darán instrucciones sobre cómo avanzar por la ruta";
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            sv.hablar(punto);
+            primerCalculo = false;
+        }
+        */
     }
 
     /**
