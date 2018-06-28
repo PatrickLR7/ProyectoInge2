@@ -45,6 +45,9 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     List<GeoPoint> rutaALaZonaSegura = null;
     boolean primerCalculo = true;
 
+    String advertenciaInicial = "Esta aplicacion solo le dara indicaciones generales para llegar a su destino, indicaciones especificas como la evasion de postes, caños u otros objetos no seran otorgadas";
+    String destino = "Ha llegado a la zona segura, por favor, siga las instrucciones que le indiquen los rescatistas.";
+
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
      * @param savedInstanceState: la instancia previa de esta actividad.
@@ -358,6 +361,10 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             }
             puntoZona = puntoEMasCercano;
             distanciaPunto = distanciaMin;
+
+            if(distanciaPunto < 150) {
+                sv.hablar(destino);
+            }
         }
 
         //puntoProximo con el algoritmo de MapActivity
