@@ -20,4 +20,5 @@ public class Config {
     public static List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
     public static PuntoEncuentro puntoEncuentroMasCercano;
     public static List<GeoPoint> rutaHaciaLaZonaSegura;
+    public static boolean termino = false;
 }

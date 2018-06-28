@@ -23,6 +23,7 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
         pantallaUso = pantalla;
         context = contexto;
         tts = new TextToSpeech(context, this);
+
     }
 
     /**
@@ -39,8 +40,9 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
             if(pantallaUso == 1)
             {
                 String aviso = "Advertencia: En esta pantalla se le dan instrucciones de cómo avanzar, mas no sobre obstáculos en la vía como huecos o alcantarillas. ";
-                hablar(aviso);
+                hablar2(aviso);
             }
+
         }
     }
 
@@ -67,9 +69,33 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
     /**
      * Metodo que simplemente lee una cadena.
      */
-    public void hablar(String texto)
-    {
+    public void hablar(String texto)  {
+
+
+
         tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+
+
+    }
+
+
+    /**
+     * Metodo que simplemente lee una cadena.
+     */
+    public void hablar2(String texto)  {
+
+
+
+        tts.speak(texto, TextToSpeech.QUEUE_FLUSH, null);
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        //Config.termino = true;
     }
 
     /**

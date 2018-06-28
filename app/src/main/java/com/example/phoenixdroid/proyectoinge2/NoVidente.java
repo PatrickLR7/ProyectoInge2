@@ -30,7 +30,7 @@ import java.util.List;
 public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     double latActual, lonActual, distanciaPunto, distanciaZona, distanciaAnterior;
-    GeoPoint puntoUsuario, puntoZona, puntoProximo; //Puntos necesarios para determinar puntos cardinales
+    GeoPoint puntoUsuario, puntoZona, puntoProximo, puntoPasado; //Puntos necesarios para determinar puntos cardinales
     int grados, puntoCardinalTel, puntoCardinalProximo; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
     LocationManager locationManager; //Controlador de ubicación
     PuntoCardinal pc; //Clase que determina un punto cardinal según dos GeoPoints
@@ -44,6 +44,8 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     GeoPoint puntoEMasCercano = null;
     List<GeoPoint> rutaALaZonaSegura = null;
     boolean primerCalculo = true;
+
+    double distAnterior;
 
     /**
      * Metodo que se ejecuta cuando se crea esta actividad.
@@ -71,7 +73,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE); //Sensor de la orientación del teléfono
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
-        sv = new SintetizadorVoz(this, 1); //Clase con TextToSpeech
+
 
         grados = 0; //Orientación del teléfono
         puntoCardinalTel = 0; //Punto cardinal según la orientación
@@ -85,6 +87,8 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         distanciaZona = 26;
         pc = new PuntoCardinal();
         rutasE = parser.rutasE;
+
+        sv = new SintetizadorVoz(this, 1); //Clase con TextToSpeech
     }
 
     /**
@@ -336,6 +340,8 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             if (posPuntoSeguro != -1) {
                 puntoEMasCercano = new GeoPoint(parser.getPuntosE().get(posPuntoSeguro).latitud, parser.getPuntosE().get(posPuntoSeguro).longitud);
                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                distAnterior = distanciaMin;
+
             } else {
                 posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(rutaALaZonaSegura.size() - 1));
                 if (posPuntoSeguro != -1) {
@@ -349,6 +355,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                             if (pETemp.compareTo(temp2)) {
                                 puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);
                                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+
                                 y = 1000000;
                                 x = 1000000;
                             }
@@ -358,6 +365,12 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             }
             puntoZona = puntoEMasCercano;
             distanciaPunto = distanciaMin;
+
+
+            if( distanciaMin <= distAnterior-20 || distanciaMin >= distAnterior+20 || distanciaMin == distAnterior  ) {
+                distAnterior = distanciaMin;
+                guiar();
+            }
         }
 
         //puntoProximo con el algoritmo de MapActivity
