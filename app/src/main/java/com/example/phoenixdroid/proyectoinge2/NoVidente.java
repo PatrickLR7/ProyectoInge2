@@ -30,7 +30,7 @@ import java.util.List;
 public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     double latActual, lonActual, distanciaPunto, distanciaZona, distanciaAnterior;
-    GeoPoint puntoUsuario, puntoProximo; //Puntos necesarios para determinar puntos cardinales
+    GeoPoint puntoUsuario, puntoZona, puntoProximo; //Puntos necesarios para determinar puntos cardinales
     int grados, puntoCardinalTel, puntoCardinalProximo; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
     LocationManager locationManager; //Controlador de ubicación
     PuntoCardinal pc; //Clase que determina un punto cardinal según dos GeoPoints
@@ -79,6 +79,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         lonActual = 0;
         puntoMasCercano = null;
         puntoUsuario = null;
+        puntoZona = null;
         puntoProximo = null;
         distanciaPunto = 0;
         distanciaZona = 26;
@@ -175,12 +176,12 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
 
 
     /**
-     * Metodo que determina el punto cardinal hacia el que se encuentra el siguiente punto
+     * Metodo que determina el punto cardinal hacia el que se encuentra la zona segura
      * @param texto texto al que se le va a concatenar el lugar del punto.
      */
-    private String puntoCardinalPunto(String texto)
+    private String puntoCardinalZona(String texto)
     {
-        int direccion = pc.determinateDirection(puntoUsuario, puntoProximo);
+        int direccion = pc.determinateDirection(puntoUsuario, puntoZona);
         puntoCardinalProximo = direccion;
         switch (direccion)
         {
@@ -212,7 +213,43 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         return texto;
     }
 
-
+    /**
+     * Metodo que determina el punto cardinal hacia el que se encuentra la zona segura
+     * @param texto texto al que se le va a concatenar el lugar del punto.
+     */
+    private String puntoCardinalPunto(String texto)
+    {
+        int direccion = pc.determinateDirection(puntoUsuario, puntoProximo);
+        puntoCardinalProximo = direccion;
+        switch (direccion)
+        {
+            case 0:
+                texto = texto  + "El siguiente punto esta al norte. ";
+                break;
+            case 1:
+                texto = texto  + "El siguiente punto esta al noreste. ";
+                break;
+            case 2:
+                texto = texto  + "El siguiente punto esta al este. ";
+                break;
+            case 3:
+                texto = texto  + "El siguiente punto esta al sureste. ";
+                break;
+            case 4:
+                texto = texto  + "El siguiente punto esta al sur. ";
+                break;
+            case 5:
+                texto = texto  + "El siguiente punto esta al suroeste. ";
+                break;
+            case 6:
+                texto = texto  + "El siguiente punto esta al oeste. ";
+                break;
+            case 7:
+                texto = texto  + "El siguiente punto esta al noroeste. ";
+                break;
+        }
+        return texto;
+    }
 
 
 
@@ -292,8 +329,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             }
 
             distanciaZona = distanciaMin; //Actualiza la distancia al siguiente punto
-            //PuntoZona para lo del punto cardinal
-            //puntoProximo = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud); //Guarda la información del siguiente punto
+            //puntoZona = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud); //Guarda la información del siguiente punto
 
             //Basado en la ruta calculada anteriormente, se obtiene el punto seguro
             int posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(0));
@@ -320,9 +356,12 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                     }
                 }
             }
-            puntoProximo = puntoEMasCercano;
+            puntoZona = puntoEMasCercano;
             distanciaPunto = distanciaMin;
         }
+
+        //puntoProximo con el algoritmo de MapActivity
+
         /*
         if(primerCalculo)
         {
