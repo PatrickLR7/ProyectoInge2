@@ -26,6 +26,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
     BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
@@ -44,6 +45,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
     GeoPoint puntoEMasCercano = null;
     List<GeoPoint> rutaALaZonaSegura = null;
     boolean primerCalculo = true;
+    Semaphore semaforo;
 
     String advertenciaInicial = "Esta aplicacion solo le dara indicaciones generales para llegar a su destino, indicaciones especificas como la evasion de postes, caños u otros objetos no seran otorgadas";
     String destino = "Ha llegado a la zona segura, por favor, siga las instrucciones que le indiquen los rescatistas.";
@@ -88,6 +90,16 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         distanciaZona = 26;
         pc = new PuntoCardinal();
         rutasE = parser.rutasE;
+
+        semaforo = new Semaphore(0);
+        try {
+            semaforo.wait();
+            String punto = puntoCardinalZona("");
+            punto = punto + "Se le darán instrucciones sobre cómo avanzar por la ruta";
+            sv.hablar(punto);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -216,6 +228,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         return texto;
     }
 
+
     /**
      * Metodo que determina el punto cardinal hacia el que se encuentra la zona segura
      * @param texto texto al que se le va a concatenar el lugar del punto.
@@ -253,9 +266,6 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         }
         return texto;
     }
-
-
-
 
 
     /**
@@ -369,20 +379,13 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
 
         //puntoProximo con el algoritmo de MapActivity
 
-        /*
+
         if(primerCalculo)
         {
-            String punto = puntoCardinalPunto("");
-            punto = punto + "Se le darán instrucciones sobre cómo avanzar por la ruta";
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            sv.hablar(punto);
+            semaforo.release();
             primerCalculo = false;
         }
-        */
+
     }
 
     /**
