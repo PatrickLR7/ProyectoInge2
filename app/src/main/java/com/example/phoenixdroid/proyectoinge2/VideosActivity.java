@@ -91,8 +91,11 @@ public class VideosActivity extends AppCompatActivity implements View.OnClickLis
             case CALLE_PARALELA_RIO_URUCA:
                 numZona = R.raw.calle_paralela_rio_uruca;
                 break;
-            default:
+            case ENTRADA_CALLE_LOS_ALVAREZ:
                 numZona = R.raw.entrada_calle_los_alvarez;
+                break;
+            default:
+                numZona = R.raw.instrucciones;
                 break;
         }
         ruta += numZona;
