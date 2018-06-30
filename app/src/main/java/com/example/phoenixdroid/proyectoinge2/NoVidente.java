@@ -44,10 +44,8 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
 
     GeoPoint puntoEMasCercano = null;
     List<GeoPoint> rutaALaZonaSegura = null;
-    boolean primerCalculo = true;
-    Semaphore semaforo;
 
-    String advertenciaInicial = "Esta aplicacion solo le dara indicaciones generales para llegar a su destino, indicaciones especificas como la evasion de postes, caños u otros objetos no seran otorgadas";
+    //String advertenciaInicial = "Esta aplicacion solo le dara indicaciones generales para llegar a su destino, indicaciones especificas como la evasion de postes, caños u otros objetos no seran otorgadas";
     String destino = "Ha llegado a la zona segura, por favor, siga las instrucciones que le indiquen los rescatistas.";
 
     /**
@@ -90,16 +88,6 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         distanciaZona = 26;
         pc = new PuntoCardinal();
         rutasE = parser.rutasE;
-
-        semaforo = new Semaphore(0);
-        try {
-            semaforo.wait();
-            String punto = puntoCardinalZona("");
-            punto = punto + "Se le darán instrucciones sobre cómo avanzar por la ruta";
-            sv.hablar(punto);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -372,20 +360,12 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             puntoZona = puntoEMasCercano;
             distanciaPunto = distanciaMin;
 
-            if(distanciaPunto < 150) {
+            if (distanciaPunto < 150) {
                 sv.hablar(destino);
             }
         }
 
         //puntoProximo con el algoritmo de MapActivity
-
-
-        if(primerCalculo)
-        {
-            semaforo.release();
-            primerCalculo = false;
-        }
-
     }
 
     /**
