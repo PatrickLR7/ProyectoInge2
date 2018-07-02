@@ -17,13 +17,17 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
@@ -142,6 +146,60 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                 flashLightStatus ^= true;
             }
         });
+    }
+
+    /**
+     * Metodo para crear el menu.
+     * @param menu layout con el menu.
+     * @return true si se crea correctamente.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu){
+        getMenuInflater().inflate(R.menu.navigation_menu, menu);
+        return true;
+    }
+
+    /**
+     * Metodo para realizar una accion al seleccionar items del menu.
+     * @param item una opcion del menu.
+     * @return true si realiza la accion correctamente.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+
+        switch(id){
+            case R.id.nav_Inicio:
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+                finish();
+                break;
+            case R.id.nav_Ayuda:
+                Toast.makeText(this, "Pendiente. ", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_Acerca:
+                AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.acercade, null);
+                Button bt = (Button) mView.findViewById(R.id.btnA);
+                TextView title = new TextView(this);
+                title.setText("Desarrollado por: \n PhoenixDroid");
+                title.setBackgroundColor(getColor(android.R.color.white));
+                title.setPadding(10, 10, 10, 10);
+                title.setGravity(Gravity.CENTER);
+                title.setTextColor(getColor(R.color.colorPrimary));
+                title.setTextSize(20);
+                builder.setCustomTitle(title);
+                builder.setView(mView);
+                final AlertDialog ad = builder.create();
+                bt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad.dismiss();
+                    }
+                });
+                ad.show();
+        }
+        return true;
     }
 
     /**
