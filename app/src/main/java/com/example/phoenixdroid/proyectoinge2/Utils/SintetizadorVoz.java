@@ -93,7 +93,7 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
+
 
 
         //Config.termino = true;

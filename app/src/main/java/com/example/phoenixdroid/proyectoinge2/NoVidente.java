@@ -337,6 +337,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             if (posPuntoSeguro != -1) {
                 puntoEMasCercano = new GeoPoint(parser.getPuntosE().get(posPuntoSeguro).latitud, parser.getPuntosE().get(posPuntoSeguro).longitud);
                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
+                distanciaAnterior = distanciaMin;
             } else {
                 posPuntoSeguro = buscarPuntoSeguro(rutaALaZonaSegura.get(rutaALaZonaSegura.size() - 1));
                 if (posPuntoSeguro != -1) {
@@ -360,8 +361,10 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
             puntoZona = puntoEMasCercano;
             distanciaPunto = distanciaMin;
 
-            if (distanciaPunto < 150) {
-                sv.hablar(destino);
+            if (distanciaPunto <= distanciaAnterior-20  || distanciaPunto >= distanciaAnterior-20 || distanciaPunto == distanciaAnterior  )  {
+                distanciaAnterior = distanciaMin;
+                //sv.hablar(destino);
+                guiar();
             }
         }
 
