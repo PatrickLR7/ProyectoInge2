@@ -170,29 +170,48 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                 finish();
                 break;
             case R.id.nav_Ayuda:
-                Toast.makeText(this, "Pendiente. ", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_Acerca:
-                AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.acercade, null);
-                Button bt = (Button) mView.findViewById(R.id.btnA);
-                TextView title = new TextView(this);
-                title.setText("Desarrollado por: \n PhoenixDroid");
-                title.setBackgroundColor(getColor(android.R.color.white));
-                title.setPadding(10, 10, 10, 10);
-                title.setGravity(Gravity.CENTER);
-                title.setTextColor(getColor(R.color.colorPrimary));
-                title.setTextSize(20);
-                builder.setCustomTitle(title);
-                builder.setView(mView);
-                final AlertDialog ad = builder.create();
-                bt.setOnClickListener(new View.OnClickListener() {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(MapActivity.this);
+                View mView1 = getLayoutInflater().inflate(R.layout.ayuda_mapa, null);
+                Button bt1 = (Button) mView1.findViewById(R.id.btnA2);
+                TextView title1 = new TextView(this);
+                title1.setText("Ayuda");
+                title1.setBackgroundColor(getColor(android.R.color.white));
+                title1.setPadding(10, 10, 10, 10);
+                title1.setGravity(Gravity.CENTER);
+                title1.setTextColor(getColor(R.color.colorPrimary));
+                title1.setTextSize(20);
+                builder1.setCustomTitle(title1);
+                builder1.setView(mView1);
+                final AlertDialog ad1 = builder1.create();
+                bt1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ad.dismiss();
+                        ad1.dismiss();
                     }
                 });
-                ad.show();
+                ad1.show();
+                break;
+            case R.id.nav_Acerca:
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(MapActivity.this);
+                View mView2 = getLayoutInflater().inflate(R.layout.acercade, null);
+                Button bt2 = (Button) mView2.findViewById(R.id.btnA);
+                TextView title2 = new TextView(this);
+                title2.setText("Desarrollado por: \n PhoenixDroid");
+                title2.setBackgroundColor(getColor(android.R.color.white));
+                title2.setPadding(10, 10, 10, 10);
+                title2.setGravity(Gravity.CENTER);
+                title2.setTextColor(getColor(R.color.colorPrimary));
+                title2.setTextSize(20);
+                builder2.setCustomTitle(title2);
+                builder2.setView(mView2);
+                final AlertDialog ad2 = builder2.create();
+                bt2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad2.dismiss();
+                    }
+                });
+                ad2.show();
         }
         return true;
     }
