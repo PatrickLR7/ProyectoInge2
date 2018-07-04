@@ -81,7 +81,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     float gradosAux = 0f;
 
     private ImageButton buttonEnable;
-    private Button instructionButton;
     private static final int CAMERA_REQUEST = 50;
     private boolean flashLightStatus = false;
 
@@ -127,10 +126,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         //dibujarRutasEvacuacion();
         markersPuntosE();
         brujula = findViewById(R.id.brujumas);
-
-        instructionButton = findViewById(R.id.InstBtn);
-        instructionButton.setClickable(false);
-        instructionButton.setVisibility(View.INVISIBLE);
 
         buttonEnable = findViewById(R.id.luz);
         buttonEnable.setOnClickListener(new View.OnClickListener() {
@@ -524,16 +519,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
                     distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
                     tipoRuta = 1;
-                    if(distanciaMin < 100.0){
-                        instructionButton.setClickable(true);
-                        instructionButton.setVisibility(View.VISIBLE);
-                    }
+
                 } else {
                     for (int x = 0; x < puntosE.size(); x++) {
                         PuntoEncuentro pETemp =puntosE.get(x);
                         for (int y = 0; y < rutaALaZonaSegura.size(); y++) {
                             GeoPoint temp2 = rutaALaZonaSegura.get(y);
                             if (pETemp.compareTo(temp2)) {
+                                posPuntoSeguro = y;
                                 puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);
                                 Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
                                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);

@@ -39,6 +39,8 @@ public class ZonasActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu){
         getMenuInflater().inflate(R.menu.navigation_menu, menu);
+        MenuItem item = menu.getItem(1);
+        item.setVisible(false);
         return true;
     }
 

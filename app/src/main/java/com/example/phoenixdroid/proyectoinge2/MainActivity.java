@@ -50,8 +50,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu){
         getMenuInflater().inflate(R.menu.navigation_menu, menu);
+        MenuItem item = menu.getItem(1);
+        item.setVisible(false);
         return true;
     }
+
+
 
     /**
      * Metodo para realizar una accion al seleccionar items del menu.
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.nav_Ayuda:
-                Toast.makeText(this, "Pendiente. ", Toast.LENGTH_SHORT).show();
+                //
                 break;
             case R.id.nav_Acerca:
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
