@@ -329,7 +329,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                 }
             }
 
-            distanciaZona = distanciaMin; //Actualiza la distancia al siguiente punto
+
             //puntoZona = new GeoPoint(puntoMasCercano.latitud, puntoMasCercano.longitud); //Guarda la información del siguiente punto
 
             //Basado en la ruta calculada anteriormente, se obtiene el punto seguro
@@ -359,9 +359,9 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
                 }
             }
             puntoZona = puntoEMasCercano;
-            distanciaPunto = distanciaMin;
+            distanciaZona = distanciaMin;
 
-            if (distanciaPunto <= distanciaAnterior-20  || distanciaPunto >= distanciaAnterior-20 || distanciaPunto == distanciaAnterior  )  {
+            if (distanciaZona <= distanciaAnterior-20  || distanciaZona >= distanciaAnterior-20 || distanciaZona == distanciaAnterior  )  {
                 distanciaAnterior = distanciaMin;
                 //sv.hablar(destino);
                 guiar();
