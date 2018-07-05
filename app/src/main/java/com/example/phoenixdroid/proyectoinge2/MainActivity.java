@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
                 View mView = getLayoutInflater().inflate(R.layout.acercade, null);
                 Button bt = (Button) mView.findViewById(R.id.btnA);
                 TextView title = new TextView(this);
-                title.setText("Desarrollado por: \n PhoenixDroid");
+                title.setText("Desarrollado por: PhoenixDroid");
                 title.setBackgroundColor(getColor(android.R.color.white));
                 title.setPadding(10, 10, 10, 10);
                 title.setGravity(Gravity.CENTER);
