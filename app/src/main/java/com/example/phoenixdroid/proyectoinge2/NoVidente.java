@@ -102,7 +102,7 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
      */
     private void guiar() {
         String texto = "";
-        if(distanciaZona <= 25) {
+        if(distanciaZona <= 30) {
             texto = "Ha llegado a la zona segura, por favor espere instrucciones o que llegue un miembro de la cruz roja";
         } else {
             texto = puntoCardinalTel(texto) + ", "; //Orientación del teléfono.

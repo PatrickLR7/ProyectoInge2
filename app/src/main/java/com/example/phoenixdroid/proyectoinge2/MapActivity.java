@@ -547,7 +547,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                             if (pETemp.compareTo(temp2)) {
                                 posPuntoSeguro = y;
                                 puntoEMasCercano = new GeoPoint(pETemp.latitud, pETemp.longitud);
-                                Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
+                                Config.puntoEncuentroMasCercano = puntosE.get(x);
                                 distanciaMin = miPosicion.distanceToAsDouble(puntoEMasCercano);
                                 tipoRuta = 2;
                                 y = 1000000;
@@ -557,11 +557,14 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                     }
                 }
             }
+
+            //Config.puntoEncuentroMasCercano = puntosE.get(posPuntoSeguro);
+
             dibujarRutasEvacuacion(miPosicion, rutaALaZonaSegura, posPuntoSeguro, posUsuarioEnRuta, tipoRuta);
             Toast.makeText(this,"Distancia a la zona segura más cercana: " + Integer.toString((int)distanciaMin)  + " metros." ,Toast.LENGTH_LONG).show();
             markersSenalesRuta();
             addMarker(miPosicion, "Mi ubicacion", 1);
-            //verificarCercaniaZona(distanciaMin2, distanciaMin);
+            verificarCercaniaZona(distanciaMin);
         }
     }
 
@@ -580,13 +583,12 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         return -1;
     }
 
-    private void verificarCercaniaZona(double distSenal, double distZona) {
+    private void verificarCercaniaZona(double distZona) {
         String texto = "";
-        if (distSenal <= 20) {
-            texto = texto + "Se está aproximando a una señal vertical. Por favor, revísela. ";
-        }
-        if (distZona <= 20) {
+
+        if (distZona <= 30) {
             texto = texto + "Ha llegado a la zona segura.";
+            Toast.makeText(this,"Ha llegado a la zona segura. "  ,Toast.LENGTH_LONG).show();
         }
         sv.hablar(texto);
     }
