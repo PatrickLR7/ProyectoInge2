@@ -201,7 +201,26 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
                 finish();
                 break;
             case R.id.nav_Ayuda:
-                Toast.makeText(this, "Pendiente. ", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(SimpleCameraActivity.this);
+                View mView1 = getLayoutInflater().inflate(R.layout.ayuda_camara, null);
+                Button bt1 = (Button) mView1.findViewById(R.id.btnA3);
+                TextView title1 = new TextView(this);
+                title1.setText("Ayuda");
+                title1.setBackgroundColor(getColor(android.R.color.white));
+                title1.setPadding(10, 10, 10, 10);
+                title1.setGravity(Gravity.CENTER);
+                title1.setTextColor(getColor(R.color.colorPrimary));
+                title1.setTextSize(20);
+                builder1.setCustomTitle(title1);
+                builder1.setView(mView1);
+                final AlertDialog ad1 = builder1.create();
+                bt1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ad1.dismiss();
+                    }
+                });
+                ad1.show();
                 break;
             case R.id.nav_Acerca:
                 AlertDialog.Builder builder = new AlertDialog.Builder(SimpleCameraActivity.this);
