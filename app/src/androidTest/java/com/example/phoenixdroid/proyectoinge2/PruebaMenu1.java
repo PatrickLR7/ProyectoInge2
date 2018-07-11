@@ -12,17 +12,19 @@ import android.view.ViewParent;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -30,33 +32,13 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class PruebaModos {
+public class PruebaMenu1 {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void pruebaModos() {
-        ViewInteraction button = onView(
-                allOf(withId(R.id.button),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        1),
-                                0),
-                        isDisplayed()));
-        button.check(matches(isDisplayed()));
-
-        ViewInteraction button2 = onView(
-                allOf(withId(R.id.button2),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        1),
-                                1),
-                        isDisplayed()));
-        button2.check(matches(isDisplayed()));
-
+    public void pruebaMenu1() {
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.button), withText("Modo Vidente"),
                         childAtPosition(
@@ -67,48 +49,36 @@ public class PruebaModos {
                         isDisplayed()));
         appCompatButton.perform(click());
 
-        ViewInteraction button3 = onView(
-                allOf(withId(R.id.btnQNavajas),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                        0),
-                                1),
-                        isDisplayed()));
-        button3.check(matches(isDisplayed()));
-
-        ViewInteraction button4 = onView(
-                allOf(withId(R.id.btnLaFuente),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                        7),
-                                0),
-                        isDisplayed()));
-        button4.check(matches(isDisplayed()));
-
-        pressBack();
-
         ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.button2), withText("Modo No Vidente"),
+                allOf(withId(R.id.btnAlvarez), withText("Calle Los Álvarez"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.ScrollView")),
+                                        0),
+                                2)));
+        appCompatButton2.perform(scrollTo(), click());
+
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.botonMapa), withText("Ver Mapa"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.LinearLayout")),
-                                        1),
+                                        0),
                                 1),
                         isDisplayed()));
-        appCompatButton2.perform(click());
+        appCompatButton3.perform(click());
 
-        ViewInteraction textView = onView(
-                allOf(withText("Evacuación: Cuenca Río Uruca"),
+        ViewInteraction imageView = onView(
+                allOf(withContentDescription("Más opciones"),
                         childAtPosition(
-                                allOf(withId(R.id.action_bar),
-                                        childAtPosition(
-                                                withId(R.id.action_bar_container),
-                                                0)),
+                                childAtPosition(
+                                        withId(R.id.action_bar),
+                                        1),
                                 0),
                         isDisplayed()));
-        textView.check(matches(withText("Evacuación: Cuenca Río Uruca")));
+        imageView.check(matches(isDisplayed()));
+
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
     }
 
