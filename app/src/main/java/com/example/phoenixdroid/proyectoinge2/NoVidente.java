@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoCardinal;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoVidente extends AppCompatActivity implements View.OnClickListener, SensorEventListener, LocationListener {
-    BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     double latActual, lonActual, distanciaPunto, distanciaZona, distanciaAnterior;
     GeoPoint puntoUsuario, puntoZona, puntoProximo; //Puntos necesarios para determinar puntos cardinales
     int grados, puntoCardinalTel, puntoCardinalProximo; //Grados de 0 a 360 de la orientación y puntos cardinales de posiciones geográficas
@@ -64,7 +62,6 @@ public class NoVidente extends AppCompatActivity implements View.OnClickListener
         }
         catch (SecurityException ignored) { }
 
-        bdMapa = new BaseDeDatos(getApplicationContext());
         parser = new XmlParser(this);
 
         Button btn_guiar = findViewById(R.id.btn_guiarNoVidente);

@@ -14,14 +14,11 @@ import java.util.List;
 
 public class XmlParser {
     private ArrayList<PuntoEncuentro> puntosE; //Lista de los puntos seguros.
-    private ArrayList<SenalVertical> senalesV; // Lista de las señales verticales.
-    private BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     private Context contexto;
     public List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
 
     public XmlParser(Context c) {
         contexto = c;
-        bdMapa = new BaseDeDatos(contexto);
         parseXML();
     }
 
@@ -29,15 +26,11 @@ public class XmlParser {
     {
         return puntosE;
     }
-    public ArrayList<SenalVertical> getSenalesV()
-    {
-        return senalesV;
-    }
 
     /**
      * Metodo para leer datos desde un archivo XML.
      */
-    public void parseXML() {
+    private void parseXML() {
         XmlPullParserFactory parserFactory;
         try {
             parserFactory = XmlPullParserFactory.newInstance();
@@ -67,7 +60,7 @@ public class XmlParser {
      * Lee desde un archivo XML las rutas de evacuación y  y las enlista.
      * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de rutas de evacuación.
      */
-    public void processParsingRE(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private void processParsingRE(XmlPullParser parser) throws IOException, XmlPullParserException {
         int eventType = parser.getEventType();
         List<GeoPoint> rEActual = null;
         int id = 0;
@@ -136,7 +129,6 @@ public class XmlParser {
                             puntoEActual.latitud = Double.parseDouble(parser.nextText());
                         } else if ("lon".equals(tag)) {
                             puntoEActual.longitud = Double.parseDouble(parser.nextText());
-                            bdMapa.agregarPuntoSeguro(puntoEActual.latitud, puntoEActual.longitud, puntoEActual.nombre);
                         }
 
                     }
@@ -151,7 +143,7 @@ public class XmlParser {
      * @param parser XmlPullParser que contiene los datos leidos desde el archivo xml de puntos de encuentro.
      */
     private void processParsingSV(XmlPullParser parser) throws IOException, XmlPullParserException {
-        senalesV = new ArrayList<>();
+        ArrayList<SenalVertical> senalesV = new ArrayList<>();
         int eventType = parser.getEventType();
         SenalVertical senalVActual = null;
 

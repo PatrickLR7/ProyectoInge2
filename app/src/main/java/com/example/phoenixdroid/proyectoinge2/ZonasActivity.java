@@ -3,17 +3,12 @@ package com.example.phoenixdroid.proyectoinge2;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.Zona;
@@ -60,29 +55,9 @@ public class ZonasActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.nav_Ayuda:
-                Toast.makeText(this, "Pendiente. ", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_Acerca:
-                AlertDialog.Builder builder = new AlertDialog.Builder(ZonasActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.acercade, null);
-                Button bt = (Button) mView.findViewById(R.id.btnA);
-                TextView title = new TextView(this);
-                title.setText("Desarrollado por: \n PhoenixDroid");
-                title.setBackgroundColor(getColor(android.R.color.white));
-                title.setPadding(10, 10, 10, 10);
-                title.setGravity(Gravity.CENTER);
-                title.setTextColor(getColor(R.color.colorPrimary));
-                title.setTextSize(20);
-                builder.setCustomTitle(title);
-                builder.setView(mView);
-                final AlertDialog ad = builder.create();
-                bt.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ad.dismiss();
-                    }
-                });
-                ad.show();
+                Config.mostrarAcercaDe(this);
         }
         return true;
     }

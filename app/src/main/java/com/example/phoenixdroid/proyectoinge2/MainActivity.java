@@ -17,7 +17,6 @@ import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 
 public class MainActivity extends AppCompatActivity
 {
-    Button btn_vidente;
     Button btn_no_vidente;
 
     /**

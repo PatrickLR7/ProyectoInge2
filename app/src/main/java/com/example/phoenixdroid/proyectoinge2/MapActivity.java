@@ -30,13 +30,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.phoenixdroid.proyectoinge2.Utils.BaseDeDatos;
 import com.example.phoenixdroid.proyectoinge2.Utils.Config;
 import com.example.phoenixdroid.proyectoinge2.Utils.CopyFolder;
 import com.example.phoenixdroid.proyectoinge2.Utils.PuntoEncuentro;
 import com.example.phoenixdroid.proyectoinge2.Utils.SenalVertical;
 import com.example.phoenixdroid.proyectoinge2.Utils.SintetizadorVoz;
-import com.example.phoenixdroid.proyectoinge2.Utils.Zona;
 
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -62,7 +60,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
     ArrayList<PuntoEncuentro> puntosE; //Lista de los puntos seguros.
     ArrayList<SenalVertical> senalesV; // Lista de las señales verticales.
     List<List<GeoPoint>> rutasE = new ArrayList<>(59); //Lista de rutas de evacuación.
-    BaseDeDatos bdMapa; //Base de datos que guarda información clave del mapa.
     SensorManager sensorManager;
     Sensor sensor;
     RotationGestureOverlay mRotationGestureOverlay; // Para utilizar gestos para rotar el mapa.
@@ -108,9 +105,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
         mapViewController = (MapController) mapView.getController();
         mapViewController.setZoom(19);
         mapView.setTileSource(new XYTileSource("tiles", 10, 18, 256, ".png", new String[0]));
-
-
-        bdMapa = new BaseDeDatos(getApplicationContext());
         parseXML();
 
         locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -172,7 +166,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             case R.id.nav_Ayuda:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(MapActivity.this);
                 View mView1 = getLayoutInflater().inflate(R.layout.ayuda_mapa, null);
-                Button bt1 = (Button) mView1.findViewById(R.id.btnA2);
+                Button bt1 = mView1.findViewById(R.id.btnA2);
                 TextView title1 = new TextView(this);
                 title1.setText("Ayuda");
                 title1.setBackgroundColor(getColor(android.R.color.white));
@@ -192,26 +186,7 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                 ad1.show();
                 break;
             case R.id.nav_Acerca:
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(MapActivity.this);
-                View mView2 = getLayoutInflater().inflate(R.layout.acercade, null);
-                Button bt2 = (Button) mView2.findViewById(R.id.btnA);
-                TextView title2 = new TextView(this);
-                title2.setText("Desarrollado por: \n PhoenixDroid");
-                title2.setBackgroundColor(getColor(android.R.color.white));
-                title2.setPadding(10, 10, 10, 10);
-                title2.setGravity(Gravity.CENTER);
-                title2.setTextColor(getColor(R.color.colorPrimary));
-                title2.setTextSize(20);
-                builder2.setCustomTitle(title2);
-                builder2.setView(mView2);
-                final AlertDialog ad2 = builder2.create();
-                bt2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ad2.dismiss();
-                    }
-                });
-                ad2.show();
+                Config.mostrarAcercaDe(this);
         }
         return true;
     }
@@ -350,7 +325,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                             puntoEActual.latitud = Double.parseDouble(parser.nextText());
                         } else if ("lon".equals(tag)) {
                             puntoEActual.longitud = Double.parseDouble(parser.nextText());
-                            bdMapa.agregarPuntoSeguro(puntoEActual.latitud, puntoEActual.longitud, puntoEActual.nombre);
                         }
                     }
                     break;
@@ -375,7 +349,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
             switch(eventType){
                 case XmlPullParser.START_TAG:
                     tag = parser.getName();
-
                     if ("node".equals(tag)) {
                         senalVActual = new SenalVertical();
                         senalesV.add(senalVActual);
@@ -451,19 +424,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
                 routeCenter.setLatitude(puntosE.get(i).latitud);
                 routeCenter.setLongitude(puntosE.get(i).longitud);
                 addMarker(routeCenter, puntosE.get(i).nombre,3);
-            }
-        }
-    }
-
-    /**
-     * Coloca marcadores en el mapa en la posición en la que se ubican las señales verticales.
-     */
-    public void markersSenalesV(){
-        if (senalesV != null && !senalesV.isEmpty()) {
-            for (int i = 0; i < senalesV.size(); i++) {
-                routeCenter.setLatitude(senalesV.get(i).latSV);
-                routeCenter.setLongitude(senalesV.get(i).lonSV);
-                addMarker(routeCenter, "Señal: " + Integer.toString(senalesV.get(i).id),2);
             }
         }
     }
@@ -585,7 +545,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
     private void verificarCercaniaZona(double distZona) {
         String texto = "";
-
         if (distZona <= 30) {
             texto = texto + "Ha llegado a la zona segura.";
             Toast.makeText(this,"Ha llegado a la zona segura. "  ,Toast.LENGTH_LONG).show();
@@ -708,20 +667,6 @@ public class MapActivity extends AppCompatActivity implements LocationListener, 
 
             cameraManager.setTorchMode(cameraId, false);
         } catch (CameraAccessException ignored) { }
-    }
-
-    /**
-     * Pruebas Menu
-     */
-    public void menuAct(View v){
-        Intent i = new Intent(getApplicationContext(), Menu.class);
-        startActivity(i);
-    }
-
-    public void instructions(View v){
-        Intent i = new Intent(getApplicationContext(), VideosActivity.class);
-        Config.zona = Zona.INSTRUCCIONES;
-        startActivity(i);
     }
 
     /**

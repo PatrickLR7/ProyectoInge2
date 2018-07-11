@@ -89,7 +89,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         // Start home activity
         requestPermission(Permiso, 1);
 
-
         askPermission();
 
         // Hide the window title.
@@ -119,7 +118,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         user.setImageResource(R.drawable.icon_persona);
         user.setName("Posicion del usuario");
         mWorld.addBeyondarObject(user);
-
 
         //Permitimos que BeyondAR actualice automáticamente la posición del mundo con respecto al usuario
         BeyondarLocationManager.addWorldLocationUpdate(mWorld);
@@ -166,8 +164,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
         mSeekBarMaxDistance.setProgress(23);
         mRadarPlugin.setMaxDistance(45);
 
-
-
         puntosE = Config.puntosEncuentro;
         senalesV = Config.senalesVerticales;
         geoObjects = Config.geoObjetos;
@@ -203,7 +199,7 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
             case R.id.nav_Ayuda:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(SimpleCameraActivity.this);
                 View mView1 = getLayoutInflater().inflate(R.layout.ayuda_camara, null);
-                Button bt1 = (Button) mView1.findViewById(R.id.btnA3);
+                Button bt1 = mView1.findViewById(R.id.btnA3);
                 TextView title1 = new TextView(this);
                 title1.setText("Ayuda");
                 title1.setBackgroundColor(getColor(android.R.color.white));
@@ -223,26 +219,7 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
                 ad1.show();
                 break;
             case R.id.nav_Acerca:
-                AlertDialog.Builder builder = new AlertDialog.Builder(SimpleCameraActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.acercade, null);
-                Button bt = (Button) mView.findViewById(R.id.btnA);
-                TextView title = new TextView(this);
-                title.setText("Desarrollado por: \n PhoenixDroid");
-                title.setBackgroundColor(getColor(android.R.color.white));
-                title.setPadding(10, 10, 10, 10);
-                title.setGravity(Gravity.CENTER);
-                title.setTextColor(getColor(R.color.colorPrimary));
-                title.setTextSize(20);
-                builder.setCustomTitle(title);
-                builder.setView(mView);
-                final AlertDialog ad = builder.create();
-                bt.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ad.dismiss();
-                    }
-                });
-                ad.show();
+                Config.mostrarAcercaDe(this);
         }
         return true;
     }
@@ -278,7 +255,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
 
         Config.geoObjetos = geoObjects;
         Config.idGeoObjects = id;
-
     }
 
     /**
@@ -307,11 +283,9 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
      */
     @Override
     public void onLocationChanged(Location location) {
-
         GeoPoint miPosicion = new GeoPoint(location.getLatitude(),location.getLongitude());
         Config.usuarioLat = location.getLatitude();
         Config.usuarioLon = location.getLongitude();
-
 
         if (latActual != miPosicion.getLatitude() || lonActual != miPosicion.getLongitude()) {
             latActual = miPosicion.getLatitude();
@@ -387,7 +361,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
     @Override
     public void onClickBeyondarObject(ArrayList<BeyondarObject> arrayList) {
             String nombre = arrayList.get(0).getName();
-
             if(("Punto de Encuentro: " + nombrePuntoMC).equals(nombre)){
                 Toast toast1 = Toast.makeText(this, nombre + " Distancia: " + Integer.toString((int)distPuntoMC) + " metros", Toast.LENGTH_SHORT);
                 View customT = toast1.getView();
@@ -395,7 +368,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
                 TextView t = customT.findViewById(android.R.id.message);
                 t.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 toast1.show();
-
             } else{
 
                 Toast toast1 = Toast.makeText(this, nombre, Toast.LENGTH_SHORT);
@@ -405,7 +377,6 @@ public class SimpleCameraActivity extends AppCompatActivity implements SeekBar.O
                 t.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                 toast1.show();
             }
-
     }
 
     /**

@@ -82,7 +82,7 @@ public class SintetizadorVoz implements TextToSpeech.OnInitListener
     /**
      * Metodo que simplemente lee una cadena.
      */
-    public void hablar2(String texto)  {
+    private void hablar2(String texto)  {
 
 
 

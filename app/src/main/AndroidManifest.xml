@@ -40,7 +40,6 @@
         <activity
             android:name=".SimpleCameraActivity"
             android:screenOrientation="landscape"></activity>
-        <activity android:name=".Menu"></activity>
     </application>
 
 </manifest>
