@@ -25,14 +25,14 @@ public class CopyFolder {
         try {
             in = activity.getAssets().open("tiles.zip");
 
-            Log.i(TAG, ": " + Environment.getExternalStorageDirectory());
+            //Log.i(TAG, ": " + Environment.getExternalStorageDirectory());
             File dir = new File(Environment.getExternalStorageDirectory(),
                     "osmdroid");
-            Log.i(TAG, "existe: " + dir.exists());
+            //Log.i(TAG, "existe: " + dir.exists());
             if (!dir.exists())
                 dir.mkdirs();
             File fileZip = new File(dir, "tiles.zip");
-            Log.i(TAG, "existe : " + fileZip.exists());
+            //Log.i(TAG, "existe : " + fileZip.exists());
 
             out = new FileOutputStream(fileZip);
             copyFile(in, out);
@@ -40,7 +40,7 @@ public class CopyFolder {
             out.flush();
             out.close();
         } catch (IOException e) {
-            Log.e("tag", "Error al copiar el archivo: " + e.getMessage());
+            //Log.e("tag", "Error al copiar el archivo: " + e.getMessage());
         }
     }
 
